@@ -25,7 +25,6 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
-
 def detail(request, menu_id):
     # This page is shown when a link/item is clicked on the menu page.
-    return HttpResponse("<h2>Unique menu ID: " + str(menu_id) + "</h2>")
+    return render(request, 'customer/menu_item_detail.html', {'menu_item_id': menu_id})
