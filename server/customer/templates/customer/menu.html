@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Menu</title>
+    <!-- bootstrap css cdn -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center">Menu</h1>
+      <hr />
+
+      {% if all_menu %}
+
+      <div class="row">
+
+        {% for menu_item in all_menu %}
+          <div class="col-md-6 mb-md-3">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-9">
+                    <h3 class="card-title">{{ menu_item.name }}</h2>
+                    <h6 class="card-subtitle text-muted">Vegetarian, vegan, allergies, etc</h6>
+                    <p class="card-text">
+                      A description of the menu item.
+                    </p>
+                    <a href="/customer/{{ menu_item.id }}/">Additional information</a>
+                  </div>
+                  <div class="col-md-3">
+                    <h2 class="text-center">£{{ menu_item.price }}</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      </div>
+
+      {% else %}
+        <div class="alert alert-warning">
+          No menu data recieved
+        </div>
+      {% endif %}
+
+
+
+    </div>
+  </body>
+</html>

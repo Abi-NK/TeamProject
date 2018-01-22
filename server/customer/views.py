@@ -12,7 +12,7 @@ def index(request):
     all_menu = Menu.objects.all()
 
     # Loads the html file as a template.
-    template = loader.get_template('customer/index.html')
+    template = loader.get_template('customer/menu.html')
 
     # Context gets sent straight into the html file, this is needed because it's
     # better to keep all the html code separated from all the python logic.
