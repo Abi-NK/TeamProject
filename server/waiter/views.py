@@ -29,6 +29,6 @@ def orderupdate():
 
 
 #def takeOrder():
-    # method to take an order this involves added a new order to the table
+    # method to take an order this involves added a new order to the table.
 
 
