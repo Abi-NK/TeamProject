@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class DatabasecontrollerConfig(AppConfig):
+class CustomerConfig(AppConfig):
     name = 'customer'

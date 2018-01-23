@@ -20,4 +20,5 @@ urlpatterns = [
 	path('serverController/', include('serverController.urls')),
     path('customer/', include('customer.urls')),
     path('admin/', admin.site.urls),
+    path('waiter/', include('waiter.urls')),
 ]
