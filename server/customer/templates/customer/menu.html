@@ -1,4 +1,5 @@
 {% extends "customer/base.html" %}
+{% load static %}
 {% block title %}Menu{% endblock %}
 {% block content %}
   <h1 class="text-center">Menu</h1>
@@ -17,6 +18,7 @@
                     A description of the menu item.
                   </p>
                   <a href="/customer/{{ menu_item.id }}/">Additional information</a>
+                  <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }})">Add to order</button>
                 </div>
                 <div class="col-md-3">
                   <h2 class="text-center">£{{ menu_item.price }}</h2>
@@ -32,4 +34,5 @@
       No menu data recieved
     </div>
   {% endif %}
+<script src="{% static "customer/js/menu.js" %}"></script>
 {% endblock %}
