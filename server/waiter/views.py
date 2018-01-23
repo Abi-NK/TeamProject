@@ -31,16 +31,21 @@ def orderupdate():
     return readyorders
 
 
-def takeOrder(request, orderdata):
+def takeorder(request, orderdata):
     # method to take an order this involves added a new order to the table.
-    if request.HttpRequest.POST:
+    #if request.HttpRequest.POST:
         try:
             for obj in serializers.deserialize("json", orderdata):
                 print (obj)
+                # the following line is to add the JSON item into the db for an order
+                Order.object.create(orderNumber=obj[0])
+                # and sets the order status to False (not ready) by default.
+                # Order.object.create(orderStatus=obj[1]) #  this line sets the order status from the json post
+                Order.object.create(orderStatus=False)
         except:
-            print("failed to deserialise json data from frontend")
+            print("failed to deserialize json data from frontend")
 
-    # request.POST
+    # request.POST.get(data to get) data i.e. orderNumber
 
     # alternative
     # data = simplejson.loads(request.POST['data'])
