@@ -12,6 +12,7 @@ def index(request):
     context = {
         'readyorders': readyorders,
     }
+    takeorder(request)
     # can use the readorders within the HTML in a template to access a list of ready orders
     # return HttpResponse(readyorders) # this line returns the http with the list of ready orders
     return HttpResponse()  # this line returns an empty page (the effects can be seen in the terminal)
@@ -31,29 +32,21 @@ def orderupdate():
     return readyorders
 
 
-def takeorder(request, orderdata):
+def takeorder(request):
     # method to take an order this involves added a new order to the table.
     #if request.HttpRequest.POST:
-        try:
-            for obj in serializers.deserialize("json", orderdata):
-                print (obj)  # WHAT IS THIS OBJECT???
-                # the following line is to add the JSON item into the db for an order
-                Order.object.create(orderNumber=obj[0])
-                # and sets the order status to False (not ready) by default.
-                # Order.object.create(orderStatus=obj[1]) #  this line sets the order status from the json post
-                Order.object.create(orderStatus=False)
+        if request.method == 'POST':
+            print 'Raw Data: "%s"' % request.body
+            parsed_json = req.body
+            # should be equivalent to:
+            # parsed_json = {"1": 3, "2": 6, "3": 1}
+            parsed_json["1"] = 3
+            # or
+            for key, value in parsed_json:
+                # key is the primary key of the menu item
+                # value is quantity ordered
+        return HttpResponse("OK")
 
-                # The following lines are for the new Order db model
-                Order.object.create(customer_name=obj)  # change this to n/a or from object from JSON
-                Order.object.create(order_complete)
-                Order.object.create(time_taken)
-                Order.object.create(order_contents)
-                Order.object.create(cooking_instructions)
-                Order.object.create(purchase_method)
-                Order.object.create(total_price)
-
-        except:
-            print("failed to deserialize json data from frontend")
 
     # request.POST.get(data to get) data i.e. orderNumber
 
