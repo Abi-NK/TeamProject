@@ -1,9 +1,11 @@
-from waiter.models import Order
-# from waiter.models import Order
 from django.http import HttpResponse
-
+from django.db import models
+from django.db.models import permalink
+from waiter.models import Order
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
+
+
 
 def index(request):
     readyorders = orderupdate()
@@ -19,8 +21,9 @@ def index(request):
 # to see if the order has updated.
 def orderupdate():
     print ("-----checking for order update-----")
-    # readyorders = Order.objects.filter(order_complete=True)
-    readyorders = Order.objects.all
+    readyorders = Order.objects.filter(order_complete=True)
+    #readyorders = Order.objects.all
+    print (Order.objects.all())
     try:
         for curIt in readyorders:
             # Note -- add a method here to send the readyorders object i.e. through JSON.
