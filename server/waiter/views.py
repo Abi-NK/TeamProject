@@ -36,12 +36,22 @@ def takeorder(request, orderdata):
     #if request.HttpRequest.POST:
         try:
             for obj in serializers.deserialize("json", orderdata):
-                print (obj)
+                print (obj)  # WHAT IS THIS OBJECT???
                 # the following line is to add the JSON item into the db for an order
                 Order.object.create(orderNumber=obj[0])
                 # and sets the order status to False (not ready) by default.
                 # Order.object.create(orderStatus=obj[1]) #  this line sets the order status from the json post
                 Order.object.create(orderStatus=False)
+
+                # The following lines are for the new Order db model
+                Order.object.create(customer_name=obj)  # change this to n/a or from object from JSON
+                Order.object.create(order_complete)
+                Order.object.create(time_taken)
+                Order.object.create(order_contents)
+                Order.object.create(cooking_instructions)
+                Order.object.create(purchase_method)
+                Order.object.create(total_price)
+
         except:
             print("failed to deserialize json data from frontend")
 
