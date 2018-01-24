@@ -79,6 +79,17 @@ function addToOrder(menuItemID, menuItemName, menuItemPrice) {
   addOrderItemToDisplay(menuItemID);
 }
 
+// used to send the order object to the server
+function placeOrder(){
+  if (Object.keys(order).length === 0){
+    console.log("Not placing order: order is empty.");
+  } else {
+    $.post("/waiter/makeorder", JSON.stringify(order), function(){
+      alert("Order placed");
+    });
+  }
+}
+
 $(document).ready(function() {
   updateTotal();
 });
