@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 
 def index(request):
@@ -12,17 +11,27 @@ def index(request):
 
 
 
+def takeorderTest(request):
+    # method to take an order this involves added a new order to the table.
+    #if request.HttpRequest.POST:
+        if request.method == 'POST':
+            #print 'Raw Data: "%s' % request.body
+            print ('Raw Data: ' + request.body)
+        return HttpResponse(request.body)
+
+
 def takeorder(request):
     # method to take an order this involves added a new order to the table.
     #if request.HttpRequest.POST:
         if request.method == 'POST':
-            print 'Raw Data: "%s"' % request.body
-            parsed_json = req.body
+            #print 'Raw Data: "%s' %request.body
+            print ('Raw Data: ' + request.body)
+            parsed_json = request.body
             # should be equivalent to:
             # parsed_json = {"1": 3, "2": 6, "3": 1}
             parsed_json["1"] = 3
             # or
-            for key, value in parsed_json:
+            #for key, value in parsed_json:
                 # key is the primary key of the menu item
                 # value is quantity ordered
         return HttpResponse("OK")

@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from waiter.models import Order
+# from waiter.models import Order
+from django.http import HttpResponse
 
-# Create your views here.
+
+# list of orders that are ready is updated every time the page is accessed (refreshed)
+
+def index(request):
+    readyorders = orderupdate()
+    context = {
+        'readyorders': readyorders,
+    }
+    # can use the readorders within the HTML in a template to access a list of ready orders
+    # return HttpResponse(readyorders) # this line returns the http with the list of ready orders
+    return HttpResponse()  # this line returns an empty page (the effects can be seen in the terminal)
+
+
+# This method is used to check the db every 30 seconds
+# to see if the order has updated.
+def orderupdate():
+    print ("-----checking for order update-----")
+    readyorders = Order.objects.filter(order_complete=True)
+    try:
+        for curIt in readyorders:
+            # Note -- add a method here to send the readyorders object i.e. through JSON.
+            print (str(curIt[0]) + ' -> ' + 'READY')  # str(curIt.orderStatus))
+    except:
+        print("error printing")
+    return readyorders
+
+
+
