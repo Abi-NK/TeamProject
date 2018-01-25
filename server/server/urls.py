@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 from django.views.generic.base import TemplateView
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='index.html')),
+    path('', TemplateView.as_view(template_name='static/index.html')),
 	path('serverController/', include('serverController.urls')),
-    path('customer/', include('customer.urls')),
+    url(r'^customer/', include('customer.urls'), name='customer'),
     path('admin/', admin.site.urls),
     path('waiter/', include('waiter.urls')),
     path('waiter/readyorders', include('waiter.readyorders.urls')),
