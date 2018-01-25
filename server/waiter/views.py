@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-
+from .models import Order
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
 
@@ -29,7 +29,7 @@ def orderstatus(request):
     # to see if the order has updated.
 
 def readyorders(request):
-    readyorders = orderupdate()
+    readyorders = orderupdateReadyOnly()
     orderContext = {
         'readyorders': readyorders,
     }
@@ -41,7 +41,7 @@ def readyorders(request):
     # to see if the order has updated.
 
 
-def orderupdate():
+def orderupdateReadyOnly():
     print ("-----checking for order update-----")
     readyorders = Order.objects.filter(order_complete=True)
     # readyorders = Order.objects.all
@@ -72,15 +72,6 @@ def orderupdate():
     except:
         print("error printing")
     return readyorders
-
-
-def takeorderTest(request):
-    # method to take an order this involves added a new order to the table.
-    # if request.HttpRequest.POST:
-    # if request.method == 'POST':
-    # print 'Raw Data: "%s' % request.body
-    # print ('Raw Data: ' + request.body)
-    return HttpResponse(request.body)
 
 
 def takeorder(request):
