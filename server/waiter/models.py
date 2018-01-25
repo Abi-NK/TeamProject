@@ -13,7 +13,8 @@ class Order(models.Model):
     order_complete = models.BooleanField(default=False)
     time_taken = models.DateTimeField()  # The time at which the order was taken
     order_contents = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
-    cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium rare or without the onions
+    cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium
+    #  rare or without the onions
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.PositiveIntegerField(default=0)
 
