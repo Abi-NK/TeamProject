@@ -70,10 +70,10 @@ def order_update_ready_only():
 def get_all_orders():
     print("-----geting all orders-----")
     try:
-        allorders = Order.objects.all()
+        getallorders = Order.objects.all()
     except:
         print("chould not get orders")
-    return allorders
+    return getallorders
 
 
 def order_update():
