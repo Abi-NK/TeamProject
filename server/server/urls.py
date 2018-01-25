@@ -23,4 +23,5 @@ urlpatterns = [
     path('waiter/', include('waiter.urls')),
     path('waiter/readyorders', include('waiter.readyorders.urls')),
     path('waiter/makeorder', include('waiter.makeorder.urls')),
+    path('waiter/orderstatus', include('waiter.orderstatus.urls')),
 ]
