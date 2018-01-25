@@ -18,7 +18,7 @@ def make_order(request):
             print("Recieved order from front-end: ", all_orders)
 
             order_contents = [Menu.objects.get(pk=key) for key in all_orders]
-            total_price = sum([item.price for item in order_contents])
+            total_price = sum([item.price * all_orders[str(item.id)] for item in order_contents])
             new_order = Order(
                 customer_name="none",
                 order_complete=False,
