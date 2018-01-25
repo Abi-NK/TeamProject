@@ -1,10 +1,13 @@
 {% extends "waiter/base.html" %}
+
+{% load static %}
+
 {% block title %}Orders{% endblock %}
-{%block content %}
+
+{% block content %}
   <h1 class="text-center">Orders</h1>
   <hr />
     <div class="row">
-      <!-- {% for order in orders %} -->
       <div class="col-md-12 mb-md-3">
         <div class="card">
           <div class="card-body">
@@ -22,6 +25,7 @@
           </div>
         </div>
       </div>
-      <!-- {% endfor %} -->
     </div>
 {% endblock %}
+
+{% block endjs %}<script src="{% static "waiter/js/orders.js" %}"></script>{% endblock %}
