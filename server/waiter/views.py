@@ -1,8 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Order
 from customer.models import Menu
 import json
 from django.utils import timezone
+from django.shortcuts import render
+from django.core.serializers import serialize
 
 
 def index(request):
@@ -16,7 +18,7 @@ def make_order(request):
             print("Recieved order from front-end: ", all_orders)
 
             order_contents = [Menu.objects.get(pk=key) for key in all_orders]
-            total_price = sum([item.price for item in order_contents])
+            total_price = sum([item.price * all_orders[str(item.id)] for item in order_contents])
             new_order = Order(
                 customer_name="none",
                 order_complete=False,
@@ -29,6 +31,21 @@ def make_order(request):
 
             return HttpResponse("recieved")
     return HttpResponse("Post order JSON to this endpoint.")
+
+
+# used to confirm an order
+def confirm_order(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            order_id = json.loads(request.body.decode('utf-8'))["id"]
+            print("Recieved ID: " + str(order_id))
+            order = Order.objects.get(pk=order_id+1)
+            print(order)
+            order.order_complete = True
+            order.save()
+            print(Order.objects.values_list('order_complete'))
+            return HttpResponse("recieved")
+    return HttpResponse("Post orderID to confirm to this endpoint.")
 
 
 def order_status(request):
@@ -57,13 +74,15 @@ def ready_orders(request):
     # to see if the order has updated.
 
 
+# page for displaying all orders
 def orders(request):
-    # this method returnes all the orders and all there columns
-    allorders = get_all_orders()
-    allorders = {
-        'allorders': allorders,
-    }
-    return HttpResponse(allorders)
+    return render(request, "waiter/orders.html")
+
+
+# returns JSON of all orders from orders table
+def get_orders(request):
+    orders_json = serialize('json', Order.objects.all())
+    return JsonResponse(orders_json, safe=False)
 
 
 def order_update_ready_only():
@@ -78,15 +97,6 @@ def order_update_ready_only():
     except:
         print("error printing")
     return readyorders
-
-
-def get_all_orders():
-    print("-----geting all orders-----")
-    try:
-        getallorders = Order.objects.all()
-    except:
-        print("chould not get orders")
-    return getallorders
 
 
 def order_update():
