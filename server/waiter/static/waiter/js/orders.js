@@ -1,7 +1,23 @@
 // essentially a wrapper for the HTML template
 function makeOrderHTML(){
   return `
-  <div class="col-md-12 mb-md-3"><h4>An Order</h4></div>
+  <div class="col-md-12 mb-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-9">
+            <h2 class="card-title">Order Number</h2>
+            <p class="card-text">
+              Items which have been ordered.
+            </p>
+          </div>
+          <div class="col-md-3">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   `;
 }
 
