@@ -1,4 +1,4 @@
-// using jQuery
+// from the django docs: https://docs.djangoproject.com/en/2.0/ref/csrf/
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {

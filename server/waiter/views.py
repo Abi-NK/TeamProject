@@ -33,6 +33,21 @@ def make_order(request):
     return HttpResponse("Post order JSON to this endpoint.")
 
 
+# used to confirm an order
+def confirm_order(request):
+    if request.is_ajax():
+        if request.method == 'POST':
+            order_id = json.loads(request.body.decode('utf-8'))["id"]
+            print("Recieved ID: " + str(order_id))
+            order = Order.objects.get(pk=order_id+1)
+            print(order)
+            order.order_complete = True
+            order.save()
+            print(Order.objects.values_list('order_complete'))
+            return HttpResponse("recieved")
+    return HttpResponse("Post orderID to confirm to this endpoint.")
+
+
 def order_status(request):
     orderstatus = order_update()
     orderstatus = {
