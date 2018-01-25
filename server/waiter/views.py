@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from .models import Order
-
-# list of orders that are ready is updated every time the page is accessed (refreshed)
+from customer.models import Menu
+import json
+from django.utils import timezone
 
 
 def index(request):
@@ -9,13 +10,25 @@ def index(request):
 
 
 def make_order(request):
-    try:
-        take_order(request)
-        print("order taken")
-        return HttpResponse("order taken")
-    except:
-        print("problem taking order")
-        return HttpResponse("Error taking order")
+    if request.is_ajax():
+        if request.method == 'POST':
+            all_orders = json.loads(request.body.decode('utf-8'))
+            print("Recieved order from front-end: ", all_orders)
+
+            order_contents = [Menu.objects.get(pk=key) for key in all_orders]
+            total_price = sum([item.price for item in order_contents])
+            new_order = Order(
+                customer_name="none",
+                order_complete=False,
+                time_taken=timezone.now(),
+                order_contents=", ".join([str(item) for item in order_contents]),
+                cooking_instructions='none',
+                purchase_method='none',
+                total_price=total_price)
+            new_order.save(force_insert=True)
+
+            return HttpResponse("recieved")
+    return HttpResponse("Post order JSON to this endpoint.")
 
 
 def order_status(request):
@@ -93,15 +106,3 @@ def order_update():
     except:
         print("error printing")
     return readyorders
-
-
-def take_order(request):
-    # testdata = Order.create(customer_name='test')
-    # testdata.save()
-    O = Order(customer_name="Bruce", order_complete=False, time_taken=timezone.now(), order_contents='none',
-              cooking_instructions='none', purchase_method='none', total_price=100)
-    O.save(force_insert=True)
-    return HttpResponse("OK")
-
-
-
