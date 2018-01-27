@@ -39,7 +39,7 @@ def confirm_order(request):
         if request.method == 'POST':
             order_id = json.loads(request.body.decode('utf-8'))["id"]
             print("Recieved ID: " + str(order_id))
-            order = Order.objects.get(pk=order_id+1)
+            order = Order.objects.get(pk=order_id)
             print(order)
             order.order_complete = True
             order.save()
