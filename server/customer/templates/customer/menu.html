@@ -1,4 +1,5 @@
 {% extends "customer/base.html" %}
+{% load static %}
 {% block title %}Menu{% endblock %}
 {% block content %}
   <h1 class="text-center">Menu</h1>
@@ -17,6 +18,7 @@
                     A description of the menu item.
                   </p>
                   <a href="/customer/{{ menu_item.id }}/">Additional information</a>
+                  <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">Add to order</button>
                 </div>
                 <div class="col-md-3">
                   <h2 class="text-center">£{{ menu_item.price }}</h2>
@@ -27,9 +29,41 @@
         </div>
       {% endfor %}
     </div>
+    <div class="col-md-12">
+      <hr />
+      <h2 class="text-center">Your Order</h2>
+      <div id="order-container">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-9">
+                <h4>Item Name</h4>
+              </div>
+              <div class="col-md-3">
+                <h4>Price</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-9">
+              <h4>Total</h4>
+            </div>
+            <div class="col-md-3">
+              <h4 id="total-price">Total</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder()">Place order</button>
+    </div>
   {% else %}
     <div class="alert alert-warning">
       No menu data recieved
     </div>
   {% endif %}
 {% endblock %}
+{% block endjs %}<script src="{% static "customer/js/menu.js" %}"></script>{% endblock %}

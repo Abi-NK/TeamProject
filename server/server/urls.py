@@ -20,11 +20,7 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='static/index.html')),
-	path('serverController/', include('serverController.urls')),
-    url(r'^customer/', include('customer.urls'), name='customer'),
+    path('customer/', include('customer.urls')),
     path('admin/', admin.site.urls),
     path('waiter/', include('waiter.urls')),
-    path('waiter/readyorders', include('waiter.readyorders.urls')),
-    path('waiter/makeorder', include('waiter.makeorder.urls')),
-    path('waiter/orderstatus', include('waiter.orderstatus.urls')),
 ]

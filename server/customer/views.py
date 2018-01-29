@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Menu
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 
 # A view is a simple function that returns html.
+@ensure_csrf_cookie
 def index(request):
     # This is basically an SQL Query that gets the contents of the
     # menu and puts it into a variable. Select specific parts of
