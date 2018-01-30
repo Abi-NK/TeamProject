@@ -15,7 +15,7 @@
                   <h3 class="card-title">{{ menu_item.name }}</h2>
                   <h6 class="card-subtitle text-muted">Vegetarian, vegan, allergies, etc</h6>
                   <p class="card-text">
-                    A description of the menu item.
+                    {{ menu_item.description }}
                   </p>
                   <a href="/customer/{{ menu_item.id }}/">Additional information</a>
                   <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">Add to order</button>
