@@ -12,6 +12,8 @@ class Order(models.Model):
     #  rare or without the onions
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    delivered = models.BooleanField(default=False)  # weather or not the order has been delivered
+    table_assistance = models.BooleanField(default=False)  # if the table needs help
 
     def __str__(self):
         if self.complete:
