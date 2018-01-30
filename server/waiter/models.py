@@ -16,7 +16,7 @@ class Order(models.Model):
     cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium
     #  rare or without the onions
     purchase_method = models.CharField(max_length=100, default='na')
-    total_price = models.PositiveIntegerField(default=0)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self): # HOW do i accsess the order number?
         if self.order_complete:
