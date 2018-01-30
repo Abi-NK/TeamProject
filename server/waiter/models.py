@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 
 class Order(models.Model):
 
@@ -18,7 +17,7 @@ class Order(models.Model):
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
-    def __str__(self): # HOW do i accsess the order number?
+    def __str__(self):
         if self.order_complete:
             return "Order: " + str(self.id) + ' -> ' + 'READY'
         else:
