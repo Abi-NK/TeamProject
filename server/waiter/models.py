@@ -4,7 +4,7 @@ from django.db import models
 class Order(models.Model):
 
     # Order db
-    table_id = models.CharField(max_length=100, default='na')
+    table = models.CharField(max_length=100, default='na')
     complete = models.BooleanField(default=False)  # weather or not the order is ready to be delivered
     time = models.DateTimeField()  # The time at which the order was taken
     items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
