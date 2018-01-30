@@ -20,13 +20,15 @@ def make_order(request):
             order_contents = [Menu.objects.get(pk=key) for key in all_orders]
             total_price = sum([item.price * all_orders[str(item.id)] for item in order_contents])
             new_order = Order(
-                customer_name="none",
-                order_complete=False,
-                time_taken=timezone.now(),
-                order_contents=", ".join([str(item) for item in order_contents]),
+                table_id="1",
+                complete=False,
+                time=timezone.now(),
+                items=", ".join([str(item) for item in order_contents]),
                 cooking_instructions='none',
                 purchase_method='none',
-                total_price=total_price)
+                total_price=total_price,
+                delivered=False,
+                table_assistance=False)
             new_order.save(force_insert=True)
 
             return HttpResponse("recieved")
@@ -87,7 +89,7 @@ def get_orders(request):
 
 def order_update_ready_only():
     print ("-----checking for order update-----")
-    readyorders = Order.objects.filter(order_complete=True)
+    readyorders = Order.objects.filter(complete=True)
     # readyorders = Order.objects.all
     # print (Order.objects.all())
     try:
@@ -102,8 +104,8 @@ def order_update_ready_only():
 def order_update():
     print ("-----checking for order update-----")
     readyorders = Order.objects.all()
-    realyreadyorders = Order.objects.filter(order_complete=True)
-    notreadyorders = Order.objects.filter(order_complete=False)
+    realyreadyorders = Order.objects.filter(complete=True)
+    notreadyorders = Order.objects.filter(complete=False)
     # readyorders = Order.objects.all
     # print (Order.objects.all())
     try:
