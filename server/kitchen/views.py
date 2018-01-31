@@ -1,5 +1,5 @@
 from django.http import HttpResponse, JsonResponse
-from .models import Order
+from waiter.models import Order
 from customer.models import Menu
 import json
 from django.utils import timezone
@@ -10,12 +10,12 @@ from django.views.decorators.http import require_http_methods
 
 def index(request):
     """Return the waiter index page."""
-    return HttpResponse("Waiter index page, to be implemented.")
+    return render(request, "kitchen/status.html")
 
 
 def orders(request):
     """Return the page for viewing all orders."""
-    return render(request, "waiter/orders.html")
+    return render(request, "kitchen/status.html")
 
 
 @require_http_methods(["GET"])
@@ -61,4 +61,4 @@ def confirm_order(request):
     order = Order.objects.get(pk=order_id)
     order.confirmed = True
     order.save()
-    return HttpResponse("recieved")
+    return HttpResponse("ready, calling waiter")

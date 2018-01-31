@@ -22,7 +22,7 @@ function toPrice(number){
 }
 
 // essentially a wrapper for the HTML template
-function makeOrderHTML(orderID, contents, price, confirmed){
+function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, ready_delivery){
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
@@ -31,14 +31,36 @@ function makeOrderHTML(orderID, contents, price, confirmed){
           <div class="col-md-9">
             <h2 class="card-title">Order #${ orderID }</h2>
             <p class="card-text">
-              ${ contents }
+              ${ items }
             </p>
-            <h3>Total price: ${ toPrice(price) }
           </div>
+          <div class="col-md-10">
+            <p class="card-text">
+              ${ time }
+            </p>
+          </div>
+          <div class="col-md-11">
+            <p class="card-text">
+              ${ cooking_instructions }
+            </p>
+          </div>
+          </div>
+          <div class="col-md-11">
+            <p class="card-text">
+              ${ confirmed }
+            </p>
+          </div>
+          </div>
+          <div class="col-md-11">
+            <p class="card-text">
+              ${ ready_delivery }
+            </p>
+          </div>
+
           <div class="col-md-3 text-center">
             <button type="button" class="btn btn-primary btn-lg"
             onclick="confirmOrder(this, ${ orderID })" ${ confirmed ? "disabled" : "" }>
-            ${ confirmed ? "Confirmed" : "Confirm" }</button>
+            ${ confirmed ? "Readied" : "Ready" }</button>
           </div>
         </div>
       </div>
@@ -57,7 +79,7 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-      var orderHTML = makeOrderHTML(value["pk"], fields["items"], fields["total_price"], fields["confirmed"]);
+      var orderHTML = makeOrderHTML(value["pk"], fields["items"], fields["time"], fields["cooking_instructions"], fields["confirmed"], fields["ready_delivery"]);
       $("#order-container").append(orderHTML);
     });
 
@@ -74,7 +96,7 @@ function confirmOrder(button, orderID){
     dataType: 'text',
     success: function(result) {
       $(button).attr("disabled", true);
-      $(button).text("Confirmed");
+      $(button).text("Ready");
     }
   });
 }
