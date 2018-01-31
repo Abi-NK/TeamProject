@@ -16,17 +16,12 @@ function getCookie(name) {
 }
 var csrfToken = getCookie('csrftoken');
 
-// takes a number and returns it in printable price format
-function toPrice(number){
-  return "£" + Number.parseFloat(number).toFixed(2);
-}
-
 // essentially a wrapper for the HTML template
 function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, ready_delivery){
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
-      <div class="card-body">
+      <div class="card-body" style="background-color:Tomato;">
         <div class="row">
           <div class="col-md-9">
             <h2 class="card-title">Order #${ orderID }</h2>
@@ -78,7 +73,7 @@ function updateOrders(){
   });
 }
 
-function confirmOrder(button, orderID){
+function readyOrder(button, orderID){
   $.ajax({
     url: "/waiter/confirmorder",
     type: 'POST',
