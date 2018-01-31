@@ -16,12 +16,22 @@ function getCookie(name) {
 }
 var csrfToken = getCookie('csrftoken');
 
+function changeColour(ready_delivery)
+{
+    var card = document.getElementsByClassName('card-body');
+    if (ready_delivery){
+        card.style.color= 'green';
+    }else{
+        card.style.color= 'red';
+    }
+}
+
 // essentially a wrapper for the HTML template
 function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, ready_delivery){
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
-      <div class="card-body" style="background-color:Tomato;">
+      <div class="card-body" style="changeColour(ready_delivery);">
         <div class="row">
           <div class="col-md-9">
             <h2 class="card-title">Order #${ orderID }</h2>
