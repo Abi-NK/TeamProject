@@ -57,7 +57,7 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-      var orderHTML = makeOrderHTML(value["pk"], fields["items"], fields["total_price"], fields["complete"]);
+      var orderHTML = makeOrderHTML(value["pk"], fields["items"], fields["total_price"], fields["confirmed"]);
       $("#order-container").append(orderHTML);
     });
 

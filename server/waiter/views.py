@@ -28,7 +28,7 @@ def get_orders(request):
 @require_http_methods(["GET"])
 def ready_orders(request):
     """Return all ready orders as JSON."""
-    json = serialize('json', Order.objects.filter(complete=True))
+    json = serialize('json', Order.objects.filter(confirmed=True))
     return JsonResponse(json, safe=False)
 
 
@@ -41,7 +41,7 @@ def make_order(request):
     total_price = sum([item.price * all_orders[str(item.id)] for item in order_contents])
     new_order = Order(
         table="0",
-        complete=False,
+        confirmed=False,
         time=timezone.now(),
         items=", ".join([str(item) for item in order_contents]),
         cooking_instructions='none',
@@ -59,6 +59,6 @@ def confirm_order(request):
     order_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(order_id))
     order = Order.objects.get(pk=order_id)
-    order.complete = True
+    order.confirmed = True
     order.save()
     return HttpResponse("recieved")
