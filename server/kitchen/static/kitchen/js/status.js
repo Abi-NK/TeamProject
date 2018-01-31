@@ -57,16 +57,16 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-      var orderHTML = makeOrderHTML(value["pk"], fields["order_contents"], fields["total_price"], fields["order_complete"]);
+      var orderHTML = makeOrderHTML(value["pk"], fields["items"], fields["total_price"], fields["confirmed"]);
       $("#order-container").append(orderHTML);
     });
 
   });
 }
 
-function confirmReady(button, orderID){
+function confirmOrder(button, orderID){
   $.ajax({
-    url: "/kitchen/confirmready",
+    url: "/waiter/confirmorder",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
