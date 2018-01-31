@@ -64,9 +64,9 @@ function updateOrders(){
   });
 }
 
-function confirmOrder(button, orderID){
+function confirmReady(button, orderID){
   $.ajax({
-    url: "/waiter/confirmorder",
+    url: "/kitchen/confirmready",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
