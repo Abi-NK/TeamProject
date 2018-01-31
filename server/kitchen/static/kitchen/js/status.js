@@ -30,37 +30,29 @@ function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, re
         <div class="row">
           <div class="col-md-9">
             <h2 class="card-title">Order #${ orderID }</h2>
-            <p class="card-text">
+            <p class="card-text">Contents:
               ${ items }
             </p>
           </div>
-          <div class="col-md-10">
-            <p class="card-text">
-              ${ time }
+          <div class="col-md-9">
+            <p class="card-text">Order made:
+                ${ time }
             </p>
           </div>
-          <div class="col-md-11">
-            <p class="card-text">
-              ${ cooking_instructions }
-            </p>
+          <div class="col-md-9">
+           <p class="card-text">Cooking:
+             ${ cooking_instructions }
+           </p>
           </div>
-          </div>
-          <div class="col-md-11">
-            <p class="card-text">
-              ${ confirmed }
-            </p>
-          </div>
-          </div>
-          <div class="col-md-11">
-            <p class="card-text">
-              ${ ready_delivery }
-            </p>
-          </div>
-
-          <div class="col-md-3 text-center">
-            <button type="button" class="btn btn-primary btn-lg"
-            onclick="confirmOrder(this, ${ orderID })" ${ confirmed ? "disabled" : "" }>
-            ${ confirmed ? "Readied" : "Ready" }</button>
+          <div class="col-md-9">
+           <p class="card-text">Order status:
+             ${ confirmed }
+           </p>
+         </div>
+         <div class="col-md-9">
+           <p class="card-text">Order ready:
+             ${ ready_delivery }
+           </p>
           </div>
         </div>
       </div>
