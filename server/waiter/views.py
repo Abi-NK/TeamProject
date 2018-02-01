@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 
 def index(request):
     """Return the waiter index page."""
-    return HttpResponse("Waiter index page, to be implemented.")
+    return render(request, "waiter/index.html")
 
 
 def orders(request):
