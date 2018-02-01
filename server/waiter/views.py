@@ -8,6 +8,8 @@ from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 
 
+# list of orders that are ready is updated every time the page is accessed (refreshed)
+
 def index(request):
     """Return the waiter index page."""
     return HttpResponse("Waiter index page, to be implemented.")
@@ -28,7 +30,7 @@ def get_orders(request):
 @require_http_methods(["GET"])
 def ready_orders(request):
     """Return all ready orders as JSON."""
-    json = serialize('json', Order.objects.filter(order_complete=True))
+    json = serialize('json', Order.objects.filter(confirmed=True))
     return JsonResponse(json, safe=False)
 
 
@@ -40,13 +42,15 @@ def make_order(request):
     order_contents = [Menu.objects.get(pk=key) for key in all_orders]
     total_price = sum([item.price * all_orders[str(item.id)] for item in order_contents])
     new_order = Order(
-        customer_name="none",
-        order_complete=False,
-        time_taken=timezone.now(),
-        order_contents=", ".join([str(item) for item in order_contents]),
+        table="0",
+        confirmed=False,
+        time=timezone.now(),
+        items=", ".join([str(item) for item in order_contents]),
         cooking_instructions='none',
         purchase_method='none',
-        total_price=total_price)
+        total_price=total_price,
+        delivered=False,
+        table_assistance=False)
     new_order.save(force_insert=True)
     return HttpResponse("recieved")
 
@@ -57,6 +61,6 @@ def confirm_order(request):
     order_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(order_id))
     order = Order.objects.get(pk=order_id)
-    order.order_complete = True
+    order.confirmed = True
     order.save()
     return HttpResponse("recieved")
