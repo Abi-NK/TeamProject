@@ -8,6 +8,8 @@ from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 
 
+# list of orders that are ready is updated every time the page is accessed (refreshed)
+
 def index(request):
     """Return the waiter index page."""
     return HttpResponse("Waiter index page, to be implemented.")
