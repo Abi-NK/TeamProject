@@ -11,10 +11,22 @@
 <li>Django 2.0</li>
 <li>sqlite 3</li>
 <h2>Installing</h2>
-<p>python manage.py runserver</p>
+<p>python3 manage.py runserver</p>
 <p>Visit: <a href= "http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a></p>
 <h2>Running the tests</h2>
-<p>See Part 3 - 4.</p>
+<li>Identify a bug from the shell</li>
+<p>Call the function from the shell to see a false positive, or confirm bug exists.</p>
+<code>python3 manage.py shell</code>
+<li>Create a test to expose the bug</li>
+<p>All tests have a def begining with'test_' in the polls/tests.py file</p>
+<code>gedit polls/tests.py</code>
+<li>Running Tests</li>
+<p>Issue the command below to run all of the tests in polls/tests.py</p>
+<code>python3 manage.py test polls</code>
+<li>Fixing the bug and confirm fix by re-running tests</li>
+<p>Edit the required file to fix the bug, e.g. polls/models.py, and run the test again.</p>
+<code>gedit polls/models.py</code>
+<code>python3 manage.py test polls</code>
 <h2>Deployment</h2>
 <p>See the DEPLOY.md file for details.</p>
 <h2>Built With</h2>
