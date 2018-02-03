@@ -6,6 +6,7 @@ class Command(BaseCommand):
     help = 'Clears and repopulates the Menu table with a sample menu.'
 
     sample_menu = [
+        # this sample menu is taken from Wahaca's menu, found at https://www.wahaca.co.uk/menu/food/
         # [name, price, description, course, category, vegetarian]
         # Nibbles
         ["Guacamole with tortilla chips", 4.75, "Freshly made every day with Hass avocados, lime and coriander", "Nibbles", "", True],
