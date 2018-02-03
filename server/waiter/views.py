@@ -37,21 +37,21 @@ def ready_orders(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    all_orders = json.loads(request.body.decode('utf-8'))
-    print("Recieved order: ", all_orders)
-    order_contents = [Menu.objects.get(pk=key) for key in all_orders]
-    total_price = sum([item.price * all_orders[str(item.id)] for item in order_contents])
-    new_order = Order(
+    order_json = json.loads(request.body.decode('utf-8'))
+    print("Recieved order: ", order_json)
+    order_contents = [Menu.objects.get(pk=key) for key in order_json]
+    total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
+    Order(
         table="0",
         confirmed=False,
         time=timezone.now(),
-        items=", ".join([str(item) for item in order_contents]),
+        items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
         cooking_instructions='none',
         purchase_method='none',
         total_price=total_price,
         delivered=False,
-        table_assistance=False)
-    new_order.save(force_insert=True)
+        table_assistance=False
+    ).save(force_insert=True)
     return HttpResponse("recieved")
 
 
