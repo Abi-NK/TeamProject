@@ -51,12 +51,11 @@ SECRET_KEY = os.environ['SECRET_KEY']</code>
 <code>with open('/etc/secret_key.txt') as f:<br>
 SECRET_KEY = f.read().strip()</code>
 <li>Set ALLOWED_HOSTS</li>
-<code>#ALLOWED_HOSTS = ['localhost', '127.0.0.1', '111.222.333.444', 'mywebsite.com'] # Example
-ALLOWED_HOSTS = ['example.com']
-<li>Web server must redirect all HTTP traffic to HTTPS, and only transmit HTTPS requests to Django</li>
-<code>CSRF_COOKIE_SECURE = True<br>
+<code>ALLOWED_HOSTS = ['example.com']</code>
+<li>Redirect all server HTTP traffic to HTTPS, only HTTPS to Django</li>
+<code>CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True</code>
-<p>To run live checks.</p>
+<p>Run checks to go live.</p>
 <code>python3 manage.py check --deploy</code>
 <p>Any additional error please refer to the documentation at https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/</p>
 <h2>Built With</h2>
