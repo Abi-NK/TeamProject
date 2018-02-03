@@ -19,12 +19,13 @@ class Command(BaseCommand):
         print("Deleting all entries in Menu table...")
         Menu.objects.all().delete()
         print("Deleted.")
-        print("Adding sample menu item...")
-        Menu(
-            name="Pork pibil",
-            price=7.80,
-            description="Slow cooked, with pink pickled onions",
-            course="Main",
-            category="Burritos"
-        ).save()
-        print("Added.")
+        for item in self.sample_menu:
+            print("Adding %s..." % item[0])
+            Menu(
+                name=item[0],
+                price=item[1],
+                description=item[2],
+                course=item[3],
+                category=item[4],
+            ).save()
+        print("Sample menu added.")
