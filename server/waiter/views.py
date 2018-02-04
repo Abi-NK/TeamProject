@@ -68,5 +68,7 @@ def confirm_order(request):
 
 
 @require_http_methods(["POST"])
-def request_help():
-    pass
+def request_help(request):
+    table_number = json.loads(request.body.decode('utf-8'))["tableNumber"]
+    print("Table %s requested help" % table_number)
+    return HttpResponse("recieved")

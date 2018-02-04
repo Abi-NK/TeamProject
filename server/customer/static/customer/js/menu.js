@@ -119,13 +119,31 @@ function placeOrder(){
 }
 
 function askTableNumber(){
-
+  // could store the table number server-side with sessions in future
+  input = prompt("Which table number are you sitting at?");
+  while(isNaN(input) || input == null){
+    input = prompt("Sorry, that didn't look like a number, where are you sitting?");
+  }
+  tableNumber = input;
 }
 
 function requestHelp(){
-
+  $.ajax({
+    url: "/waiter/requesthelp",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({tableNumber: tableNumber}),
+    dataType: 'text',
+    success: function(result) {
+      alert("Someone will be with you shortly");
+    }
+  });
 }
 
 $(document).ready(function() {
   updateTotal();
+  askTableNumber();
+  console.log(tableNumber);
+  requestHelp();
 });
