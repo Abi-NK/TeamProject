@@ -4,6 +4,11 @@ function goBack() {
     window.history.back();
 }
 </script>
+<script>
+    function refresh() {
+        window.location.reload();
+    }
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,6 +25,7 @@ function goBack() {
 <br>
     <div class="container-fluid">
         <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
+        <button type="button" class="btn btn-default" onclick="refresh()">Refresh Page</button>
     </div>
 
     <div class="container">
@@ -29,9 +35,6 @@ function goBack() {
                   <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose an Order
                           <span class="caret"></span></button>
-                      <ul class="dropdown-menu">
-                          <li><a href="#">HTML</a></li>
-                      </ul>
                   </div>
 
             </div>
