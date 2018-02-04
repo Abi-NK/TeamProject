@@ -7,9 +7,10 @@ from django.shortcuts import render
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 
+help_requested = []
+
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
-
 def index(request):
     """Return the waiter index page."""
     return HttpResponse("Waiter index page, to be implemented.")
@@ -64,3 +65,8 @@ def confirm_order(request):
     order.confirmed = True
     order.save()
     return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def request_help():
+    pass

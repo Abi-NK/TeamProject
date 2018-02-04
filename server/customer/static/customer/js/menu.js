@@ -23,6 +23,8 @@ var itemNames = {};
 var itemPrices = {};
 var stringTotal = "total"
 
+var tableNumber = "0";
+
 // returns the sum of all items in the order times their quantity
 function calculateTotal(){
   var total = 0;
@@ -114,6 +116,14 @@ function placeOrder(){
       }
     });
   }
+}
+
+function askTableNumber(){
+
+}
+
+function requestHelp(){
+
 }
 
 $(document).ready(function() {
