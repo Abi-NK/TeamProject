@@ -5,37 +5,27 @@ from django.utils import timezone
 from django.shortcuts import render
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import ensure_csrf_cookie
 
-
+@ensure_csrf_cookie
 def index(request):
-    """Return the waiter index page."""
-    return render(request, "kitchen/status.html")
-
-
-def orders(request):
-    """Return the page for viewing all orders."""
-    return render(request, "kitchen/status.html")
+    """Return the kitchen page."""
+    return render(request, 'kitchen/status.html', {'all_menu': Order.objects.all})
 
 
 @require_http_methods(["GET"])
 def get_orders(request):
     """Return all orders as JSON."""
-    json = serialize('json', Order.objects.all())
+    json = serialize('json', Order.objects.filter(delivered=False).order_by('time'))
     return JsonResponse(json, safe=False)
 
-
-@require_http_methods(["GET"])
-def ready_orders(request):
-    """Return all ready orders as JSON."""
-    json = serialize('json', Order.objects.filter(confirmed=True))
-    return JsonResponse(json, safe=False)
 
 @require_http_methods(["POST"])
-def confirm_order(request):
-    """Confirm the provided order in the database."""
+def readyDelivery(request):
+    """sets the ready_delivery in the database to true."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(order_id))
     order = Order.objects.get(pk=order_id)
-    order.confirmed = True
+    order.ready_delivery = True
     order.save()
-    return HttpResponse("ready, calling waiter")
+    return HttpResponse("Order ready, calling waiter")
