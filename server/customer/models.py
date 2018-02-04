@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 
 
 class Menu(models.Model):
@@ -12,4 +11,4 @@ class Menu(models.Model):
     category = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name + ' - ' + self.category
+        return "%s (%s)" % (self.name, self.course)
