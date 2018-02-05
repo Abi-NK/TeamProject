@@ -71,4 +71,7 @@ def confirm_order(request):
 def request_help(request):
     table_number = json.loads(request.body.decode('utf-8'))["tableNumber"]
     print("Table %s requested help" % table_number)
+    if table_number not in help_requested:
+        help_requested.append(table_number)
+        print("Tables requesting help: %s" % help_requested)
     return HttpResponse("recieved")
