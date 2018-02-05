@@ -35,8 +35,12 @@ function goBack() {
                   <div class="dropdown">
                       <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose an Order
                           <span class="caret"></span></button>
+                      <ul class="dropdown-menu">
+                          {% for order in all_orders %}
+                          <li><a href="#">{{ order.table }}, {{ order.items }}</a></li>
+                          {% endfor %}
+                      </ul>
                   </div>
-
             </div>
         </div>
     </div>
