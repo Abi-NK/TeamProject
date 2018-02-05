@@ -23,7 +23,7 @@ function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, de
   <div class="col-md-12 mb-md-3">
     <div class="card">
       <div id="body" class="card-body">
-        <script>${changeColour(time, this)} </script>
+        <script>changeColour(time)</script>
         <div class="row">
           <div class="col-md-9">
             <h2 class="card-title">Order #${ orderID }</h2>
@@ -95,7 +95,7 @@ function parseDate(time){
 }
 
 //changes color depenign on the age of the order
-function changeColour(time, id) {
+function changeColour(time) {
 
     var d = new Date();
     d = d.getTime();
@@ -103,11 +103,12 @@ function changeColour(time, id) {
     var orderTimeM = parseTime(time, 'M');
 
     if((orderTimeM - 10) > d){
-        document.getElementsByClassName("card-body").style.backgroundColor = "RED";
+        //document.getElementsByClassName("body").style.backgroundColor = "RED";
+        document.getElementById("body").style.backgroundColor = "ORANGE";
     }else{
-        //document.getElementById("body").style.backgroundColor = "GREEN";
+        document.getElementById("body").style.backgroundColor = "GREEN";
         //document.getElementsByClassName("card-body").style.backgroundColor = "RED";
-        document.getElementById(id).style.backgroundColor = "GREEN";
+        //document.getElementById(id).style.backgroundColor = "GREEN";
     }
 }
 
