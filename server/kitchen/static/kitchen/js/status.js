@@ -18,7 +18,7 @@ var csrfToken = getCookie('csrftoken');
 
 
 // essentially a wrapper for the HTML template
-function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, delivered){
+function showOrders(orderID, items, time, cooking_instructions, confirmed, ready_delivery, delivered){
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
@@ -31,7 +31,7 @@ function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, de
                 <b>Items:</b> <br> ${ items }
             </p>
             <p>
-                <b>Time:</b> &nbsp; ${ parseTime(time, 'H') +":" +  parseTime(time, 'M') + ":"+ parseTime(time, 'S') }
+                <b>Order time:</b> &nbsp; ${ parseTime(time, 'H') +":" +  parseTime(time, 'M') + ":"+ parseTime(time, 'S') }
             </p>
             <p>
                 <b>Cooking instructions:</b> &nbsp; ${ cooking_instructions }
@@ -40,13 +40,13 @@ function makeOrderHTML(orderID, items, time, cooking_instructions, confirmed, de
                 <b>Order Confirmed:</b> &nbsp; ${ easyRead(confirmed) }
             </p>
             <p>
-                <b>Order delivered status:</b> &nbsp; ${ easyRead(delivered) }
+                <b>Order delivered:</b> &nbsp; ${ easyRead(delivered) }
             </p>
           </div>
           <div class="col-md-3 text-center">
             <button type="button" class="btn btn-primary btn-lg"
-            onclick="setReadyDelivery(this, ${ orderID })" ${ confirmed ? "disabled" : "" }>
-            ${ confirmed ? "readied" : "ready" }</button>
+            onclick="setReadyDelivery(this, ${ orderID })" ${ ready_delivery ? "disabled" : "" }>
+            ${ ready_delivery ? "readied" : "ready" }</button>
           </div>
         </div>
       </div>
@@ -122,7 +122,8 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-      var orderHTML = makeOrderHTML(value["pk"], fields["items"], fields["time"], fields["cooking_instructions"], fields["ready_delivery"], fields["delivered"]);
+      var orderHTML = showOrders(value["pk"], fields["items"], fields["time"], fields["cooking_instructions"],
+       fields["confirmed"], fields["ready_delivery"], fields["delivered"]);
       $("#order-container").append(orderHTML);
     });
 
