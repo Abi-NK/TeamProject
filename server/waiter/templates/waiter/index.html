@@ -32,15 +32,24 @@ function goBack() {
         <div class="row">
             <div class="col-sm-4">
                 <h3>Order Delivered?</h3>
-                  <div class="dropdown">
-                      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose an Order
-                          <span class="caret"></span></button>
-                      <ul class="dropdown-menu">
-                          {% for order in all_orders %}
-                          <li><a href="#">{{ order.table }}, {{ order.items }}</a></li>
-                          {% endfor %}
-                      </ul>
-                  </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Table</th>
+                            <th>Order Items</th>
+                            <th>Delivered?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in all_orders %}
+                        <tr>
+                            <td>{{ order.table }}</td>
+                            <td>{{ order.items }}</td>
+                            <td><label class="checkbox-inline"><input type="checkbox" value=""></label></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
