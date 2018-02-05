@@ -141,9 +141,12 @@ function requestHelp(){
   });
 }
 
+function buttonHelp(button){
+  requestHelp();
+}
+
 $(document).ready(function() {
   updateTotal();
   askTableNumber();
-  console.log(tableNumber);
-  requestHelp();
+  console.log("Table number: " + tableNumber);
 });
