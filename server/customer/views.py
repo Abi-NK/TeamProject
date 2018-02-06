@@ -3,8 +3,7 @@ from .models import Menu
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 number_of_tables = 20
-seating = [True] * number_of_tables
-print([str(i) for i, seat in enumerate(seating) if seating[i]])
+seating = [{"id": i, "available": True, "label": "Table " + str(i+1)} for i in range(number_of_tables)]
 
 
 @ensure_csrf_cookie
@@ -12,7 +11,7 @@ def index(request):
     """Return the menu page."""
     return render(request, 'customer/menu.html', {
         'all_menu': Menu.objects.all(),
-        'seating': [str(i) for i, seat in enumerate(seating) if seating[i]]
+        'seating': [seat for seat in seating if seat["available"]],
     })
 
 
