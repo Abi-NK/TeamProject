@@ -1,11 +1,23 @@
 {% extends "customer/base.html" %}
 {% block title %}Menu Item {{ menu_item_id }}{% endblock %}
 {% block content %}
-  {% if menu_item_id %}
-    <h2>Unique menu ID: {{ menu_item_id }}</h2>
-  {% else %}
-    <div class="alert alert-warning">
-      No menu item ID was recieved.
-    </div>
-  {% endif %}
+<div class="description-section">
+    <div class="container">
+	 <div class="row">
+	   <div class="col-md-6 ">
+	   <div class="desc-image">
+	       <img src="http://www.ernestosfinemexicanfood.com/wp-content/uploads/2015/10/right-image.png">
+	   </div>
+	   </div>
+	   <div class="col-md-6">
+	    <div class="desc-title">
+	        <h4>{{menu_item.name}} --- £{{menu_item.price}}</h4>
+	        <p>{{menu_item.description}}</p>
+	        <p>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</p>
+	        <p>{{menu_item.calories}}kcal</p>
+	    </div>
+	   </div>
+	</div>
+</div>
+</div>
 {% endblock %}

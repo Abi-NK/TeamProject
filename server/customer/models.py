@@ -9,6 +9,8 @@ class Menu(models.Model):
     description = models.CharField(max_length=1000)
     course = models.CharField(max_length=100)
     category = models.CharField(max_length=100)
+    allergy = models.CharField(max_length=1000)
+    calories = models.IntegerField()
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.course)
