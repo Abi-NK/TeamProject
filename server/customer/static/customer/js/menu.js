@@ -136,7 +136,7 @@ function requestHelp(){
     data: JSON.stringify({tableNumber: tableNumber}),
     dataType: 'text',
     success: function(result) {
-      alert("Someone will be with you shortly");
+      $('#callWaiterModalCenter').modal('show');
     }
   });
 }

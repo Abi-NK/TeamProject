@@ -2,6 +2,29 @@
 {% load static %}
 {% block title %}Menu{% endblock %}
 {% block content %}
+
+<!-- Modal - calling over waiter -->
+<div class="modal fade" id="callWaiterModalCenter" tabindex="-1" role="dialog" aria-labelledby="callWaiterModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="callWaiterModalLongTitle">Waiters notififed</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Someone will be with you shortly
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Visible Menu - main content for the page -->
+<div>
   <h1 class="text-center">Menu</h1>
   <hr />
   <div class="row mb-md-3">
@@ -73,5 +96,7 @@
       No menu data recieved
     </div>
   {% endif %}
+</div>
+
 {% endblock %}
 {% block endjs %}<script src="{% static "customer/js/menu.js" %}"></script>{% endblock %}
