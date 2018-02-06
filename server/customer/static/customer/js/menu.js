@@ -23,6 +23,8 @@ var itemNames = {};
 var itemPrices = {};
 var stringTotal = "total"
 
+var tableNumber = "0";
+
 // returns the sum of all items in the order times their quantity
 function calculateTotal(){
   var total = 0;
@@ -116,6 +118,54 @@ function placeOrder(){
   }
 }
 
+function askTableNumber(){
+  // could store the table number server-side with sessions in future
+  input = prompt("Which table number are you sitting at?");
+  while(isNaN(input) || input == null || input == ""){
+    input = prompt("Sorry, that didn't look like a number, where are you sitting?");
+  }
+  tableNumber = input;
+}
+
+function requestHelp(){
+  $.ajax({
+    url: "/waiter/requesthelp",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({tableNumber: tableNumber}),
+    dataType: 'text',
+    success: function(result) {
+      $('#callWaiterModalCenter').modal('show');
+    }
+  });
+}
+
+function buttonHelp(button){
+  requestHelp();
+}
+
+$('#seating-list a').on('click', function(){
+    console.log($(this).text());
+});
+
+function buttonSelectSeating(seatingID){
+  console.log("Selected seating with ID " + seatingID);
+  tableNumber = seatingID;
+  $.ajax({
+    url: "/customer/takeseat",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({tableID: seatingID}),
+    dataType: 'text',
+    success: function(result) {
+      $('#chooseTableModalCenter').modal('hide');
+    }
+  });
+}
+
 $(document).ready(function() {
   updateTotal();
+  $('#chooseTableModalCenter').modal('show');
 });
