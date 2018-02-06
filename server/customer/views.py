@@ -31,5 +31,4 @@ def take_seat(request):
     for seat in seating:
         if seat["id"] == table_id:
             seat["available"] = False
-    print(seating)
     return HttpResponse("recieved")

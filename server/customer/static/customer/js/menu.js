@@ -151,6 +151,7 @@ $('#seating-list a').on('click', function(){
 
 function buttonSelectSeating(seatingID){
   console.log("Selected seating with ID " + seatingID);
+  tableNumber = seatingID;
   $.ajax({
     url: "/customer/takeseat",
     type: 'POST',
@@ -167,5 +168,4 @@ function buttonSelectSeating(seatingID){
 $(document).ready(function() {
   updateTotal();
   $('#chooseTableModalCenter').modal('show');
-  console.log("Table number: " + tableNumber);
 });
