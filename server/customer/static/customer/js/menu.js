@@ -145,8 +145,29 @@ function buttonHelp(button){
   requestHelp();
 }
 
+$('#seating-list a').on('click', function(){
+    console.log($(this).text());
+});
+
+function buttonSelectSeating(seatingID){
+  console.log("Selected: " + seatingID);
+  $.ajax({
+    url: "/customer/selectseating",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({tableNumber: seatingID}),
+    dataType: 'text',
+    success: function(result) {
+      $('#chooseTableModalCenter').modal('hide');
+    }
+  });
+  $('#chooseTableModalCenter').modal('hide');
+}
+
 $(document).ready(function() {
   updateTotal();
-  askTableNumber();
+  // askTableNumber();
+  $('#chooseTableModalCenter').modal('show');
   console.log("Table number: " + tableNumber);
 });
