@@ -150,24 +150,22 @@ $('#seating-list a').on('click', function(){
 });
 
 function buttonSelectSeating(seatingID){
-  console.log("Selected: " + seatingID);
+  console.log("Selected seating with ID " + seatingID);
   $.ajax({
-    url: "/customer/selectseating",
+    url: "/customer/takeseat",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
-    data: JSON.stringify({tableNumber: seatingID}),
+    data: JSON.stringify({tableID: seatingID}),
     dataType: 'text',
     success: function(result) {
       $('#chooseTableModalCenter').modal('hide');
     }
   });
-  $('#chooseTableModalCenter').modal('hide');
 }
 
 $(document).ready(function() {
   updateTotal();
-  // askTableNumber();
   $('#chooseTableModalCenter').modal('show');
   console.log("Table number: " + tableNumber);
 });
