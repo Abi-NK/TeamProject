@@ -21,5 +21,7 @@ class Command(BaseCommand):
                 description=item[2],
                 course=item[3],
                 category=item[4],
+                allergy=item[5],
+                calories=item[6],
             ).save()
         print("Sample menu added.")
