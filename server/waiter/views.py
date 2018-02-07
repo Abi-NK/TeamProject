@@ -12,9 +12,9 @@ from django.views.decorators.http import require_http_methods
 
 def index(request):
     """Return the waiter index page."""
-
+    unconfirmed_orders = Order.objects.filter(confirmed=False)
     return render(request, "waiter/index.html", {'undelivered': Order.objects.filter(delivered=False),
-                                                 'all_orders': Order.objects.all()})
+                                                 'unconfirmed_orders': unconfirmed_orders})
 
 
 def orders(request):

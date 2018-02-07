@@ -50,11 +50,11 @@ function goBack() {
       <div class="row">
         <div class="col-sm-6">
             <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./orders'">Orders
-                {% if all_orders %}
-                    {% with total=all_orders.count %}
+                {% with total=unconfirmed_orders.count %}
+                    {% if total != 0 %}
                         <font color="LIGHTSALMON">(+{{total}})</font>
-                    {% endwith %}
-                {% endif %}
+                    {% endif %}
+                {% endwith %}
             </button>
         </div>
             <div class="col-sm-6">
