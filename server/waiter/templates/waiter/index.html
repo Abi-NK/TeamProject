@@ -4,11 +4,18 @@ function goBack() {
     window.history.back();
 }
 </script>
-<script>
-    function refresh() {
-        window.location.reload();
-    }
-</script>
+<style media="screen" type="text/css">
+
+.btn-bigboi {
+    padding: 180px 280px;
+    font-size: 1000px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+</style>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,32 +32,29 @@ function goBack() {
 <br>
     <div class="container-fluid">
         <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
-        <button type="button" class="btn btn-default" onclick="refresh()">Refresh Page</button>
+    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+        <button class="btn btn-primary btn-lg btn-block"onclick="window.location.href='./orders'">Orders</button>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <h3>Order Delivered?</h3>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Table</th>
-                            <th>Order Items</th>
-                            <th>Delivered?</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for order in undelivered %}
-                        <tr>
-                            <td>{{ order.table }}</td>
-                            <td>{{ order.items }}</td>
-                            <td><label class="checkbox-inline"><input type="checkbox" value=""></label></td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="col-sm-6">
+        <button class="btn btn-primary btn-lg btn-block"onclick="window.location.href='./deliveries'">Deliveries</button>
+    </div>
+    </div>
     </div>
 </body>
