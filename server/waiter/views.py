@@ -6,10 +6,12 @@ from django.utils import timezone
 from django.shortcuts import render
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
+from customer.views import seating
+
+help_requested = []
 
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
-
 def index(request):
     """Return the waiter index page."""
     unconfirmed_orders = Order.objects.filter(confirmed=False)
@@ -78,4 +80,15 @@ def confirm_order(request):
     order = Order.objects.get(pk=order_id)
     order.confirmed = True
     order.save()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def request_help(request):
+    table_id = json.loads(request.body.decode('utf-8'))["tableNumber"]
+    table_label = [seat["label"] for seat in seating if seat["id"] == table_id][0]
+    print("Table %s requested help" % table_label)
+    if table_label not in help_requested:
+        help_requested.append(table_label)
+        print("Tables requesting help: %s" % help_requested)
     return HttpResponse("recieved")

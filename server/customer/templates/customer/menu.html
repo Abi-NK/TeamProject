@@ -2,8 +2,73 @@
 {% load static %}
 {% block title %}Menu{% endblock %}
 {% block content %}
+
+<!-- Modal - calling over waiter -->
+<div class="modal fade" id="callWaiterModalCenter" tabindex="-1" role="dialog" aria-labelledby="callWaiterModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="callWaiterModalLongTitle">Waiters notififed</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Someone will be with you shortly
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal - choose table -->
+<div class="modal fade" id="chooseTableModalCenter" tabindex="-1" role="dialog" aria-labelledby="chooseTableModalCenterTitle" aria-hidden="true"data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="chooseTableModalLongTitle">Where are you sitting?</h5>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-center">Available seating:</h6>
+        <div class="container-fluid">
+          <div class="row">
+            {% if seating %}
+              {% for seat in seating %}
+                <div class="col-md-6 mb-md-1">
+                  <button type="button" class="btn btn-primary btn-lg btn-block" onclick="buttonSelectSeating({{ seat.id }})">
+                    {{ seat.label }}
+                  </button>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="alert alert-warning">
+                No seating data recieved
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!--<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>-->
+    </div>
+  </div>
+</div>
+
+<!-- Visible Menu - main content for the page -->
+<div>
   <h1 class="text-center">Menu</h1>
   <hr />
+  <div class="row mb-md-3">
+    <div class="col-md-8">
+        <h3>Need some help?</h3>
+    </div>
+    <div class="col-md-4">
+      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="buttonHelp(this)">Call a waiter</button>
+    </div>
+  </div>
   {% if all_menu %}
     <div class="row">
       {% for menu_item in all_menu %}
@@ -68,5 +133,7 @@
       No menu data recieved
     </div>
   {% endif %}
+</div>
+
 {% endblock %}
 {% block endjs %}<script src="{% static "customer/js/menu.js" %}"></script>{% endblock %}
