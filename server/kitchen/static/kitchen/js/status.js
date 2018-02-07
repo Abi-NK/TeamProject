@@ -22,8 +22,7 @@ function showOrders(orderID, items, time, cooking_instructions, confirmed, ready
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
-      <div id="body" class="card-body">
-        <script>changeColour(time)</script>
+      <div id="body" class="card-body" style=${changeColour(time)}>
         <div class="row">
           <div class="col-md-9">
             <h2 class="card-title">Order #${ orderID }</h2>
@@ -55,8 +54,8 @@ function showOrders(orderID, items, time, cooking_instructions, confirmed, ready
   `;
 }
 
-// makes boolean vars easyer to read
-// returns eather yes or no strings depending on bool
+// makes boolean vars easier to read
+// returns either yes or no strings depending on bool
 function easyRead(bool){
     if (bool){
         return "yes";
@@ -65,7 +64,7 @@ function easyRead(bool){
     }
 }
 
-// this function returns the current time --> needs fixing
+// this function returns the current time
 function timeNow(){
     var d = new Date();
     d = d.getTime();
@@ -73,7 +72,7 @@ function timeNow(){
 }
 
 // time parser that takes argument of frame
-// returns houres, mins or secs depengin on frame
+// returns hours, minutes or secs depending on frame
 function parseTime(time, frame){
     var timeString = time;
 
@@ -87,31 +86,42 @@ function parseTime(time, frame){
     return timeOnly;
 }
 
-// returns date
+// returns date from the time field that is passed in
+// needs to be formatted using the Django datetimefield format
 function parseDate(time){
     var timeString = time;
     var DateOnly = timeString.slice(0, 9);
     return DateOnly;
 }
 
-//changes color depenign on the age of the order
+// changes color depending on the age of the order
+// note: parseTime function will not work to parse for the function bellow,
+// instead a local parser is used.
+
+// PLEASE do not read the function bellow. I am sorry. Please don't judge me.
 function changeColour(time) {
 
-    var d = new Date();
-    d = d.getTime();
-
-    var orderTimeM = parseTime(time, 'M');
-
-    if((orderTimeM - 10) > d){
-        //document.getElementsByClassName("body").style.backgroundColor = "RED";
-        document.getElementById("body").style.backgroundColor = "ORANGE";
-    }else{
-        document.getElementById("body").style.backgroundColor = "GREEN";
-        //document.getElementsByClassName("card-body").style.backgroundColor = "RED";
-        //document.getElementById(id).style.backgroundColor = "GREEN";
+    var date = new Date();
+    var currentTimeMinutes = date.getMinutes();
+    if ((currentTimeMinutes.toString().length) == 1){
+        currentTimeMinutes = "0" + String(currentTimeMinutes); // 0 is used to match the format of datetimefield
     }
-}
 
+    var orderTimeMinutes = time.slice(14, 16);
+
+    // add the 10 and 3 as this is when the order is due. Possible overflow at 60
+    if((parseInt(orderTimeMinutes)+10) <= (parseInt(currentTimeMinutes))){
+        return "background-color:#F15454;"
+    }else if((parseInt(orderTimeMinutes)+7) <= (parseInt(currentTimeMinutes)) && (parseInt(orderTimeMinutes)+9) >= (parseInt(currentTimeMinutes)) ){
+        return "background-color:#FEDB00;"
+    }else {
+        return "background-color:LIGHTGREEN;"
+    }
+}// ^I am sorry you had to look at this.
+
+// Refreshes the  page every 30 seconds
+// this is to keep the orders up to date
+// and to track progress using the colour system
 setTimeout(function(){
    window.location.reload(1);
 }, 30000);
@@ -134,7 +144,9 @@ function updateOrders(){
   });
 }
 
-function setReadyDelivery(button, orderID){ //add check for confirmed first
+// Makes the order ready for delivery by setting the ready_delivery field
+// in the Order db to True.
+function setReadyDelivery(button, orderID){
   $.ajax({
     url: "/kitchen/readyDelivery",
     type: 'POST',
