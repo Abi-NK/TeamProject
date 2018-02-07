@@ -58,7 +58,13 @@ function goBack() {
             </button>
         </div>
             <div class="col-sm-6">
-                <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries</button>
+                <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries
+                    {% with total=undelivered_orders.count %}
+                        {% if total != 0 %}
+                            <font color="LIGHTSALMON">(+{{total}})</font>
+                        {% endif %}
+                    {% endwith %}
+                </button>
             </div>
       </div>
     </div>
