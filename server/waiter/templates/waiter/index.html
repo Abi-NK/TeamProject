@@ -29,32 +29,37 @@ function goBack() {
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<br>
-    <div class="container-fluid">
-        <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
-    </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-6">
-        <button class="btn btn-primary btn-lg btn-block"onclick="window.location.href='./orders'">Orders</button>
-    </div>
-
-    <div class="col-sm-6">
-        <button class="btn btn-primary btn-lg btn-block"onclick="window.location.href='./deliveries'">Deliveries</button>
-    </div>
-    </div>
+    <br>
+        <div class="container-fluid">
+            <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
+        </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+            <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./orders'">Orders
+                {% if all_orders %}
+                    {% with total=all_orders.count %}
+                        <font color="LIGHTSALMON">(+{{total}})</font>
+                    {% endwith %}
+                {% endif %}
+            </button>
+        </div>
+            <div class="col-sm-6">
+                <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries</button>
+            </div>
+      </div>
     </div>
 </body>
