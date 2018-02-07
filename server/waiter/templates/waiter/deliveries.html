@@ -41,13 +41,15 @@ function goBack() {
                         </tr>
                     </thead>
                     <tbody>
-                    {% for order in undelivered %}
-                        <tr>
-                            <td>{{ order.table }}</td>
-                            <td>{{ order.items }}</td>
-                            <td><label class="checkbox-inline"><input type="checkbox" value=""></label></td>
-                        </tr>
-                    {% endfor %}
+                        {% if delivery %}
+                            {% for delivery_item in delivery %}
+                            <tr>
+                                <td>{{delivery_item.table}}</td>
+                                <td>{{delivery_item.items}}</td>
+                                <td><label class="checkbox-inline"><input type="checkbox" value=""></label></td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>

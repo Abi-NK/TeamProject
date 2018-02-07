@@ -17,6 +17,12 @@ def index(request):
                                                  'unconfirmed_orders': unconfirmed_orders})
 
 
+def deliveries(request):
+    """Return the waiter delivery page."""
+    delivery = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
+    return render(request, "waiter/deliveries.html", {'delivery': delivery})
+
+
 def orders(request):
     """Return the page for viewing all orders."""
     return render(request, "waiter/orders.html")
