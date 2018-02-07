@@ -19,6 +19,7 @@ class Menu(models.Model):
 class Seating(models.Model):
     label = models.CharField(max_length=25, default='Table 0')
     available = models.BooleanField(default=True)
+    assistance = models.BooleanField(default=False)
 
     def __str__(self):
         return self.label
