@@ -112,6 +112,10 @@ function changeColour(time) {
     }
 }
 
+setTimeout(function(){
+   window.location.reload(1);
+}, 30000);
+
 // populates the page with a list of all orders
 function updateOrders(){
   $.getJSON("getorders", function(data){
