@@ -18,7 +18,7 @@ def index(request):
 
 
 def deliveries(request):
-    """Return the waiter delivery page."""
+    """Return the waiter delivery page and confirm deliveries using django forms"""
     delivery = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
     if request.method == "POST":
         orderUpdate = Order.objects.get(pk=request.POST['delivery_id'])
