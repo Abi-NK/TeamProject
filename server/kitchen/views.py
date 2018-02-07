@@ -16,7 +16,7 @@ def index(request):
 @require_http_methods(["GET"])
 def get_orders(request):
     """Return all orders as JSON."""
-    json = serialize('json', Order.objects.filter(delivered=False, confirmed=True).order_by('time'))
+    json = serialize('json', Order.objects.filter(ready_delivery=False, confirmed=True).order_by('time'))
     return JsonResponse(json, safe=False)
 
 
