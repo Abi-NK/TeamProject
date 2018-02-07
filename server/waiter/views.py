@@ -20,6 +20,11 @@ def index(request):
 def deliveries(request):
     """Return the waiter delivery page."""
     delivery = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
+    if request.method == "POST":
+        orderUpdate = Order.objects.get(pk=request.POST['delivery_id'])
+        orderUpdate.delivered = True
+        orderUpdate.save()
+
     return render(request, "waiter/deliveries.html", {'delivery': delivery})
 
 
