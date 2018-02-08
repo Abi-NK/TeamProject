@@ -20,3 +20,21 @@ class Order(models.Model):
             return "Order: " + str(self.id) + ' -> ' + 'READY'
         else:
             return "Order: " + str(self.id) + ' -> ' + 'Not ready'
+
+    def set_confirmed(self):
+        """sets the order as confirmed"""
+        self.confirmed = True
+        self.save()
+        print("Order %s is confirmed" % self.id)
+
+    def set_ready_delivery(self):
+        """sets the order as ready to be delivered"""
+        self.ready_delivery = True
+        self.save()
+        print("Order %s is ready for delivery" % self.id)
+
+    def set_delivered(self):
+        """sets the order as delivered"""
+        self.delivered = True
+        self.save()
+        print("Order %s is has been delivery" % self.id)

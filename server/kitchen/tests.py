@@ -1,7 +1,6 @@
 from django.test import TestCase
 from waiter.models import Order
 from django.utils import timezone
-from kitchen.views import readyDelivery
 
 
 class TestMakingDelivery(TestCase):
@@ -21,5 +20,6 @@ class TestMakingDelivery(TestCase):
     def test_ready_delivery(self):
         """Orders that are ready for delivery"""
         test_order = Order.objects.get(pk=666)
-        #readyDelivery(str(test_order.id))
-        self.assertEqual(readyDelivery(str(test_order.id)), True)
+        self.assertEqual(test_order.ready_delivery, False)
+        test_order.set_ready_delivery()
+        self.assertEqual(test_order.ready_delivery, True)

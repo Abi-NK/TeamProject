@@ -24,9 +24,7 @@ def deliveries(request):
     delivery = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
     if request.method == "POST":
         order_update = Order.objects.get(pk=request.POST['delivery_id'])
-        order_update.delivered = True
-        order_update.save()
-
+        Order.objects.get(pk=order_update.id).set_delivered()
     return render(request, "waiter/deliveries.html", {'delivery': delivery})
 
 
@@ -68,18 +66,15 @@ def make_order(request):
         total_price=total_price,
         delivered=False,
     ).save(force_insert=True)
-    return HttpResponse("recieved")
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
 def confirm_order(request):
     """Confirm the provided order in the database."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]
-    print("Recieved ID: " + str(order_id))
-    order = Order.objects.get(pk=order_id)
-    order.confirmed = True
-    order.save()
-    return HttpResponse("recieved")
+    Order.objects.get(pk=order_id).set_confirmed()
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
@@ -89,4 +84,4 @@ def request_help(request):
     print("%s requested help" % seating.label)
     seating.assistance = True
     seating.save()
-    return HttpResponse("recieved")
+    return HttpResponse("received")
