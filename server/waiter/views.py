@@ -11,7 +11,23 @@ from django.views.decorators.http import require_http_methods
 # list of orders that are ready is updated every time the page is accessed (refreshed)
 def index(request):
     """Return the waiter index page."""
-    return HttpResponse("Waiter index page, to be implemented.")
+    unconfirmed_orders = Order.objects.filter(confirmed=False)
+    undelivered_orders = Order.objects.filter(delivered=False, confirmed=True, ready_delivery=True)
+    return render(request, "waiter/index.html", {'undelivered': Order.objects.filter(delivered=False),
+                                                 'unconfirmed_orders': unconfirmed_orders,
+                                                 'undelivered_orders': undelivered_orders})
+
+
+def deliveries(request):
+    """Return the waiter delivery page and confirm deliveries using django forms"""
+    """Changes the order table when the delivered button has been pressed"""
+    delivery = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
+    if request.method == "POST":
+        order_update = Order.objects.get(pk=request.POST['delivery_id'])
+        order_update.delivered = True
+        order_update.save()
+
+    return render(request, "waiter/deliveries.html", {'delivery': delivery})
 
 
 def orders(request):
@@ -22,7 +38,7 @@ def orders(request):
 @require_http_methods(["GET"])
 def get_orders(request):
     """Return all orders as JSON."""
-    json = serialize('json', Order.objects.all())
+    json = serialize('json', Order.objects.filter(confirmed=False))
     return JsonResponse(json, safe=False)
 
 
