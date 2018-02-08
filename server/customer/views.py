@@ -11,7 +11,7 @@ def index(request):
     """Return the menu page."""
     return render(request, 'customer/menu.html', {
         'all_menu': Menu.objects.all(),
-        'seating': Seating.objects.filter(available=True),
+        'seating': Seating.available_objects.all(),
     })
 
 
@@ -23,10 +23,7 @@ def detail(request, menu_id):
 
 @require_http_methods(["POST"])
 def take_seat(request):
+    """Marks the provided seating as unavailable in the database."""
     table_id = json.loads(request.body.decode('utf-8'))["tableID"]
-    print("Recieved seating ID %s" % str(table_id))
-    table = Seating.objects.get(pk=table_id)
-    print("%s has been taken" % table.label)
-    table.available = False
-    table.save()
-    return HttpResponse("recieved")
+    Seating.objects.get(pk=table_id).set_unavailable()
+    return HttpResponse("received")
