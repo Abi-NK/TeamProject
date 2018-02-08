@@ -34,7 +34,7 @@ function makeOrderHTML(orderID, tableLabel, contents, price, confirmed, time){
               ${ contents }
             </p>
             <h3>Total price: ${ toPrice(price) }
-			<h3>Time Ordered: ${ (time) }
+			<h3>Time Ordered: ${ (time.substring(11,19)) }
           </div>
           <div class="col-md-3 text-center">
             <button type="button" class="btn btn-primary btn-lg"
