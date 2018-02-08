@@ -109,22 +109,13 @@ function placeOrder(){
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify(order),
+      data: JSON.stringify({order: order, tableNumber: tableNumber}),
       dataType: 'text',
       success: function(result) {
         alert("Order sent!");
       }
     });
   }
-}
-
-function askTableNumber(){
-  // could store the table number server-side with sessions in future
-  input = prompt("Which table number are you sitting at?");
-  while(isNaN(input) || input == null || input == ""){
-    input = prompt("Sorry, that didn't look like a number, where are you sitting?");
-  }
-  tableNumber = input;
 }
 
 function requestHelp(){

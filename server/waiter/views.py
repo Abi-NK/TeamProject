@@ -1,14 +1,11 @@
 from django.http import HttpResponse, JsonResponse
 from .models import Order
-from customer.models import Menu
+from customer.models import Menu, Seating
 import json
 from django.utils import timezone
 from django.shortcuts import render
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
-from customer.views import seating
-
-help_requested = []
 
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
@@ -39,12 +36,14 @@ def ready_orders(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    order_json = json.loads(request.body.decode('utf-8'))
+    received_json = json.loads(request.body.decode('utf-8'))
+    order_json = received_json["order"]
+    seating_id = received_json["tableNumber"]
     print("Recieved order: ", order_json)
     order_contents = [Menu.objects.get(pk=key) for key in order_json]
     total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
     Order(
-        table="0",
+        table=Seating.objects.get(pk=seating_id).label,
         confirmed=False,
         time=timezone.now(),
         items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
@@ -52,7 +51,6 @@ def make_order(request):
         purchase_method='none',
         total_price=total_price,
         delivered=False,
-        table_assistance=False
     ).save(force_insert=True)
     return HttpResponse("recieved")
 
@@ -70,10 +68,9 @@ def confirm_order(request):
 
 @require_http_methods(["POST"])
 def request_help(request):
-    table_id = json.loads(request.body.decode('utf-8'))["tableNumber"]
-    table_label = [seat["label"] for seat in seating if seat["id"] == table_id][0]
-    print("Table %s requested help" % table_label)
-    if table_label not in help_requested:
-        help_requested.append(table_label)
-        print("Tables requesting help: %s" % help_requested)
+    seating_id = json.loads(request.body.decode('utf-8'))["tableNumber"]
+    seating = Seating.objects.get(pk=seating_id)
+    print("%s requested help" % seating.label)
+    seating.assistance = True
+    seating.save()
     return HttpResponse("recieved")
