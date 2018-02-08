@@ -11,7 +11,6 @@ class Order(models.Model):
     #  rare or without the onions
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    table_assistance = models.BooleanField(default=False)  # if the table needs help
     confirmed = models.BooleanField(default=False)  # order has been confirmed
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
@@ -21,4 +20,3 @@ class Order(models.Model):
             return "Order: " + str(self.id) + ' -> ' + 'READY'
         else:
             return "Order: " + str(self.id) + ' -> ' + 'Not ready'
-
