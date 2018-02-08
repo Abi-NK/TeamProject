@@ -22,7 +22,7 @@ function toPrice(number){
 }
 
 // essentially a wrapper for the HTML template
-function makeOrderHTML(orderID, tableLabel, contents, price, confirmed){
+function makeOrderHTML(orderID, tableLabel, contents, price, confirmed, time){
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
@@ -34,6 +34,7 @@ function makeOrderHTML(orderID, tableLabel, contents, price, confirmed){
               ${ contents }
             </p>
             <h3>Total price: ${ toPrice(price) }
+			<h3>Time Ordered: ${ (time) }
           </div>
           <div class="col-md-3 text-center">
             <button type="button" class="btn btn-primary btn-lg"
@@ -57,8 +58,8 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-      var orderHTML = makeOrderHTML(value["pk"], fields["table"], fields["items"], fields["total_price"], fields["confirmed"]);
-      $("#order-container").append(orderHTML);
+	var orderHTML = makeOrderHTML(value["pk"], fields["table"], fields["items"], fields["total_price"], fields["confirmed"], fields["time"]);
+      $("#order-container").append(orderHTML)
     });
 
   });
