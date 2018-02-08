@@ -11,7 +11,7 @@ def index(request):
     """Return the menu page."""
     return render(request, 'customer/menu.html', {
         'all_menu': Menu.objects.all(),
-        'seating': Seating.objects.filter(available=True),
+        'seating': Seating.available_objects.all(),
     })
 
 
