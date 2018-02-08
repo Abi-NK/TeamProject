@@ -106,7 +106,7 @@ function changeColour(time) {
     if ((currentTimeMinutes.toString().length) == 1){
         currentTimeMinutes = "0" + String(currentTimeMinutes); // 0 is used to match the format of datetimefield
     }
-    var currentTimeHour = date.getHour();
+    var currentTimeHour = date.getHours();
     if ((currentTimeHour.toString().length) == 1){
         currentTimeHour = "0" + String(currentTimeHour);
     }
@@ -120,7 +120,10 @@ function changeColour(time) {
     }
 
     // add the 10 and 3 as this is when the order is due. Possible overflow at 60
-    if((parseInt(orderTimeMinutes)+10) <= (parseInt(currentTimeMinutes)) && (parseInt(orderTimeHour)) > (parseInt(currentTimeHour))){
+    if ((parseInt(orderTimeHour)) < (parseInt(currentTimeHour))){
+        return "background-color:#F15454;"
+    }
+    else if((parseInt(orderTimeMinutes)+10) <= (parseInt(currentTimeMinutes))){
         return "background-color:#F15454;"
     }else if((parseInt(orderTimeMinutes)+7) <= (parseInt(currentTimeMinutes)) && (parseInt(orderTimeMinutes)+9) >= (parseInt(currentTimeMinutes)) ){
         return "background-color:#FEDB00;"
@@ -134,7 +137,7 @@ function changeColour(time) {
 // and to track progress using the colour system
 setTimeout(function(){
    window.location.reload(1);
-}, 10000);
+}, 5000);
 
 // populates the page with a list of all orders
 function updateOrders(){
