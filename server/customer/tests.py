@@ -15,8 +15,14 @@ class TestSeatingModel(TestCase):
         Seating.objects.get(label="Table 4").set_unavailable()
         self.assertEqual(Seating.available_objects.count(), 2)
 
-    def test_set_availability(self):
+    def test_set_unavailable(self):
         seating = Seating.objects.get(label="Table 1")
         self.assertIs(seating.available, True)
         seating.set_unavailable()
         self.assertIs(seating.available, False)
+
+    def test_set_assistance_true(self):
+        seating = Seating.objects.get(label="Table 1")
+        self.assertIs(seating.assistance, False)
+        seating.set_assistance_true()
+        self.assertIs(seating.assistance, True)
