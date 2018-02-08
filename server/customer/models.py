@@ -23,3 +23,8 @@ class Seating(models.Model):
 
     def __str__(self):
         return self.label
+
+    def set_unavailable(self):
+        self.available = False
+        self.save()
+        print("%s has been taken" % self.label)
