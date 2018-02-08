@@ -109,6 +109,11 @@ function changeColour(time) {
 
     var orderTimeMinutes = time.slice(14, 16);
 
+    // handle overflow
+    if (parseInt(orderTimeMinutes) >= 59){
+        orderTimeMinutes = "00";
+    }
+
     // add the 10 and 3 as this is when the order is due. Possible overflow at 60
     if((parseInt(orderTimeMinutes)+10) <= (parseInt(currentTimeMinutes))){
         return "background-color:#F15454;"
@@ -124,7 +129,7 @@ function changeColour(time) {
 // and to track progress using the colour system
 setTimeout(function(){
    window.location.reload(1);
-}, 30000);
+}, 10000);
 
 // populates the page with a list of all orders
 function updateOrders(){
