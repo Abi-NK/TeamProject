@@ -22,3 +22,10 @@ class TestMarkingDelivery(TestCase):
         """Orders that are unconfirmed"""
         test_order = Order.objects.get(pk=100)
         self.assertEqual(test_order.confirmed, False)
+
+    def test_delivered(self):
+        """"Order that has been delivered"""
+        test_order = Order.objects.get(pk=100)
+        self.assertEqual(test_order.delivered, False)
+        test_order.set_delivered()
+        self.assertEqual(test_order.delivered, True)
