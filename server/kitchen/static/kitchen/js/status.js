@@ -137,7 +137,7 @@ function changeColour(time) {
 // and to track progress using the colour system
 setTimeout(function(){
    window.location.reload(1);
-}, 5000);
+}, 30000);
 
 // populates the page with a list of all orders
 function updateOrders(){
