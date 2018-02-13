@@ -3,6 +3,26 @@
 {% block title %}Menu{% endblock %}
 {% block content %}
 
+<!-- Modal - displaying that the order has been placed -->
+<div class="modal fade" id="placeOrderModalCenter" tabindex="-1" role="dialog" aria-labelledby="placeOrderModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="placeOrderModalLongTitle">Order Sent!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Order Sent!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal - calling over waiter -->
 <div class="modal fade" id="callWaiterModalCenter" tabindex="-1" role="dialog" aria-labelledby="callWaiterModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -36,7 +56,7 @@
           <div class="row">
             {% if seating %}
               {% for seat in seating %}
-                <div class="col-md-6 mb-md-1">
+                <div class="col-md-12 mb-md-1">
                   <button type="button" class="btn btn-primary btn-lg btn-block" onclick="buttonSelectSeating({{ seat.id }})">
                     {{ seat.label }}
                   </button>

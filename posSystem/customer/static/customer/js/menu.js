@@ -112,7 +112,7 @@ function placeOrder(){
       data: JSON.stringify({order: order, tableNumber: tableNumber}),
       dataType: 'text',
       success: function(result) {
-        alert("Order sent!");
+		$('#placeOrderModalCenter').modal('show');
       }
     });
   }
