@@ -16,7 +16,7 @@ def index(request):
 @require_http_methods(["GET"])
 def get_orders(request):
     """Return all orders as JSON."""
-    json = serialize('json', Order.objects.filter(ready_delivery=False, confirmed=True).order_by('time'))
+    json = serialize('json', Order.objects.filter(delivered=False, confirmed=True).order_by('time'))
     return JsonResponse(json, safe=False)
 
 
@@ -24,8 +24,5 @@ def get_orders(request):
 def readyDelivery(request):
     """sets the ready_delivery in the database to true."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]
-    print("Recieved ID: " + str(order_id))
-    order = Order.objects.get(pk=order_id)
-    order.ready_delivery = True
-    order.save()
+    Order.objects.get(pk=order_id).set_ready_delivery()
     return HttpResponse("Order ready, calling waiter")

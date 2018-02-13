@@ -85,8 +85,5 @@ def confirm_order(request):
 @require_http_methods(["POST"])
 def request_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["tableNumber"]
-    seating = Seating.objects.get(pk=seating_id)
-    print("%s requested help" % seating.label)
-    seating.assistance = True
-    seating.save()
+    Seating.objects.get(pk=seating_id).set_assistance_true()
     return HttpResponse("recieved")
