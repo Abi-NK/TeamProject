@@ -3,9 +3,7 @@
 {% block title %}Menu{% endblock %}
 {% block content %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-<!-- Modal -->
+<!-- Modal - showing additional information - -->
 {% for menu_item in all_menu %}
 <div class="modal fade" id="{{menu_item.id}}" role="dialog">
   <div class="modal-dialog">
@@ -13,11 +11,13 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
+        <h4 class="modal-title">{{menu_item.name}} - £{{menu_item.price}}</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">{{menu_item.name}}</h4>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <p>{{menu_item.description}}</p>
+        <p>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</p>
+        <p>{{menu_item.calories}}kcal</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
