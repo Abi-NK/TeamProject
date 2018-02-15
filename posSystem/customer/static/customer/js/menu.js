@@ -23,8 +23,6 @@ var itemNames = {};
 var itemPrices = {};
 var stringTotal = "total"
 
-var tableNumber = "0";
-
 // returns the sum of all items in the order times their quantity
 function calculateTotal(){
   var total = 0;
@@ -109,7 +107,7 @@ function placeOrder(){
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify({order: order, tableNumber: tableNumber}),
+      data: JSON.stringify({order: order}),
       dataType: 'text',
       success: function(result) {
         alert("Order sent!");
@@ -124,7 +122,7 @@ function requestHelp(){
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
-    data: JSON.stringify({tableNumber: tableNumber}),
+    data: JSON.stringify({}),
     dataType: 'text',
     success: function(result) {
       $('#callWaiterModalCenter').modal('show');
@@ -140,7 +138,6 @@ function buttonHelp(button){
 $('.btn-seating-option').on('click', function(){
   // gets the seating ID from the button's value field
   var seatingID = $(this).attr("value");
-  tableNumber = seatingID;
   // gets the table's name (label) from the button's name field
   seatingLabel = $(this).attr("name");
   console.log(`Now sitting at ${seatingLabel} (ID ${seatingID})`);

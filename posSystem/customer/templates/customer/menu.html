@@ -140,6 +140,6 @@
 
 {% endblock %}
 {% block endjs %}
-<script>var seatingLabel = ""; {% if seating_label %}seatingLabel = "{{seating_label}}";{% endif %}</script>
+<script>var seatingLabel = "{% if seating_label %}{{seating_label}}{% else %}{% endif %}";</script>
 <script src="{% static "customer/js/menu.js" %}"></script>
 {% endblock %}
