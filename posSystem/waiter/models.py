@@ -42,3 +42,6 @@ class Order(models.Model):
     def get_all_orders(self):
         """returns all the orders"""
         return self
+
+    def get_kitchen_orders(self):
+        return Order.objects.filter(delivered=False, confirmed=True).order_by('time')
