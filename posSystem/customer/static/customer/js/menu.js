@@ -158,5 +158,9 @@ function buttonSelectSeating(seatingID){
 
 $(document).ready(function() {
   updateTotal();
-  $('#chooseTableModalCenter').modal('show');
+  if (seatingLabel == ""){
+    $('#chooseTableModalCenter').modal('show');
+  } else {
+    console.log("Already seated at " + seatingLabel);
+  }
 });
