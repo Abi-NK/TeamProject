@@ -10,7 +10,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 @ensure_csrf_cookie
 def index(request):
     """Return the kitchen page."""
-    return render(request, 'kitchen/status.html', {'all_menu': Order.objects.all})
+    return render(request, 'kitchen/status.html', {'all_menu': Order.get_all_orders(all)})
 
 
 @require_http_methods(["GET"])

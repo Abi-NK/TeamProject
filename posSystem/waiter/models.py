@@ -38,3 +38,7 @@ class Order(models.Model):
         self.delivered = True
         self.save()
         print("Order %s is has been delivery" % self.id)
+
+    def get_all_orders(self):
+        """returns all the orders"""
+        return self
