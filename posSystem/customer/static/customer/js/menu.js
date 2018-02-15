@@ -136,13 +136,17 @@ function buttonHelp(button){
   requestHelp();
 }
 
-$('#seating-list a').on('click', function(){
-    console.log($(this).text());
-});
-
-function buttonSelectSeating(seatingID){
-  console.log("Selected seating with ID " + seatingID);
+// method called by seating selection buttons to pick a table and tell the server
+$('.btn-seating-option').on('click', function(){
+  // gets the seating ID from the button's value field
+  var seatingID = $(this).attr("value");
   tableNumber = seatingID;
+  // gets the table's name (label) from the button's name field
+  seatingLabel = $(this).attr("name");
+  console.log(`Now sitting at ${seatingLabel} (ID ${seatingID})`);
+
+  // sends the selected seating ID to the server so it can be marked as taken, and stored in the user's session
+  $('#seating-label').text(seatingLabel);
   $.ajax({
     url: "/customer/takeseat",
     type: 'POST',
@@ -151,10 +155,11 @@ function buttonSelectSeating(seatingID){
     data: JSON.stringify({tableID: seatingID}),
     dataType: 'text',
     success: function(result) {
+      // if the selection worked, close the seating selection modal
       $('#chooseTableModalCenter').modal('hide');
     }
   });
-}
+});
 
 $(document).ready(function() {
   updateTotal();
