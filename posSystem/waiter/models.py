@@ -1,4 +1,7 @@
 from django.db import models
+import json
+from customer.models import Menu, Seating
+from django.utils import timezone
 
 
 class Order(models.Model):
@@ -44,4 +47,29 @@ class Order(models.Model):
         return self
 
     def get_kitchen_orders(self):
+        """returns the orders for the kitchen"""
         return Order.objects.filter(delivered=False, confirmed=True).order_by('time')
+
+    def get_not_confirmed_orders(self):
+        """returns not confirmed orders"""
+        return Order.objects.filter(confirmed=False)
+
+    def make_order(request):
+        """Create an order from the provided JSON."""
+        received_json = json.loads(request.body.decode('utf-8'))
+        order_json = received_json["order"]
+        seating_id = received_json["tableNumber"]
+        print("Recieved order: ", order_json)
+        order_contents = [Menu.objects.get(pk=key) for key in order_json]
+        total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
+        Order(
+            table=Seating.objects.get(pk=seating_id).label,
+            confirmed=False,
+            time=timezone.now(),
+            items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
+            cooking_instructions='none',
+            purchase_method='none',
+            total_price=total_price,
+            delivered=False,
+        ).save(force_insert=True)
+        print("Order taken")

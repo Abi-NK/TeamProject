@@ -38,7 +38,7 @@ def orders(request):
 @require_http_methods(["GET"])
 def get_orders(request):
     """Return all orders as JSON."""
-    json = serialize('json', Order.objects.filter(confirmed=False))
+    json = serialize('json', Order.get_not_confirmed_orders(all))
     return JsonResponse(json, safe=False)
 
 
@@ -52,22 +52,7 @@ def ready_orders(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    received_json = json.loads(request.body.decode('utf-8'))
-    order_json = received_json["order"]
-    seating_id = received_json["tableNumber"]
-    print("Recieved order: ", order_json)
-    order_contents = [Menu.objects.get(pk=key) for key in order_json]
-    total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
-    Order(
-        table=Seating.objects.get(pk=seating_id).label,
-        confirmed=False,
-        time=timezone.now(),
-        items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
-        cooking_instructions='none',
-        purchase_method='none',
-        total_price=total_price,
-        delivered=False,
-    ).save(force_insert=True)
+    Order.make_order(request)
     return HttpResponse("recieved")
 
 
