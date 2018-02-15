@@ -99,6 +99,15 @@ function addToOrder(menuItemID, menuItemName, menuItemPrice) {
   addOrderItemToDisplay(menuItemID);
 }
 
+// used to show the customer's order
+function showOrder(){
+  $.ajax({
+    success: function(result) {
+      $('#showOrderModalCenter').modal('show');
+    }
+  });
+}
+
 // used to send the order object to the server
 function placeOrder(){
   if (Object.keys(order).length === 0){
