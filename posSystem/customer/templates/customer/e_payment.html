@@ -23,8 +23,32 @@
         <div class="row">
             <div class="col-sm-6">
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Payment Details:
+                    </div>
                     <div class="panel-body">
-                        <h3 class="text-center">Payment Details:</h3>
+                         <form action="">
+                              <div class="form-group">
+                                  <label for="name">Name:</label>
+                                  <input type="text" class="form-control" id="name">
+                              </div>
+                              <div class="form-group">
+                                  <label for="card-number">Card Number:</label>
+                                  <input type="tel" class="form-control" id="card-number">
+                              </div>
+                             <div class="form-group">
+                                  <label for="cvc">CVC:</label>
+                                  <input type="tel" class="form-control" id="cvc">
+                              </div>
+                             <div class="form-group">
+                                  <label for="expiry">Expiry Date:</label>
+                                  <input type="tel " placeholder="MM / YY" class="form-control" id="expiry">
+                              </div>
+                              <div class="checkbox">
+                                  <label><input type="checkbox"> I agree to the Oaxaca terms and conditions</label>
+                              </div>
+                              <button type="submit" class="btn btn-default">Pay Now</button>
+                            </form>
                     </div>
                 </div>
             </div>
