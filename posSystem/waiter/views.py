@@ -3,9 +3,33 @@ from .models import Order
 from customer.models import Menu, Seating
 import json
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import authenticate, login, logout
+
+
+def waiter_login(request):
+    """Provide a login page for the user and handle login requests."""
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            print("LOGGED IN")
+            return redirect(index)
+        else:
+            # Return an 'invalid login' error message.
+            return HttpResponse("Login failed")
+    return render(request, "waiter/login.html")
+
+
+def waiter_logout(request):
+    """Log out the current user."""
+    logout(request)
+    return redirect(waiter_login)
 
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
