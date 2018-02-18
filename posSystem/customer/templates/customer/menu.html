@@ -37,7 +37,7 @@
             {% if seating %}
               {% for seat in seating %}
                 <div class="col-md-6 mb-md-1">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" onclick="buttonSelectSeating({{ seat.id }})">
+                  <button type="button" class="btn-seating-option btn btn-primary btn-lg btn-block" name="{{ seat.label }}" value="{{ seat.id }}">
                     {{ seat.label }}
                   </button>
                 </div>
@@ -62,7 +62,10 @@
   <h1 class="text-center">Menu</h1>
   <hr />
   <div class="row mb-md-3">
-    <div class="col-md-8">
+    <div class="col-md-4">
+      <h2 id="seating-label">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
+    </div>
+    <div class="col-md-4 text-right">
         <h3>Need some help?</h3>
     </div>
     <div class="col-md-4">
@@ -136,4 +139,7 @@
 </div>
 
 {% endblock %}
-{% block endjs %}<script src="{% static "customer/js/menu.js" %}"></script>{% endblock %}
+{% block endjs %}
+<script>var seatingLabel = "{% if seating_label %}{{seating_label}}{% else %}{% endif %}";</script>
+<script src="{% static "customer/js/menu.js" %}"></script>
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Order
 from customer.models import Menu, Seating
 import json
@@ -52,14 +52,16 @@ def ready_orders(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    received_json = json.loads(request.body.decode('utf-8'))
-    order_json = received_json["order"]
-    seating_id = received_json["tableNumber"]
+    if "seating_id" not in request.session:
+        print("A session without a seating ID tried to place an order.")
+        return HttpResponseNotFound("no seating_id in session")
+
+    order_json = json.loads(request.body.decode('utf-8'))["order"]
     print("Recieved order: ", order_json)
     order_contents = [Menu.objects.get(pk=key) for key in order_json]
     total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
     Order(
-        table=Seating.objects.get(pk=seating_id).label,
+        table=Seating.objects.get(pk=request.session["seating_id"]).label,
         confirmed=False,
         time=timezone.now(),
         items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
@@ -84,6 +86,9 @@ def confirm_order(request):
 
 @require_http_methods(["POST"])
 def request_help(request):
-    seating_id = json.loads(request.body.decode('utf-8'))["tableNumber"]
-    Seating.objects.get(pk=seating_id).set_assistance_true()
+    if "seating_id" not in request.session:
+        print("A session without a seating ID requested assistance.")
+        return HttpResponseNotFound("no seating_id in session")
+
+    Seating.objects.get(pk=request.session["seating_id"]).set_assistance_true()
     return HttpResponse("recieved")
