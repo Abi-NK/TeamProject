@@ -7,6 +7,11 @@ from django.shortcuts import render, redirect
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+
+def group_check(user):
+    return user.username.startswith('waiter')
 
 
 def waiter_login(request):
@@ -33,6 +38,7 @@ def waiter_logout(request):
 
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
+@user_passes_test(group_check)
 def index(request):
     """Return the waiter index page."""
     unconfirmed_orders = Order.objects.filter(confirmed=False)
@@ -42,6 +48,7 @@ def index(request):
                                                  'undelivered_orders': undelivered_orders})
 
 
+@user_passes_test(group_check)
 def deliveries(request):
     """Return the waiter delivery page and confirm deliveries using django forms"""
     """Changes the order table when the delivered button has been pressed"""
@@ -54,12 +61,14 @@ def deliveries(request):
     return render(request, "waiter/deliveries.html", {'delivery': delivery})
 
 
+@user_passes_test(group_check)
 def orders(request):
     """Return the page for viewing all orders."""
     return render(request, "waiter/orders.html")
 
 
 @require_http_methods(["GET"])
+@login_required
 def get_orders(request):
     """Return all orders as JSON."""
     json = serialize('json', Order.objects.filter(confirmed=False))
@@ -67,6 +76,7 @@ def get_orders(request):
 
 
 @require_http_methods(["GET"])
+@login_required
 def ready_orders(request):
     """Return all ready orders as JSON."""
     json = serialize('json', Order.objects.filter(confirmed=True))
@@ -98,6 +108,7 @@ def make_order(request):
 
 
 @require_http_methods(["POST"])
+@login_required
 def confirm_order(request):
     """Confirm the provided order in the database."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]
