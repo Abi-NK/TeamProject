@@ -8,6 +8,7 @@ from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
+from kitchen.views import index as waiter_index
 
 
 def group_check(user):
@@ -23,8 +24,13 @@ def waiter_login(request):
         if user is not None:
             login(request, user)
             # Redirect to a success page.
-            print("LOGGED IN")
-            return redirect(index)
+            print("Logged in user %s" % user.username)
+            if user.username.startswith('waiter'):
+                return redirect(index)
+            elif user.username.startswith('kitchen'):
+                return redirect(waiter_index)
+            else:
+                return redirect('')
         else:
             # Return an 'invalid login' error message.
             return HttpResponse("Login failed")
@@ -34,7 +40,7 @@ def waiter_login(request):
 def waiter_logout(request):
     """Log out the current user."""
     logout(request)
-    return redirect(waiter_login)
+    return redirect('/login')
 
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)

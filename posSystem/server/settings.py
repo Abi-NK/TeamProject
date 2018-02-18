@@ -124,4 +124,4 @@ STATIC_URL = '/static/'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
-LOGIN_URL = '/waiter/login'
+LOGIN_URL = '/login'
