@@ -44,7 +44,12 @@ class Order(models.Model):
 
     def get_all_orders(self):
         """returns all the orders"""
-        return self
+        # return self
+        return Order.objects.all()
+
+    def get_ready_orders(self):
+        """returns all the ready orders"""
+        return Order.objects.filter(confirmed=True)
 
     def get_kitchen_orders(self):
         """returns the orders for the kitchen"""
@@ -56,14 +61,16 @@ class Order(models.Model):
 
     def make_order(request):
         """Create an order from the provided JSON."""
-        received_json = json.loads(request.body.decode('utf-8'))
-        order_json = received_json["order"]
-        seating_id = received_json["tableNumber"]
+        if "seating_id" not in request.session:
+            print("A session without a seating ID tried to place an order.")
+            return HttpResponseNotFound("no seating_id in session")
+
+        order_json = json.loads(request.body.decode('utf-8'))["order"]
         print("Recieved order: ", order_json)
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
         Order(
-            table=Seating.objects.get(pk=seating_id).label,
+            table=Seating.objects.get(pk=request.session["seating_id"]).label,
             confirmed=False,
             time=timezone.now(),
             items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
@@ -72,4 +79,3 @@ class Order(models.Model):
             total_price=total_price,
             delivered=False,
         ).save(force_insert=True)
-        print("Order taken")
