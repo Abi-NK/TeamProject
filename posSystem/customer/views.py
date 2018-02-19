@@ -9,10 +9,14 @@ import json
 @ensure_csrf_cookie
 def index(request):
     """Return the menu page."""
-    return render(request, 'customer/menu.html', {
+    context = {
         'all_menu': Menu.objects.all(),
-        'seating': Seating.available_objects.all(),
-    })
+    }
+    if 'seating_label' in request.session:
+        context['seating_label'] = request.session['seating_label']
+    else:
+        context['seating'] = Seating.available_objects.all()
+    return render(request, 'customer/menu.html', context)
 
 
 def detail(request, menu_id):
@@ -26,4 +30,6 @@ def take_seat(request):
     """Marks the provided seating as unavailable in the database."""
     table_id = json.loads(request.body.decode('utf-8'))["tableID"]
     Seating.objects.get(pk=table_id).set_unavailable()
+    request.session['seating_id'] = table_id
+    request.session['seating_label'] = Seating.objects.get(pk=table_id).label
     return HttpResponse("received")
