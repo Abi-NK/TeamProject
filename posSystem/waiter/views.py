@@ -34,7 +34,11 @@ def waiter_login(request):
         else:
             # Return an 'invalid login' error message.
             return HttpResponse("Login failed")
-    return render(request, "waiter/login.html")
+
+    context = {}
+    if request.user.username != "":
+        context["username"] = request.user.username
+    return render(request, "waiter/login.html", context)
 
 
 def waiter_logout(request):
