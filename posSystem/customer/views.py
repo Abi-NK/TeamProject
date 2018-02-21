@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Menu, Seating
+from waiter.models import Payment
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 import json
@@ -33,3 +34,8 @@ def take_seat(request):
     request.session['seating_id'] = table_id
     request.session['seating_label'] = Seating.objects.get(pk=table_id).label
     return HttpResponse("received")
+
+
+def payment(request):
+    payments = Payment.get_payments(all)
+    return render(request, "customer/e_payment.html", {'payment': payments})
