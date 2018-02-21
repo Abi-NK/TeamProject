@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="jumbotron d-flex align-items-center">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Payment Details:
+                    </div>
+                    <div class="panel-body">
+                         <form action="">
+                              <div class="form-group">
+                                  <label for="name">Name:</label>
+                                  <input type="text" placeholder="Your Name on Your Card" class="form-control" id="name">
+                              </div>
+                              <div class="form-group">
+                                  <label for="card-number">Card Number:</label>
+                                  <input type="tel" placeholder="Your Card Number" class="form-control" id="card-number">
+                              </div>
+                             <div class="form-group">
+                                  <label for="cvc">CVC:</label>
+                                  <input type="tel" placeholder="_ _ _" class="form-control" id="cvc">
+                              </div>
+                             <div class="form-group">
+                                  <label for="expiry">Expiry Date:</label>
+                                  <input type="tel " placeholder="MM / YY" class="form-control" id="expiry">
+                              </div>
+                              <div class="checkbox">
+                                  <label><input type="checkbox"> I agree to the Oaxaca terms and conditions</label>
+                              </div>
+                              <button type="submit" class="btn btn-default">Pay Now</button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+                <div class="col-sm-6">
+                    <h2>Your Bill:</h2>
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#bill">View</button>
+                    <div class="modal fade" id="bill" role="dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Your Bill Today:</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>bill etc...</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
