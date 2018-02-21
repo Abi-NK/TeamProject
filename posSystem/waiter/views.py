@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Order
+from .models import Payment
 from customer.models import Menu, Seating
 import json
 from django.utils import timezone
@@ -120,3 +121,9 @@ def request_help(request):
 
     Seating.objects.get(pk=request.session["seating_id"]).set_assistance_true()
     return HttpResponse("recieved")
+
+
+@user_passes_test(group_check)
+def get_payments(request):
+    """Get all the payments and payment status"""
+    return render(request, "waiter/payment.html")

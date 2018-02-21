@@ -11,5 +11,5 @@ urlpatterns = [
     path('confirmorder', views.confirm_order, name='confirmorder'),
     path('requesthelp', views.request_help, name='requesthelp'),
     path('deliveries', views.deliveries, name='deliveries'),
-    path('payment', views.payment, )
+    path('payment', views.get_payments, name='payment'),
 ]
