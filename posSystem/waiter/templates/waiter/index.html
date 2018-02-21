@@ -66,6 +66,7 @@ function goBack() {
               <div class="card">
                 <div class="card-body">
                   <h3 class="card-title">{{ table.label }}</h3>
+                  <button type="button" class="btn btn-primary btn-block" onclick="requestHelp({{ table.id }})" aria-label="Close">
                 </div>
               </div>
             {% endfor %}
@@ -74,4 +75,8 @@ function goBack() {
       </div>
   </div>
       </div>
+
+      {% load static %}
+
+      <script src="{% static "waiter/js/index.js" %}"></script>
 </body>

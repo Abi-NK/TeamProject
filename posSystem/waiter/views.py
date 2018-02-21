@@ -138,3 +138,10 @@ def request_help(request):
 
     Seating.objects.get(pk=request.session["seating_id"]).set_assistance_true()
     return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def cancel_help(request):
+    seating_id = json.loads(request.body.decode('utf-8'))["id"]
+    Seating.objects.get(pk=seating_id).set_assistance_false()
+    return HttpResponse("recieved")
