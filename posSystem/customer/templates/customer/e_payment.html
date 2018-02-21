@@ -18,7 +18,7 @@
                         Payment Details:
                     </div>
                     <div class="panel-body">
-                         <form action="">
+                         <form method="POST">{% csrf_token %}
                               <div class="form-group">
                                   <label for="name">Name:</label>
                                   <input type="text" placeholder="Your Name on Your Card" class="form-control" id="name">

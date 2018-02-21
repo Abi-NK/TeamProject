@@ -38,4 +38,11 @@ def take_seat(request):
 
 def payment(request):
     payments = Payment.get_payments(all)
+    if request.method == "POST":
+        Payment(
+            card_holder=request.POST.get('name', 'test'),
+            card_number=request.POST.get('card-number', 'test'),
+            cvc=request.POST.get('cvc', 'test'),
+            expiry=request.POST.get('expiry', 'test')
+        ).save(force_insert=True)
     return render(request, "customer/e_payment.html", {'payment': payments})
