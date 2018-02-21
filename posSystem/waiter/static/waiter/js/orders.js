@@ -16,7 +16,7 @@ function makeOrderHTML(orderID, tableLabel, contents, price, confirmed, time){
               ${ contents }
             </p>
             <h3>Total price: ${ toPrice(price) }
-			<h3>Time Ordered: ${ (time.substring(11,19)) }
+            <h3>Time Ordered: ${ (time.substring(11,19)) }
           </div>
           <div class="col-md-3 text-center">
             <button type="button" class="btn btn-primary btn-lg"
@@ -40,7 +40,7 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-	var orderHTML = makeOrderHTML(value["pk"], fields["table"], fields["items"], fields["total_price"], fields["confirmed"], fields["time"]);
+      var orderHTML = makeOrderHTML(value["pk"], fields["table"], fields["items"], fields["total_price"], fields["confirmed"], fields["time"]);
       $("#order-container").append(orderHTML)
     });
 

@@ -38,3 +38,11 @@ class Order(models.Model):
         self.delivered = True
         self.save()
         print("Order %s is has been delivery" % self.id)
+
+    def get_time_display(self):
+        """Get the time the order was placed in a displayable format."""
+        return str(self.time)[11: 19]
+
+    def get_price_readable(self):
+        """Get the price in a displayable format."""
+        return "£%.2f" % self.total_price

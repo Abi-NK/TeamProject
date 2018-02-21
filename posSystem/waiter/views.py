@@ -85,6 +85,12 @@ def get_orders(request):
     return JsonResponse(json, safe=False)
 
 
+def get_orders_html(request):
+    """Return all orders as formatted HTML."""
+    orders = Order.objects.filter(confirmed=False)
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'debug': True})
+
+
 @require_http_methods(["GET"])
 @login_required
 def ready_orders(request):
