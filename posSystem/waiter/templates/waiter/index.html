@@ -66,7 +66,7 @@ function goBack() {
               <div class="card">
                 <div class="card-body">
                   <h3 class="card-title">{{ table.label }}</h3>
-                  <button type="button" class="btn btn-primary btn-block" onclick="requestHelp({{ table.id }})" aria-label="Close">
+                  <button type="button" class="btn btn-block" onclick="requestHelp({{ table.id }})">X</button>
                 </div>
               </div>
             {% endfor %}
