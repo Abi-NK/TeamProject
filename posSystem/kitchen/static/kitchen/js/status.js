@@ -31,7 +31,8 @@ function setReadyDelivery(button, orderID){
     dataType: 'text',
     success: function(result) {
       $(button).attr("disabled", true);
-      $(button).text("readied");
+      $(button).removeClass("btn-primary").addClass("btn-success")
+      $(button).text("Readied");
     }
   });
 }
