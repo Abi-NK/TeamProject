@@ -1,39 +1,39 @@
-// essentially a wrapper for the HTML template
-function showOrders(orderID, items, time, cooking_instructions, confirmed, ready_delivery, delivered){
-  return `
-  <div class="col-md-12 mb-md-3">
-    <div class="card">
-      <div id="body" class="card-body" style=${changeColour(time)}>
-        <div class="row">
-          <div class="col-md-9">
-            <h2 class="card-title">Order #${ orderID }</h2>
-            <p class="card-text">
-                <b>Items:</b> <br> ${ items }
-            </p>
-            <p>
-                <b>Order time:</b> &nbsp; ${ parseTime(time, 'H') +":" +  parseTime(time, 'M') + ":"+ parseTime(time, 'S') }
-            </p>
-            <p>
-                <b>Cooking instructions:</b> &nbsp; ${ cooking_instructions }
-            </p>
-            <p>
-                <b>Order Confirmed:</b> &nbsp; ${ easyRead(confirmed) }
-            </p>
-            <p>
-                <b>Order delivered:</b> &nbsp; ${ easyRead(delivered) }
-            </p>
-          </div>
-          <div class="col-md-3 text-center">
-            <button type="button" class="btn btn-primary btn-lg"
-            onclick="setReadyDelivery(this, ${ orderID })" ${ ready_delivery ? "disabled" : "" }>
-            ${ ready_delivery ? "readied" : "ready" }</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  `;
-}
+// // essentially a wrapper for the HTML template
+// function showOrders(orderID, items, time, cooking_instructions, confirmed, ready_delivery, delivered){
+//   return `
+//   <div class="col-md-12 mb-md-3">
+//     <div class="card">
+//       <div id="body" class="card-body" style=${changeColour(time)}>
+//         <div class="row">
+//           <div class="col-md-9">
+//             <h2 class="card-title">Order #${ orderID }</h2>
+//             <p class="card-text">
+//                 <b>Items:</b> <br> ${ items }
+//             </p>
+//             <p>
+//                 <b>Order time:</b> &nbsp; ${ parseTime(time, 'H') +":" +  parseTime(time, 'M') + ":"+ parseTime(time, 'S') }
+//             </p>
+//             <p>
+//                 <b>Cooking instructions:</b> &nbsp; ${ cooking_instructions }
+//             </p>
+//             <p>
+//                 <b>Order Confirmed:</b> &nbsp; ${ easyRead(confirmed) }
+//             </p>
+//             <p>
+//                 <b>Order delivered:</b> &nbsp; ${ easyRead(delivered) }
+//             </p>
+//           </div>
+//           <div class="col-md-3 text-center">
+//             <button type="button" class="btn btn-primary btn-lg"
+//             onclick="setReadyDelivery(this, ${ orderID })" ${ ready_delivery ? "disabled" : "" }>
+//             ${ ready_delivery ? "readied" : "ready" }</button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+//   `;
+// }
 
 // makes boolean vars easier to read
 // returns either yes or no strings depending on bool
@@ -122,18 +122,22 @@ setTimeout(function(){
 
 // populates the page with a list of all orders
 function updateOrders(){
-  $.getJSON("getorders", function(data){
-    var ordersJSON = JSON.parse(data)
-    console.log(data);
-    console.log(ordersJSON);
-
-    // for each order in ordersJSON
-    $.each(ordersJSON, function(key, value){
-      var fields = value["fields"];
-      var orderHTML = showOrders(value["pk"], fields["items"], fields["time"], fields["cooking_instructions"],
-       fields["confirmed"], fields["ready_delivery"], fields["delivered"]);
-      $("#order-container").append(orderHTML);
-    });
+  $.get("getorders", function(data){
+    $("#order-container").html(data);
+    $(".not-late").css("background-color", "LIGHTGREEN");
+    $(".almost-late").css("background-color", "#FEDB00");
+    $(".late").css("background-color", "#F15454");
+    // var ordersJSON = JSON.parse(data)
+    // console.log(data);
+    // console.log(ordersJSON);
+    //
+    // // for each order in ordersJSON
+    // $.each(ordersJSON, function(key, value){
+    //   var fields = value["fields"];
+    //   var orderHTML = showOrders(value["pk"], fields["items"], fields["time"], fields["cooking_instructions"],
+    //    fields["confirmed"], fields["ready_delivery"], fields["delivered"]);
+    //   $("#order-container").append(orderHTML);
+    // });
 
   });
 }

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime, timedelta
 
 
 class Order(models.Model):
@@ -46,3 +47,13 @@ class Order(models.Model):
     def get_price_display(self):
         """Get the price in a displayable format."""
         return "£%.2f" % self.total_price
+
+    def is_nearly_late(self):
+        allowed_gap = timedelta(minutes=7)
+        difference = datetime.now() - self.time.replace(tzinfo=None)
+        return difference >= allowed_gap
+
+    def is_late(self):
+        allowed_gap = timedelta(minutes=10)
+        difference = datetime.now() - self.time.replace(tzinfo=None)
+        return difference >= allowed_gap

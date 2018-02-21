@@ -1,7 +1,6 @@
 // populates the page with a list of all orders
 function updateOrders(){
   $.get("getorders", function(data){
-    alert( "Data Loaded: " + data );
     $("#order-container").html(data);
   });
 }
@@ -16,6 +15,7 @@ function confirmOrder(button, orderID){
     dataType: 'text',
     success: function(result) {
       $(button).attr("disabled", true);
+      $(button).removeClass("btn-primary").addClass("btn-success")
       $(button).text("Confirmed");
     }
   });

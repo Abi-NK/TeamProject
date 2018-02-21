@@ -16,8 +16,8 @@
         <h3>Time Ordered: {{ order.get_time_display }}</h3>
       </div>
       <div class="col-md-3 text-center">
-        <button type="button" class="btn btn-primary btn-lg"
-        onclick="confirmOrder(this, ${ orderID })" {% if order.confirmed %}disabled{% endif %}>
+        <button type="button" class="btn btn-{% if order.confirmed %}success{% else %}primary{% endif %} btn-lg"
+        onclick="confirmOrder(this, {{ order.id }})" {% if order.confirmed %}disabled{% endif %}>
           {% if order.confirmed %}Confirmed{% else %}Confirm{% endif %}
         </button>
       </div>
@@ -29,7 +29,7 @@
 {% else %}
 
 <div class="alert alert-warning">
-  List of orders was not provided.
+  No orders.
 </div>
 
 {% endif %}

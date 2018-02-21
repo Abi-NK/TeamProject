@@ -23,9 +23,9 @@ def index(request):
 @require_http_methods(["GET"])
 @login_required
 def get_orders(request):
-    """Return all orders as JSON."""
-    json = serialize('json', Order.objects.filter(delivered=False, confirmed=True).order_by('time'))
-    return JsonResponse(json, safe=False)
+    """Return all orders as formatted HTML."""
+    orders = Order.objects.filter(delivered=False, confirmed=True).order_by('time')
+    return render(request, "kitchen/ordercards.html", {'orders': orders})
 
 
 @require_http_methods(["POST"])
