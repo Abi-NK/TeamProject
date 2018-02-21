@@ -55,7 +55,8 @@ def index(request):
     undelivered_orders = Order.objects.filter(delivered=False, confirmed=True, ready_delivery=True)
     return render(request, "waiter/index.html", {'undelivered': Order.objects.filter(delivered=False),
                                                  'unconfirmed_orders': unconfirmed_orders,
-                                                 'undelivered_orders': undelivered_orders})
+                                                 'undelivered_orders': undelivered_orders,
+                                                 'want_assistance': Seating.objects.filter(assistance=True)})
 
 
 @user_passes_test(group_check)
