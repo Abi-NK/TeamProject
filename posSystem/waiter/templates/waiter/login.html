@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Waiter Login{% endblock %}
+
+{% block content %}
+
+  {% if username %}
+    <div class="col-md-4 offset-md-4 mt-md-3">
+      <h3>Currently logged in as <strong>{{ username }}.</strong></h3>
+      <h4>Would you like to log out?</h4>
+      <a href="/logout">
+        <button class="btn btn-lg btn-primary btn-block">Logout</button>
+      </a>
+    </div>
+  {% else %}
+    <div class="col-md-4 offset-md-4 mt-md-3">
+      <form method="post">
+        <h3 class="text-center">Please log in to continue:</h3>
+        <div class="form-group">
+          {% csrf_token %}
+          <input class="form-control" type="text" name="username" placeholder="Username" required autofocus />
+          <input class="form-control" type="password" name="password" placeholder="Password" required />
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+      </form>
+    </div>
+  {% endif %}
+
+{% endblock %}
