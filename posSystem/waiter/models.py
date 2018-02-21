@@ -43,6 +43,6 @@ class Order(models.Model):
         """Get the time the order was placed in a displayable format."""
         return str(self.time)[11: 19]
 
-    def get_price_readable(self):
+    def get_price_display(self):
         """Get the price in a displayable format."""
         return "£%.2f" % self.total_price

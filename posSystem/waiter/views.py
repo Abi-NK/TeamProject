@@ -80,15 +80,9 @@ def orders(request):
 @require_http_methods(["GET"])
 @login_required
 def get_orders(request):
-    """Return all orders as JSON."""
-    json = serialize('json', Order.objects.filter(confirmed=False))
-    return JsonResponse(json, safe=False)
-
-
-def get_orders_html(request):
     """Return all orders as formatted HTML."""
     orders = Order.objects.filter(confirmed=False)
-    return render(request, "waiter/ordercards.html", {'orders': orders, 'debug': True})
+    return render(request, "waiter/ordercards.html", {'orders': orders})
 
 
 @require_http_methods(["GET"])
@@ -114,7 +108,7 @@ def make_order(request):
         table=Seating.objects.get(pk=request.session["seating_id"]).label,
         confirmed=False,
         time=timezone.now(),
-        items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
+        items="\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
         cooking_instructions='none',
         purchase_method='none',
         total_price=total_price,

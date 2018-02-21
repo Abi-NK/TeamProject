@@ -10,7 +10,7 @@
       <div class="col-md-9">
         <h2 class="card-title">Order #{{ order.id }} - {{ order.table }}</h2>
         <p class="card-text">
-          {{ order.contents }}
+          {{ order.items | linebreaksbr }}
         </p>
         <h3>Total price: {{ order.get_price_display }}</h3>
         <h3>Time Ordered: {{ order.get_time_display }}</h3>
@@ -29,7 +29,7 @@
 {% else %}
 
 <div class="alert alert-warning">
-  No orders.
+  List of orders was not provided.
 </div>
 
 {% endif %}
