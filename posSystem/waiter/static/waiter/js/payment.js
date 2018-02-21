@@ -16,30 +16,22 @@ function getCookie(name) {
 }
 var csrfToken = getCookie('csrftoken');
 
-// takes a number and returns it in printable price format
-function toPrice(number){
-  return "£" + Number.parseFloat(number).toFixed(2);
-}
-
 // essentially a wrapper for the HTML template
-function makeOrderHTML(orderID, tableLabel, contents, price, confirmed, time){
+function makeOrderHTML(pk, cardHolder, cardNumber, cvc, expiry){
   return `
   <div class="col-md-12 mb-md-3">
     <div class="card">
       <div class="card-body">
         <div class="row">
           <div class="col-md-9">
-            <h2 class="card-title">Order #${ orderID } - ${ tableLabel }</h2>
+            <h2 class="card-title">Payment</h2>
             <p class="card-text">
-              ${ contents }
+              ${ pk }
+              ${ cardHolder }
+              ${ cardNumber }
+              ${ cvc }
+              ${ expiry }
             </p>
-            <h3>Total price: ${ toPrice(price) }
-			<h3>Time Ordered: ${ (time.substring(11,19)) }
-          </div>
-          <div class="col-md-3 text-center">
-            <button type="button" class="btn btn-primary btn-lg"
-            onclick="confirmOrder(this, ${ orderID })" ${ confirmed ? "disabled" : "" }>
-            ${ confirmed ? "Confirmed" : "Confirm" }</button>
           </div>
         </div>
       </div>
@@ -58,7 +50,7 @@ function updateOrders(){
     // for each order in ordersJSON
     $.each(ordersJSON, function(key, value){
       var fields = value["fields"];
-	var orderHTML = makeOrderHTML(value["pk"], fields["table"], fields["items"], fields["total_price"], fields["confirmed"], fields["time"]);
+	var orderHTML = makeOrderHTML(value["pk"], fields["card_holder"], fields["card_number"], fields["cvc"], fields["expiry"]);
       $("#order-container").append(orderHTML)
     });
 

@@ -123,7 +123,17 @@ def request_help(request):
     return HttpResponse("recieved")
 
 
+@require_http_methods(["GET"])
+@login_required
 @user_passes_test(group_check)
 def get_payments(request):
     """Get all the payments and payment status"""
-    return render(request, "waiter/payment.html")
+    return render(request, 'waiter/payment.html', {'all_menu': Payment.get_payments(all)})
+
+
+@require_http_methods(["GET"])
+@login_required
+def all_payments(request):
+    """Return all ready orders as JSON."""
+    json = serialize('json', Payment.get_payments(all))
+    return JsonResponse(json, safe=False)

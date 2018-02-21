@@ -84,14 +84,15 @@ class Order(models.Model):
 class Payment(models.Model):
 
     # payment db
-    card_holder = models.CharField(max_length=50, default='na')    # name of card holder
-    card_number = models.CharField(max_length=12, default='na')    # Card number
+    card_holder = models.CharField(max_length=50, default='na')     # name of card holder
+    card_number = models.CharField(max_length=12, default='na')     # Card number
     cvc = models.CharField(max_length=3, default='na')              # CVC
     expiry = models.CharField(max_length=5, default='na')           # Card expiry date
     terms_conditions = models.BooleanField(default=False)           # Customer has accepted t and c
     payment_requested = models.BooleanField(default=False)          # Waiter has asked for payment
     payment_received = models.BooleanField(default=False)           # Payment information has been received
     payment_accepted = models.BooleanField(default=False)           # Waiter has accepted the payment
+
 
     def get_payments(self):
         """Returns all the payments"""
