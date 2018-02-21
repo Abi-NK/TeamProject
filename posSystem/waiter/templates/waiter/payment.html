@@ -1,0 +1,15 @@
+{% extends "waiter/base.html" %}
+
+{% load static %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+  <h1 class="text-center">Payment</h1>
+  <hr />
+    <div class="row" id="order-container">
+      
+    </div>
+{% endblock %}
+
+{% block endjs %}<script src="{% static "waiter/js/payment.js" %}"></script>{% endblock %}
