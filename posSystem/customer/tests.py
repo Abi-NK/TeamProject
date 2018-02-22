@@ -26,3 +26,10 @@ class TestSeatingModel(TestCase):
         self.assertIs(seating.assistance, False)
         seating.set_assistance_true()
         self.assertIs(seating.assistance, True)
+
+    def test_set_assistance_false(self):
+        seating = Seating.objects.get(label="Table 1")
+        seating.set_assistance_true()
+        self.assertIs(seating.assistance, True)
+        seating.set_assistance_false()
+        self.assertIs(seating.assistance, False)
