@@ -1,29 +1,9 @@
-// from the django docs: https://docs.djangoproject.com/en/2.0/ref/csrf/
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-var csrfToken = getCookie('csrftoken');
-
 // the object of items ordered and quantity
 var order = {};
 // used locally for displaying order info, should never be returned to the server
 var itemNames = {};
 var itemPrices = {};
 var stringTotal = "total"
-
-var tableNumber = "0";
 
 // returns the sum of all items in the order times their quantity
 function calculateTotal(){
@@ -109,7 +89,7 @@ function placeOrder(){
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify({order: order, tableNumber: tableNumber}),
+      data: JSON.stringify({order: order}),
       dataType: 'text',
       success: function(result) {
         alert("Order sent!");
@@ -124,7 +104,7 @@ function requestHelp(){
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
-    data: JSON.stringify({tableNumber: tableNumber}),
+    data: JSON.stringify({}),
     dataType: 'text',
     success: function(result) {
       $('#callWaiterModalCenter').modal('show');
@@ -136,13 +116,16 @@ function buttonHelp(button){
   requestHelp();
 }
 
-$('#seating-list a').on('click', function(){
-    console.log($(this).text());
-});
+// method called by seating selection buttons to pick a table and tell the server
+$('.btn-seating-option').on('click', function(){
+  // gets the seating ID from the button's value field
+  var seatingID = $(this).attr("value");
+  // gets the table's name (label) from the button's name field
+  seatingLabel = $(this).attr("name");
+  console.log(`Now sitting at ${seatingLabel} (ID ${seatingID})`);
 
-function buttonSelectSeating(seatingID){
-  console.log("Selected seating with ID " + seatingID);
-  tableNumber = seatingID;
+  // sends the selected seating ID to the server so it can be marked as taken, and stored in the user's session
+  $('#seating-label').text(seatingLabel);
   $.ajax({
     url: "/customer/takeseat",
     type: 'POST',
@@ -151,12 +134,17 @@ function buttonSelectSeating(seatingID){
     data: JSON.stringify({tableID: seatingID}),
     dataType: 'text',
     success: function(result) {
+      // if the selection worked, close the seating selection modal
       $('#chooseTableModalCenter').modal('hide');
     }
   });
-}
+});
 
 $(document).ready(function() {
   updateTotal();
-  $('#chooseTableModalCenter').modal('show');
+  if (seatingLabel == ""){
+    $('#chooseTableModalCenter').modal('show');
+  } else {
+    console.log("Already seated at " + seatingLabel);
+  }
 });
