@@ -1,14 +1,54 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from .models import Order
 from customer.models import Menu, Seating
 import json
 from django.utils import timezone
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from kitchen.views import index as waiter_index
+
+
+def group_check(user):
+    return user.username.startswith('waiter')
+
+
+def waiter_login(request):
+    """Provide a login page for the user and handle login requests."""
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            print("Logged in user %s" % user.username)
+            if user.username.startswith('waiter'):
+                return redirect(index)
+            elif user.username.startswith('kitchen'):
+                return redirect(waiter_index)
+            else:
+                return redirect('')
+        else:
+            # Return an 'invalid login' error message.
+            return HttpResponse("Login failed")
+
+    context = {}
+    if request.user.username != "":
+        context["username"] = request.user.username
+    return render(request, "waiter/login.html", context)
+
+
+def waiter_logout(request):
+    """Log out the current user."""
+    logout(request)
+    return redirect('/login')
 
 
 # list of orders that are ready is updated every time the page is accessed (refreshed)
+@user_passes_test(group_check)
 def index(request):
     """Return the waiter index page."""
     unconfirmed_orders = Order.objects.filter(confirmed=False)
@@ -18,6 +58,7 @@ def index(request):
                                                  'undelivered_orders': undelivered_orders})
 
 
+@user_passes_test(group_check)
 def deliveries(request):
     """Return the waiter delivery page and confirm deliveries using django forms"""
     """Changes the order table when the delivered button has been pressed"""
@@ -30,12 +71,14 @@ def deliveries(request):
     return render(request, "waiter/deliveries.html", {'delivery': delivery})
 
 
+@user_passes_test(group_check)
 def orders(request):
     """Return the page for viewing all orders."""
     return render(request, "waiter/orders.html")
 
 
 @require_http_methods(["GET"])
+@login_required
 def get_orders(request):
     """Return all orders as JSON."""
     json = serialize('json', Order.objects.filter(confirmed=False))
@@ -43,6 +86,7 @@ def get_orders(request):
 
 
 @require_http_methods(["GET"])
+@login_required
 def ready_orders(request):
     """Return all ready orders as JSON."""
     json = serialize('json', Order.objects.filter(confirmed=True))
@@ -52,14 +96,16 @@ def ready_orders(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    received_json = json.loads(request.body.decode('utf-8'))
-    order_json = received_json["order"]
-    seating_id = received_json["tableNumber"]
+    if "seating_id" not in request.session:
+        print("A session without a seating ID tried to place an order.")
+        return HttpResponseNotFound("no seating_id in session")
+
+    order_json = json.loads(request.body.decode('utf-8'))["order"]
     print("Recieved order: ", order_json)
     order_contents = [Menu.objects.get(pk=key) for key in order_json]
     total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
     Order(
-        table=Seating.objects.get(pk=seating_id).label,
+        table=Seating.objects.get(pk=request.session["seating_id"]).label,
         confirmed=False,
         time=timezone.now(),
         items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
@@ -72,6 +118,7 @@ def make_order(request):
 
 
 @require_http_methods(["POST"])
+@login_required
 def confirm_order(request):
     """Confirm the provided order in the database."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]
@@ -84,6 +131,9 @@ def confirm_order(request):
 
 @require_http_methods(["POST"])
 def request_help(request):
-    seating_id = json.loads(request.body.decode('utf-8'))["tableNumber"]
-    Seating.objects.get(pk=seating_id).set_assistance_true()
+    if "seating_id" not in request.session:
+        print("A session without a seating ID requested assistance.")
+        return HttpResponseNotFound("no seating_id in session")
+
+    Seating.objects.get(pk=request.session["seating_id"]).set_assistance_true()
     return HttpResponse("recieved")
