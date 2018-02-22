@@ -53,13 +53,7 @@ def index(request):
         order_update = Order.objects.get(pk=request.POST['delivery_id'])
         order_update.delivered = True
         order_update.save()
-
-    unconfirmed_orders = Order.objects.filter(confirmed=False)
-    undelivered_orders = Order.objects.filter(delivered=False, confirmed=True, ready_delivery=True)
-    return render(request, "waiter/index.html", {'undelivered': Order.objects.filter(delivered=False),
-                                                 'unconfirmed_orders': unconfirmed_orders,
-                                                 'undelivered_orders': undelivered_orders,
-                                                 'want_assistance': Seating.objects.filter(assistance=True)})
+    return render(request, "waiter/index.html")
 
 
 @require_http_methods(["GET"])
@@ -84,6 +78,13 @@ def get_orders_unpaid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     orders = Order.objects.filter(delivered=True)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
+
+
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_alerts(request):
+    want_assistance = Seating.objects.filter(assistance=True)
+    return render(request, "waiter/alerts.html", {'want_assistance': want_assistance})
 
 
 @require_http_methods(["POST"])

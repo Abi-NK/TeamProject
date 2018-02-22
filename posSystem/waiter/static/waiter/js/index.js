@@ -12,6 +12,10 @@ function requestHelp(id){
 }
 
 function updateOrders(){
+  $.get("getalerts", function(data){
+    $("#container-alerts").html(data);
+  });
+
   $.get("getordersconfirm", function(data){
     $("#container-confirm").html(data);
   });
