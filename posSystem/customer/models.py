@@ -41,3 +41,8 @@ class Seating(models.Model):
         self.assistance = True
         self.save()
         print("%s requested help" % self.label)
+
+    def set_assistance_false(self):
+        self.assistance = False
+        self.save()
+        print("%s has been helped" % self.label)
