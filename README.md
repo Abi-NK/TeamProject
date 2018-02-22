@@ -52,7 +52,7 @@ Tests that require a database will not use the real production database, separat
 Tests are located within each Django application as a tests.py file.
 
 
-Run the tests using the test command of the project’s manage.py utility:
+Run all tests within the project using the test command of the project’s manage.py utility:
 
 ```
 $ python manage.py test
@@ -70,7 +70,7 @@ OK
 ```
 ## Coding style
 
-For this project we used PEP 8.
+* [PEP 8](https://www.python.org/dev/peps/pep-0008/) -  Python style guide
 
 
 ## Deployment
