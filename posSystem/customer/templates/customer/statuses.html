@@ -4,6 +4,8 @@
 {% block content %}
 <meta http-equiv="refresh" content="5" >
 <div class="jumbotron">
+    <h1 class="text-center">Order Statuses:</h1>
+    <br>
     {% if orders %}
         {% for order in orders %}
             <h3>Table Number {{order.table}}:</h3>
