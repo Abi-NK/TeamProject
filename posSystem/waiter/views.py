@@ -1,10 +1,8 @@
-from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound
 from .models import Order
-from customer.models import Menu, Seating
+from customer.models import Seating
 import json
-from django.utils import timezone
 from django.shortcuts import render, redirect
-from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -65,19 +63,27 @@ def index(request):
 
 
 @require_http_methods(["GET"])
+@login_required
+def get_orders_confirm(request):
+    """Return all orders which need confirmation as formatted HTML."""
+    orders = Order.get_not_confirmed_orders(all)
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
+
+
+@require_http_methods(["GET"])
 @user_passes_test(group_check)
-def deliveries(request):
+def get_orders_delivery(request):
     """Return all orders which are ready to be delivered as formatted HTML."""
     orders = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'delivery': True})
 
 
 @require_http_methods(["GET"])
-@login_required
-def get_orders(request):
-    """Return all orders which need confirmation as formatted HTML."""
-    orders = Order.get_not_confirmed_orders(all)
-    return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
+@user_passes_test(group_check)
+def get_orders_unpaid(request):
+    """Return all orders which have been delivered but not paid for as formatted HTML."""
+    orders = Order.objects.filter(delivered=True)
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
 
 
 @require_http_methods(["POST"])

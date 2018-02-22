@@ -12,12 +12,16 @@ function requestHelp(id){
 }
 
 function updateOrders(){
-  $.get("getorders", function(data){
+  $.get("getordersconfirm", function(data){
     $("#container-confirm").html(data);
   });
 
-  $.get("deliveries", function(data){
+  $.get("getordersdelivery", function(data){
     $("#container-delivery").html(data);
+  });
+
+  $.get("getordersunpaid", function(data){
+    $("#container-unpaid").html(data);
   });
 }
 
