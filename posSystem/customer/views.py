@@ -44,12 +44,20 @@ def payment(request):
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),
             expiry=request.POST.get('expiry'),
-            terms_conditions=request.POST.get('t-c', True)
+            terms_conditions=request.POST.get(checkbox_check('cbx'))
         ).save(force_insert=True)
     return render(request, "customer/e_payment.html", {'payment': payments})
+
+
+def checkbox_check(val):
+    if val == 'on':
+        return "True"
+    return "False"
+
 
 def t_and_c(request):
     if request.method == "POST":
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True
         payment_update.save()
+
