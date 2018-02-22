@@ -11,6 +11,13 @@ function requestHelp(id){
   });
 }
 
+function updateLoop(){
+  updateOrders();
+  setTimeout(function(){
+     updateLoop();
+  }, 5000);
+}
+
 function updateOrders(){
   $.get("getalerts", function(data){
     $("#container-alerts").html(data);
@@ -46,5 +53,5 @@ function confirmOrder(button, orderID){
 }
 
 $(document).ready(function(){
-  updateOrders();
+  updateLoop();
 });

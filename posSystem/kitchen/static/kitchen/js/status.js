@@ -5,7 +5,7 @@ function updateLoop(){
   updateOrders();
   setTimeout(function(){
      updateLoop();
-  }, 30000);
+  }, 5000);
 }
 
 
@@ -14,7 +14,7 @@ function updateOrders(){
   $.get("getorders", function(data){
     $("#order-container").html(data);
     $(".not-late").css("background-color", "LIGHTGREEN");
-    $(".almost-late").css("background-color", "#FEDB00");
+    $(".nearly-late").css("background-color", "#FEDB00");
     $(".late").css("background-color", "#F15454");
   });
 }
