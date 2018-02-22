@@ -6,28 +6,34 @@
 <div class="jumbotron">
     {% if orders %}
         {% for order in orders %}
-            <h3>Order {{order.table}}:</h3>
+            <h3>Table Number {{order.table}}:</h3>
             {% if order.confirmed and not order.ready_delivery and not order.delivered %}
                 <div class="progress">
-                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40"
-                         aria-valuemin="0" aria-valuemax="100" style="width:40%">
-                        Order Confirmed
+                    <div class="progress-bar" style="width:30%">
+                        Being Cooked
                     </div>
                 </div>
             {% endif %}
             {% if order.ready_delivery and not order.delivered %}
-                 <div class="progress">
-                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="40"
-                             aria-valuemin="0" aria-valuemax="100" style="width:60%">
-                            Order Ready
-                        </div>
+                <div class="progress">
+                    <div class="progress-bar" style="width:30%">
+                        Being Cooked
                     </div>
+                    <div class="progress-bar bg-warning" style="width:30%">
+                        Ready For Delivery
+                    </div>
+                </div>
             {% endif %}
             {% if order.delivered %}
-                 <div class="progress">
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40"
-                         aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                        Order Delivered
+                <div class="progress">
+                    <div class="progress-bar" style="width:30%">
+                        Being Cooked
+                    </div>
+                    <div class="progress-bar bg-warning" style="width:30%">
+                        Ready For Delivery
+                    </div>
+                    <div class="progress-bar bg-success" style="width:40%">
+                        Delivered
                     </div>
                 </div>
             {% endif %}
