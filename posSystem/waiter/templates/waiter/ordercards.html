@@ -6,22 +6,27 @@
 
 <div class="card mb-md-3">
   <div class="card-body">
-    <div class="row">
-      <div class="col-md-9">
-        <h2 class="card-title">Order #{{ order.id }} - {{ order.table }}</h2>
-        <p class="card-text">
-          {{ order.items | linebreaksbr }}
-        </p>
-        <h3>Total price: {{ order.get_price_display }}</h3>
-        <h3>Time Ordered: {{ order.get_time_display }}</h3>
-      </div>
-      <div class="col-md-3 text-center">
-        <button type="button" class="btn btn-{% if order.confirmed %}success{% else %}primary{% endif %} btn-lg"
-        onclick="confirmOrder(this, {{ order.id }})" {% if order.confirmed %}disabled{% endif %}>
-          {% if order.confirmed %}Confirmed{% else %}Confirm{% endif %}
-        </button>
-      </div>
-    </div>
+    <h4 class="card-title">Order #{{ order.id }} - {{ order.table }}</h4>
+    <p class="card-text">
+      {{ order.items | linebreaksbr }}
+    </p>
+
+    {% if confirm %}
+    <h5>Total price: {{ order.get_price_display }}</h5>
+    <h5>Time Ordered: {{ order.get_time_display }}</h5>
+    <button type="button" class="btn btn-{% if order.confirmed %}success{% else %}primary{% endif %} btn-lg btn-block"
+    onclick="confirmOrder(this, {{ order.id }})" {% if order.confirmed %}disabled{% endif %}>
+      {% if order.confirmed %}Confirmed{% else %}Confirm{% endif %}
+    </button>
+    {% endif %}
+
+    {% if delivery %}
+    <form method="POST">{% csrf_token %}
+      <input type="hidden" name="delivery_id" value="{{ order.id }}">
+      <td><button type="submit" class="btn btn-primary btn-lg btn-block">Delivered</button></td>
+    </form>
+    {% endif %}
+
   </div>
 </div>
 

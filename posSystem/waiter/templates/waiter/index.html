@@ -22,16 +22,9 @@
     </div>
 
     <div class="col-md-4">
-      <h2 class="text-center">Column</h2>
+      <h2 class="text-center">Ready to be delivered:</h2>
       <div id="container-delivery">
         {# populate orders which need delivering here #}
-        <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries
-            {% with total=undelivered_orders.count %}
-                {% if total != 0 %}
-                    <font color="LIGHTSALMON">(+{{total}})</font>
-                {% endif %}
-            {% endwith %}
-        </button>
       </div>
     </div>
 

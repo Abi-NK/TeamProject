@@ -51,6 +51,11 @@ def waiter_logout(request):
 @user_passes_test(group_check)
 def index(request):
     """Return the waiter index page."""
+    if request.method == "POST":
+        order_update = Order.objects.get(pk=request.POST['delivery_id'])
+        order_update.delivered = True
+        order_update.save()
+
     unconfirmed_orders = Order.objects.filter(confirmed=False)
     undelivered_orders = Order.objects.filter(delivered=False, confirmed=True, ready_delivery=True)
     return render(request, "waiter/index.html", {'undelivered': Order.objects.filter(delivered=False),
@@ -59,39 +64,20 @@ def index(request):
                                                  'want_assistance': Seating.objects.filter(assistance=True)})
 
 
+@require_http_methods(["GET"])
 @user_passes_test(group_check)
 def deliveries(request):
-    """Return the waiter delivery page and confirm deliveries using django forms"""
-    """Changes the order table when the delivered button has been pressed"""
-    delivery = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
-    if request.method == "POST":
-        order_update = Order.objects.get(pk=request.POST['delivery_id'])
-        order_update.delivered = True
-        order_update.save()
-
-    return render(request, "waiter/deliveries.html", {'delivery': delivery})
-
-
-@user_passes_test(group_check)
-def orders(request):
-    """Return the page for viewing all orders."""
-    return render(request, "waiter/orders.html")
+    """Return all orders which are ready to be delivered as formatted HTML."""
+    orders = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'delivery': True})
 
 
 @require_http_methods(["GET"])
 @login_required
 def get_orders(request):
-    """Return all orders as formatted HTML."""
+    """Return all orders which need confirmation as formatted HTML."""
     orders = Order.get_not_confirmed_orders(all)
-    return render(request, "waiter/ordercards.html", {'orders': orders})
-
-
-@require_http_methods(["GET"])
-@login_required
-def ready_orders(request):
-    """Return all ready orders as JSON."""
-    json = serialize('json', Order.get_ready_orders(all))
-    return JsonResponse(json, safe=False)
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
 @require_http_methods(["POST"])

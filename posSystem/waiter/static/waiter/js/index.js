@@ -15,6 +15,10 @@ function updateOrders(){
   $.get("getorders", function(data){
     $("#container-confirm").html(data);
   });
+
+  $.get("deliveries", function(data){
+    $("#container-delivery").html(data);
+  });
 }
 
 function confirmOrder(button, orderID){
