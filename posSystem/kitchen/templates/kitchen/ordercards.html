@@ -1,0 +1,49 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if orders %}
+{% for order in orders %}
+
+<div class="card mb-md-3 {% if order.is_late %}late{% elif order.is_nearly_late %}nearly-late{% else %}not-late{% endif %}">
+  <div id="body" class="card-body" style=${changeColour(time)}>
+    <div class="row">
+      <div class="col-md-9">
+        <h2 class="card-title">Order #{{ order.id }}</h2>
+        <p class="card-text">
+          {% if order.is_late %}late{% elif order.is_nearly_late %}nearly-late{% endif %}<br />
+          <b>Items:</b>
+          <br>
+          {{ order.items | linebreaksbr }}
+        </p>
+        <p>
+          <b>Order time:</b> {{ order.get_time_display }}
+        </p>
+        <p>
+          <b>Cooking instructions:</b> {{ order.cooking_instructions }}
+        </p>
+        <p>
+          <b>Order confirmed:</b> {% if order.confirmed %}yes{% else %}no{% endif %}
+        </p>
+        <p>
+          <b>Order delivered:</b> {% if order.delivered %}yes{% else %}no{% endif %}
+        </p>
+      </div>
+      <div class="col-md-3 text-center">
+        <button type="button" class="btn btn-{% if order.ready_delivery %}success{% else %}primary{% endif %} btn-lg"
+        onclick="setReadyDelivery(this, {{ order.id }})" {% if order.ready_delivery %}"disabled"{% endif %}>
+          {% if order.ready_delivery %}Readied{% else %}Ready{% endif %}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endfor %}
+{% else %}
+
+<div class="alert alert-warning">
+  No orders.
+</div>
+
+{% endif %}
+{% endblock %}

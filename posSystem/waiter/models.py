@@ -2,6 +2,7 @@ from django.db import models
 import json
 from customer.models import Menu, Seating
 from django.utils import timezone
+from datetime import datetime, timedelta
 
 
 class Order(models.Model):
@@ -73,9 +74,27 @@ class Order(models.Model):
             table=Seating.objects.get(pk=request.session["seating_id"]).label,
             confirmed=False,
             time=timezone.now(),
-            items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
+            items="\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
             cooking_instructions='none',
             purchase_method='none',
             total_price=total_price,
             delivered=False,
         ).save(force_insert=True)
+
+    def get_time_display(self):
+        """Get the time the order was placed in a displayable format."""
+        return str(self.time)[11: 19]
+
+    def get_price_display(self):
+        """Get the price in a displayable format."""
+        return "£%.2f" % self.total_price
+
+    def is_nearly_late(self):
+        allowed_gap = timedelta(minutes=7)
+        difference = datetime.now() - self.time.replace(tzinfo=None)
+        return difference >= allowed_gap
+
+    def is_late(self):
+        allowed_gap = timedelta(minutes=10)
+        difference = datetime.now() - self.time.replace(tzinfo=None)
+        return difference >= allowed_gap

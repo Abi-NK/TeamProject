@@ -1,82 +1,55 @@
-<!-- Script for returning to the index page of the site if the user mistakenly clicked wrong section -->
-<script>
-function goBack() {
-    window.history.back();
-}
-</script>
-<style media="screen" type="text/css">
+{% extends "base.html" %}
 
-.btn-bigboi {
-    padding: 180px 280px;
-    font-size: 1000px;
-    line-height: normal;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
-}
+{% load static %}
 
-</style>
+{% block title %}Orders{% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block content %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Waiters Index</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-    <br>
-        <div class="container-fluid">
-            <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
-        </div>
+<button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
 
-    <div class="container h-100">
-      <div class="row">
-    <div class="col-md-9">
+<div class="container h-100">
+  <div class="row">
+<div class="col-md-9">
 
-        <div class="row align-items-center h-100">
-          <div class="col-sm-6 mx-auto">
-              <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./orders'">Orders
-                  {% with total=unconfirmed_orders.count %}
-                      {% if total != 0 %}
-                          <font color="LIGHTSALMON">(+{{total}})</font>
-                      {% endif %}
-                  {% endwith %}
-              </button>
-          </div>
-          <div class="col-sm-6 mx-auto">
-              <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries
-                  {% with total=undelivered_orders.count %}
-                      {% if total != 0 %}
-                          <font color="LIGHTSALMON">(+{{total}})</font>
-                      {% endif %}
-                  {% endwith %}
-              </button>
-          </div>
-          </div>
-        </div>
-      <div class="col-md-3">
-        <h2>Tables need assistance:</h2>
-        {% if want_assistance %}
-            {% for table in want_assistance %}
-              <div class="card">
-                <div class="card-body">
-                  <h3 class="card-title">{{ table.label }}</h3>
-                  <button type="button" class="btn btn-block" onclick="requestHelp({{ table.id }})">X</button>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
+  <div class="row align-items-center h-100">
+    <div class="col-sm-6 mx-auto">
+        <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./orders'">Orders
+            {% with total=unconfirmed_orders.count %}
+                {% if total != 0 %}
+                    <font color="LIGHTSALMON">(+{{total}})</font>
+                {% endif %}
+            {% endwith %}
+        </button>
+    </div>
+    <div class="col-sm-6 mx-auto">
+        <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries
+            {% with total=undelivered_orders.count %}
+                {% if total != 0 %}
+                    <font color="LIGHTSALMON">(+{{total}})</font>
+                {% endif %}
+            {% endwith %}
+        </button>
+    </div>
   </div>
+
+</div>
+  <div class="col-md-3">
+    <h2>Tables need assistance:</h2>
+    {% if want_assistance %}
+        {% for table in want_assistance %}
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title">{{ table.label }}</h3>
+              <button type="button" class="btn btn-block" onclick="requestHelp({{ table.id }})">X</button>
+            </div>
+          </div>
+        {% endfor %}
       </div>
+    {% endif %}
+  </div>
+</div>
 
-      {% load static %}
+{% endblock %}
 
-      <script src="{% static "waiter/js/index.js" %}"></script>
-</body>
+{% block endjs %}<script src="{% static "waiter/js/index.js" %}"></script>{% endblock %}
