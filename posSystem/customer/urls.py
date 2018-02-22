@@ -11,6 +11,5 @@ urlpatterns = [
     # is used for making links to each item inside the menu. [0-9]+ is used to show
     # the amount of in
 
-    url(r'^(?P<menu_id>[0-9]+)/$', views.detail, name='detail'),
     path('takeseat', views.take_seat, name='takeseat')
 ]

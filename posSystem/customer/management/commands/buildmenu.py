@@ -23,5 +23,6 @@ class Command(BaseCommand):
                 category=item[4],
                 allergy=item[5],
                 calories=item[6],
+                image=item[7],
             ).save()
         print("Sample menu added.")
