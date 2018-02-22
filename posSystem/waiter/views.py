@@ -55,7 +55,8 @@ def index(request):
     undelivered_orders = Order.objects.filter(delivered=False, confirmed=True, ready_delivery=True)
     return render(request, "waiter/index.html", {'undelivered': Order.objects.filter(delivered=False),
                                                  'unconfirmed_orders': unconfirmed_orders,
-                                                 'undelivered_orders': undelivered_orders})
+                                                 'undelivered_orders': undelivered_orders,
+                                                 'want_assistance': Seating.objects.filter(assistance=True)})
 
 
 @user_passes_test(group_check)
@@ -119,4 +120,11 @@ def request_help(request):
         return HttpResponseNotFound("no seating_id in session")
 
     Seating.objects.get(pk=request.session["seating_id"]).set_assistance_true()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def cancel_help(request):
+    seating_id = json.loads(request.body.decode('utf-8'))["id"]
+    Seating.objects.get(pk=seating_id).set_assistance_false()
     return HttpResponse("recieved")
