@@ -81,9 +81,9 @@ def orders(request):
 @require_http_methods(["GET"])
 @login_required
 def get_orders(request):
-    """Return all orders as JSON."""
-    json = serialize('json', Order.get_not_confirmed_orders(all))
-    return JsonResponse(json, safe=False)
+    """Return all orders as formatted HTML."""
+    orders = Order.get_not_confirmed_orders(all)
+    return render(request, "waiter/ordercards.html", {'orders': orders})
 
 
 @require_http_methods(["GET"])

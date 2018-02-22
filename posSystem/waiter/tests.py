@@ -1,7 +1,7 @@
 from django.test import TestCase
 from .models import Order
 from django.utils import timezone
-import unittest
+from datetime import datetime, timedelta, date, time
 
 
 class TestMarkingDelivery(TestCase):
@@ -99,3 +99,42 @@ class TestMarkingDelivery(TestCase):
         test_order = Order.get_kitchen_orders(self)
         self.assertEqual(test_order[0].id, 400)
 
+    def test_get_time_display(self):
+        order = Order.objects.create(
+            time=datetime.combine(date(2018, 1, 1), time(9, 30, 20)),
+            total_price=0,
+        )
+        self.assertEqual(order.get_time_display(), "09:30:20")
+
+    def test_get_price_display(self):
+        order = Order.objects.create(
+            time=timezone.now(),
+            total_price=123.45,
+        )
+        self.assertEqual(order.get_price_display(), "£123.45")
+
+    def test_is_nearly_late(self):
+        self.assertFalse(Order.objects.get(pk=100).is_nearly_late())
+        order = Order.objects.create(
+            time=datetime.now() - timedelta(minutes=6),
+            total_price=0,
+        )
+        self.assertFalse(order.is_nearly_late())
+        order = Order.objects.create(
+            time=datetime.now() - timedelta(minutes=8),
+            total_price=0,
+        )
+        self.assertTrue(order.is_nearly_late())
+
+    def test_is_late(self):
+        self.assertFalse(Order.objects.get(pk=100).is_late())
+        order = Order.objects.create(
+            time=datetime.now() - timedelta(minutes=9),
+            total_price=0,
+        )
+        self.assertFalse(order.is_late())
+        order = Order.objects.create(
+            time=datetime.now() - timedelta(minutes=11),
+            total_price=0,
+        )
+        self.assertTrue(order.is_late())
