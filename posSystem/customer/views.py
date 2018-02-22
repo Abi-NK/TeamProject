@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import Menu, Seating
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
+from waiter.models import Order
 import json
 
 
@@ -31,4 +32,5 @@ def take_seat(request):
 
 def statuses(request):
     """..."""
-    return render(request, 'customer/statuses.html')
+    orders = Order.objects.all()
+    return render(request, 'customer/statuses.html', {'orders': orders})
