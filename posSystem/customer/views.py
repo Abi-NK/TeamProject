@@ -40,9 +40,16 @@ def payment(request):
     payments = Payment.get_payments(all)
     if request.method == "POST":
         Payment(
-            card_holder=request.POST.get('name', 'test'),
-            card_number=request.POST.get('card-number', 'test'),
-            cvc=request.POST.get('cvc', 'test'),
-            expiry=request.POST.get('expiry', 'test')
+            card_holder=request.POST.get('name'),
+            card_number=request.POST.get('card-number'),
+            cvc=request.POST.get('cvc'),
+            expiry=request.POST.get('expiry'),
+            terms_conditions=request.POST.get('t-c', True)
         ).save(force_insert=True)
     return render(request, "customer/e_payment.html", {'payment': payments})
+
+def t_and_c(request):
+    if request.method == "POST":
+        payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
+        payment_update.delivered = True
+        payment_update.save()
