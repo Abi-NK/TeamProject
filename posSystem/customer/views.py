@@ -26,4 +26,9 @@ def take_seat(request):
     Seating.objects.get(pk=table_id).set_unavailable()
     request.session['seating_id'] = table_id
     request.session['seating_label'] = Seating.objects.get(pk=table_id).label
-    return HttpResponse("received")
+    return HttpResponse("received")@require_http_methods(["POST"])
+
+
+def statuses(request):
+    """..."""
+    return render(request, 'customer/statuses.html')
