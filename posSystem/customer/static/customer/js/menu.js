@@ -81,11 +81,7 @@ function addToOrder(menuItemID, menuItemName, menuItemPrice) {
 
 // used to show the customer's order
 function showOrder(){
-  $.ajax({
-    success: function(result) {
-      $('#showOrderModalCenter').modal('show');
-    }
-  });
+  $('#showOrderModalCenter').modal('show');
 }
 
 // used to send the order object to the server
