@@ -17,14 +17,14 @@ def group_check(user):
 @user_passes_test(group_check)
 def index(request):
     """Return the kitchen page."""
-    return render(request, 'kitchen/status.html', {'all_menu': Order.objects.all})
+    return render(request, 'kitchen/status.html', {'all_menu': Order.get_all_orders(all)})
 
 
 @require_http_methods(["GET"])
 @login_required
 def get_orders(request):
     """Return all orders as JSON."""
-    json = serialize('json', Order.objects.filter(delivered=False, confirmed=True).order_by('time'))
+    json = serialize('json', Order.get_kitchen_orders(all))
     return JsonResponse(json, safe=False)
 
 
