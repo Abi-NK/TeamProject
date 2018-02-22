@@ -108,7 +108,7 @@ Quit the server with CTRL-BREAK.
 ## Authors
 
 - **Abhishek Nand Kumar** -------- [AbhishekNk1](https://github.com/AbhishekNk1)
-- **Bryn Davies** ---------------------- [ManRay99](https://github.com/ManRay99)
+- **Bryn Davies** ---------------------- [ManRay99](https://github.com/ManRay99) and [H09bdavies](https://github.com/H09bdavies)
 - **Henry Gilbert** -------------------- [ausanc](https://github.com/ausanc)
 - **Khalil Kablan** -------------------- [kkablan](https://github.com/kkablan)
 - **Rodney Olav C. Melby** -------- [RHUL-INFO-SEC-MASTERS](https://github.com/RHUL-INFO-SEC-MASTERS)
