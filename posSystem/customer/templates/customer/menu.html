@@ -162,6 +162,7 @@
     </div>
     <div class="col-md-4">
       <button type="button" class="btn btn-primary btn-lg btn-block" onclick="buttonHelp(this)">Call a waiter</button>
+
     </div>
   </div>
   {% if all_menu %}
@@ -197,6 +198,7 @@
     <div class="col-md-12 mb-md-3">
       <hr />
       <button type="button" class="btn btn-primary btn-lg btn-block" onclick="showOrder()">Place order</button>
+      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="location.href='http://127.0.0.1:8000/customer/payment'">pay</button>
     </div>
     <br />
   {% else %}

@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Order
+from .models import Order, Payment
 from customer.models import Seating
 import json
 from django.shortcuts import render, redirect
@@ -76,7 +76,7 @@ def get_orders_delivery(request):
 @user_passes_test(group_check)
 def get_orders_unpaid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
-    orders = Order.objects.filter(delivered=True)
+    orders = Order.objects.filter(delivered=True) and Payment.objects.filter(payment_accepted=False)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
 
 

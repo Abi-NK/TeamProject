@@ -11,5 +11,6 @@ urlpatterns = [
     # is used for making links to each item inside the menu. [0-9]+ is used to show
     # the amount of in
 
-    path('takeseat', views.take_seat, name='takeseat')
+    path('takeseat', views.take_seat, name='takeseat'),
+    path('payment', views.payment, name='payment')
 ]
