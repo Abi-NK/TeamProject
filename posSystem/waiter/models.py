@@ -84,6 +84,8 @@ class Order(models.Model):
 class Payment(models.Model):
 
     # payment db
+    table = models.CharField(max_length=50, default='na')
+    order = models.CharField(max_length=50, default='na')
     card_holder = models.CharField(max_length=50, default='na')     # name of card holder
     card_number = models.CharField(max_length=12, default='na')     # Card number
     cvc = models.CharField(max_length=3, default='na')              # CVC

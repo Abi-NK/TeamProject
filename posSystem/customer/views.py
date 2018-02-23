@@ -40,11 +40,13 @@ def payment(request):
     payments = Payment.get_payments(all)
     if request.method == "POST":
         Payment(
+            table=request.POST.get('table'),
+            order=request.POST.get('order'),
             card_holder=request.POST.get('name'),
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),
             expiry=request.POST.get('expiry'),
-            terms_conditions=request.POST.get(checkbox_check('cbx'))
+            terms_conditions=checkbox_check(request.POST.get('cbx'))
         ).save(force_insert=True)
     return render(request, "customer/e_payment.html", {'payment': payments})
 

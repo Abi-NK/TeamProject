@@ -19,6 +19,14 @@
                     </div>
                     <div class="panel-body">
                          <form method="POST">{% csrf_token %}
+                             <div class="form-group">
+                                  <label for="name">Order:</label>
+                                  <input type="text" placeholder="Your order number" class="form-control" name="order">
+                              </div>
+                             <div class="form-group">
+                                  <label for="name">table:</label>
+                                  <input type="text" placeholder="Your table number" class="form-control" name="table">
+                              </div>
                               <div class="form-group">
                                   <label for="name">Name:</label>
                                   <input type="text" placeholder="Your Name on Your Card" class="form-control" name="name">
