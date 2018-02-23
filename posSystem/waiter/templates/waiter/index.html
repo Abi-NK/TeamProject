@@ -6,47 +6,33 @@
 
 {% block content %}
 
-<button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
+<h1 class="text-center">Orders</h1>
+<hr />
 
-<div class="container h-100">
-  <div class="row">
-<div class="col-md-9">
+<div id="container-alerts">
+  {# populate alerts here #}
+</div>
 
-  <div class="row align-items-center h-100">
-    <div class="col-sm-6 mx-auto">
-        <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./orders'">Orders
-            {% with total=unconfirmed_orders.count %}
-                {% if total != 0 %}
-                    <font color="LIGHTSALMON">(+{{total}})</font>
-                {% endif %}
-            {% endwith %}
-        </button>
-    </div>
-    <div class="col-sm-6 mx-auto">
-        <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries
-            {% with total=undelivered_orders.count %}
-                {% if total != 0 %}
-                    <font color="LIGHTSALMON">(+{{total}})</font>
-                {% endif %}
-            {% endwith %}
-        </button>
+<div class="row">
+  <div class="col-md-4">
+    <h2 class="text-center">Requiring confirmation:</h2>
+    <div id="container-confirm">
+      {# populate orders which need confirming here #}
     </div>
   </div>
 
-</div>
-  <div class="col-md-3">
-    <h2>Tables need assistance:</h2>
-    {% if want_assistance %}
-        {% for table in want_assistance %}
-          <div class="card">
-            <div class="card-body">
-              <h3 class="card-title">{{ table.label }}</h3>
-              <button type="button" class="btn btn-block" onclick="requestHelp({{ table.id }})">X</button>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+  <div class="col-md-4">
+    <h2 class="text-center">Ready to be delivered:</h2>
+    <div id="container-delivery">
+      {# populate orders which need delivering here #}
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <h2 class="text-center">Delivered and unpaid:</h2>
+    <div id="container-unpaid">
+      {# populate orders which need to be paid for here #}
+    </div>
   </div>
 </div>
 
