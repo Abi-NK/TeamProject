@@ -11,6 +11,7 @@ class Menu(models.Model):
     category = models.CharField(max_length=100)
     allergy = models.CharField(max_length=1000, default="")
     calories = models.IntegerField(default=0)
+    image = models.CharField(max_length=1000, default='na')
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.course)
@@ -41,3 +42,8 @@ class Seating(models.Model):
         self.assistance = True
         self.save()
         print("%s requested help" % self.label)
+
+    def set_assistance_false(self):
+        self.assistance = False
+        self.save()
+        print("%s has been helped" % self.label)

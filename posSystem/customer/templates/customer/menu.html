@@ -3,12 +3,104 @@
 {% block title %}Menu{% endblock %}
 {% block content %}
 
+<!-- Modal - show the customer's order and let them confirm it -->
+<div class="modal fade" id="showOrderModalCenter" tabindex="-1" role="dialog" aria-labelledby="showOrderModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showOrderModalLongTitle">Your Order:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <div id="order-container">
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-9">
+                  <h4>Item Name</h4>
+                </div>
+                <div class="col-md-3">
+                  <h4>Price</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-9">
+              <h4>Total</h4>
+            </div>
+            <div class="col-md-3">
+              <h4 id="total-price">Total</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder()">Place order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal - displaying that the order has been placed -->
+<div class="modal fade" id="placeOrderModalCenter" tabindex="-1" role="dialog" aria-labelledby="placeOrderModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="placeOrderModalLongTitle">Order Sent!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Order Sent!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal - showing additional information - -->
+{% for menu_item in all_menu %}
+<div class="modal fade" id="{{menu_item.id}}" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{menu_item.name}} - £{{menu_item.price}}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-image text-center">
+          <p><img class="img-responsive" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
+        </div>
+        <p>{{menu_item.description}}</p>
+        <p><i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></p>
+        <p>{{menu_item.calories}}kcal</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
 <!-- Modal - calling over waiter -->
 <div class="modal fade" id="callWaiterModalCenter" tabindex="-1" role="dialog" aria-labelledby="callWaiterModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="callWaiterModalLongTitle">Waiters notififed</h5>
+        <h5 class="modal-title" id="callWaiterModalLongTitle">Waiters notified</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -24,7 +116,7 @@
 </div>
 
 <!-- Modal - choose table -->
-<div class="modal fade" id="chooseTableModalCenter" tabindex="-1" role="dialog" aria-labelledby="chooseTableModalCenterTitle" aria-hidden="true"data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="chooseTableModalCenter" tabindex="-1" role="dialog" aria-labelledby="chooseTableModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -81,13 +173,15 @@
               <div class="row">
                 <div class="col-md-9">
                   <h3 class="card-title">{{ menu_item.name }} </h3>
-                  <h6 class="card-subtitle text-muted">{% if menu_item.allergy != "" %}
-                    Contains {{ menu_item.allergy }}
-                  {% endif %}</h6>
+                  <h6 class="card-subtitle text-muted">
+                    {% if menu_item.allergy != "" %}
+                      Contains {{ menu_item.allergy }}
+                    {% endif %}
+                  </h6>
                   <p class="card-text">
                     {{ menu_item.description }}
                   </p>
-                  <a href="/customer/{{ menu_item.id }}/">Additional information</a>
+                  <a data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">Click here for more information</a>
                   <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">Add to order</button>
                 </div>
                 <div class="col-md-3">
@@ -100,37 +194,11 @@
         </div>
       {% endfor %}
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12 mb-md-3">
       <hr />
-      <h2 class="text-center">Your Order</h2>
-      <div id="order-container">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-9">
-                <h4>Item Name</h4>
-              </div>
-              <div class="col-md-3">
-                <h4>Price</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-9">
-              <h4>Total</h4>
-            </div>
-            <div class="col-md-3">
-              <h4 id="total-price">Total</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder()">Place order</button>
+      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="showOrder()">Place order</button>
     </div>
+    <br />
   {% else %}
     <div class="alert alert-warning">
       No menu data recieved

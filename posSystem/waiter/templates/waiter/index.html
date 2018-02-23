@@ -1,80 +1,41 @@
-<!-- Script for returning to the index page of the site if the user mistakenly clicked wrong section -->
-<script>
-function goBack() {
-    window.history.back();
-}
-</script>
-<style media="screen" type="text/css">
-.btn-bigboi {
-    padding: 180px 280px;
-    font-size: 1000px;
-    line-height: normal;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
-}
-</style>
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Waiters Index</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-    <br>
-        <div class="container-fluid">
-            <button type="button" class="btn btn-default" onclick="goBack()">Go back</button>
-        </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-6">
-            <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./orders'">Orders
-                {% with total=unconfirmed_orders.count %}
-                    {% if total != 0 %}
-                        <font color="LIGHTSALMON">(+{{total}})</font>
-                    {% endif %}
-                {% endwith %}
-            </button>
-        </div>
-            <div class="col-sm-6">
-                <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./deliveries'">Deliveries
-                    {% with total=undelivered_orders.count %}
-                        {% if total != 0 %}
-                            <font color="LIGHTSALMON">(+{{total}})</font>
-                        {% endif %}
-                    {% endwith %}
-                </button>
-            </div>
-      </div>
-        <br>
-        <br>
-        <div class="col-sm-6">
-                <button class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'">Payment-fixme
-                    {% with total=undelivered_orders.count %}
-                        {% if total != 0 %}
-                            <font color="LIGHTSALMON">(+{{total}})</font>
-                        {% endif %}
-                    {% endwith %}
-                </button>
-            </div>
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center">Orders</h1>
+<hr />
+
+<div id="container-alerts">
+  {# populate alerts here #}
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <h2 class="text-center">Requiring confirmation:</h2>
+    <div id="container-confirm">
+      {# populate orders which need confirming here #}
     </div>
-</body>
+  </div>
+
+  <div class="col-md-4">
+    <h2 class="text-center">Ready to be delivered:</h2>
+    <div id="container-delivery">
+      {# populate orders which need delivering here #}
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <h2 class="text-center">Delivered and unpaid:</h2>
+    <div id="container-unpaid">
+      {# populate orders which need to be paid for here #}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block endjs %}<script src="{% static "waiter/js/index.js" %}"></script>{% endblock %}

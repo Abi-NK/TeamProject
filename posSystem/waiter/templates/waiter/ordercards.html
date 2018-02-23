@@ -1,0 +1,44 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if orders %}
+{% for order in orders %}
+
+<div class="card mb-md-3">
+  <div class="card-body">
+    <h4 class="card-title">Order #{{ order.id }} - {{ order.table }}</h4>
+
+    {% if confirm or delivery %}
+    <p class="card-text">
+      {{ order.items | linebreaksbr }}
+    </p>
+    {% endif %}
+
+    {% if confirm %}
+    <h5>Total price: {{ order.get_price_display }}</h5>
+    <h5>Time Ordered: {{ order.get_time_display }}</h5>
+    <button type="button" class="btn btn-{% if order.confirmed %}success{% else %}primary{% endif %} btn-lg btn-block"
+    onclick="confirmOrder(this, {{ order.id }})" {% if order.confirmed %}disabled{% endif %}>
+      {% if order.confirmed %}Confirmed{% else %}Confirm{% endif %}
+    </button>
+    {% endif %}
+
+    {% if delivery %}
+    <form method="POST">{% csrf_token %}
+      <input type="hidden" name="delivery_id" value="{{ order.id }}">
+      <td><button type="submit" class="btn btn-primary btn-lg btn-block">Delivered</button></td>
+    </form>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endfor %}
+{% else %}
+
+<div class="alert alert-warning">
+  No orders.
+</div>
+
+{% endif %}
+{% endblock %}
