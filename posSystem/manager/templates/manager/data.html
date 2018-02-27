@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Realtime Data{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-2">
+    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block">Control Panel</a>
+    <div id="container-summary">
+
+    </div>
+  </div>
+
+  <div class="col-md-5">
+
+  </div>
+
+  <div class="col-md-5">
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/data.js" %}"></script>{% endblock %}
