@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+from waiter.models import Order
 
 
 def group_check(user):
@@ -21,4 +22,17 @@ def data(request):
 @user_passes_test(group_check)
 def get_summary(request):
     """Returns a summary of restaurant data in formatted HTML."""
-    return render(request, 'manager/get/summary.html')
+    context = {
+        "seating_data": {
+            "occupied_count": 15,
+            "available_count": 5,
+        },
+        "order_data": {
+            "active_count": len(Order.active_objects.all()),
+            "unconfirmed_count": len(Order.unconfirmed_objects.all()),
+            "confirmed_count": len(Order.confirmed_objects.all()),
+            "ready_count": len(Order.ready_objects.all()),
+            "delivered_today": len(Order.delivered_today_objects.all()),
+        },
+    }
+    return render(request, 'manager/get/summary.html', context)
