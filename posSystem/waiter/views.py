@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from kitchen.views import index as waiter_index
+from manager.views import index as manager_index
 
 
 def group_check(user):
@@ -27,6 +28,8 @@ def waiter_login(request):
                 return redirect(index)
             elif user.username.startswith('kitchen'):
                 return redirect(waiter_index)
+            elif user.username.startswith('manager'):
+                return redirect(manager_index)
             else:
                 return redirect('')
         else:
