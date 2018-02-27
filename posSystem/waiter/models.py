@@ -4,20 +4,19 @@ from customer.models import Menu, Seating
 from django.utils import timezone
 from datetime import datetime, timedelta
 
-
 class Order(models.Model):
 
     # Order db
     table = models.CharField(max_length=100, default='na')
-    time = models.DateTimeField()  # The time at which the order was taken
-    items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
-    cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium
-    #  rare or without the onions
+    time = models.DateTimeField() # The time at which the order was taken
+    items = models.CharField(max_length=1000, default='na') # Includes prices as plaintext
+    cooking_instructions = models.CharField(max_length=500, default='na') # Preferences, allergies, etc.
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    confirmed = models.BooleanField(default=False)  # order has been confirmed
-    ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
-    delivered = models.BooleanField(default=False)  # order has been delivered
+    confirmed = models.BooleanField(default=False) # order has been confirmed
+    cancelled = models.BooleanField(default=False)
+    ready_delivery = models.BooleanField(default=False) # order is ready for delivery
+    delivered = models.BooleanField(default=False) # order has been delivered
 
     def __str__(self):
         if self.confirmed:
@@ -30,7 +29,13 @@ class Order(models.Model):
         self.confirmed = True
         self.save()
         print("Order %s is confirmed" % self.id)
-
+    
+    def set_cancelled(self):
+        """sets the order as cancelled"""
+        self.cancelled = True
+        self.save()
+        print("Order %s is cancelled" % self.id)
+    
     def set_ready_delivery(self):
         """sets the order as ready to be delivered"""
         self.ready_delivery = True
@@ -45,7 +50,6 @@ class Order(models.Model):
 
     def get_all_orders(self):
         """returns all the orders"""
-        # return self
         return Order.objects.all()
 
     def get_ready_orders(self):
