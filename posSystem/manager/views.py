@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+from customer.models import Seating
 from waiter.models import Order
 
 
@@ -24,8 +25,8 @@ def get_summary(request):
     """Returns a summary of restaurant data in formatted HTML."""
     context = {
         "seating_data": {
-            "occupied_count": 15,
-            "available_count": 5,
+            "occupied_count": len(Seating.occupied_objects.all()),
+            "available_count": len(Seating.available_objects.all()),
         },
         "order_data": {
             "active_count": len(Order.active_objects.all()),
