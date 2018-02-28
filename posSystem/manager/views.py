@@ -46,3 +46,12 @@ def get_orders(request):
         "orders": Order.active_objects.all(),
     }
     return render(request, 'manager/get/orders.html', context)
+
+
+@user_passes_test(group_check)
+def get_tables(request):
+    """Return all occupied tables in formatted HTML."""
+    context = {
+        "seating": Seating.occupied_objects.all(),
+    }
+    return render(request, 'manager/get/tables.html', context)

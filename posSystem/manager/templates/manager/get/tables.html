@@ -1,0 +1,21 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if seating %}
+
+<div class="card mb-md-3">
+  <div class="card-body py-1">
+    {% for seat in seating %}
+    <h5>{{ seat.label }}{% if seat.assistance %} <span class="badge badge-secondary">requesting assistance</span>{% endif %}</h5>
+    {% endfor %}
+  </div>
+</div>
+
+{% else %}
+
+<div class="alert alert-warning">
+  No occupied tables.
+</div>
+
+{% endif %}
+{% endblock %}

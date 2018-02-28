@@ -13,6 +13,10 @@ function updateData(){
   $.get("getorders", function(data){
     $("#container-orders").html(data);
   });
+
+  $.get("gettables", function(data){
+    $("#container-tables").html(data);
+  });
 }
 
 $(document).ready(function(){
