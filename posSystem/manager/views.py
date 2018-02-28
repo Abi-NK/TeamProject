@@ -22,7 +22,7 @@ def data(request):
 
 @user_passes_test(group_check)
 def get_summary(request):
-    """Returns a summary of restaurant data in formatted HTML."""
+    """Return a summary of restaurant data in formatted HTML."""
     context = {
         "seating_data": {
             "occupied_count": len(Seating.occupied_objects.all()),
@@ -37,3 +37,12 @@ def get_summary(request):
         },
     }
     return render(request, 'manager/get/summary.html', context)
+
+
+@user_passes_test(group_check)
+def get_orders(request):
+    """Return all active orders in formatted HTML."""
+    context = {
+        "orders": Order.active_objects.all(),
+    }
+    return render(request, 'manager/get/orders.html', context)

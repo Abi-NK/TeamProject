@@ -1,0 +1,30 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if orders %}
+{% for order in orders %}
+
+<div class="card mb-md-3">
+  <div class="card-body py-1">
+    <h5>Order #{{ order.id }} - {{ order.table }}</h5>
+
+    <h5>Status: {% if order.ready_delivery %}Ready for delivery{% elif order.confirmed %}Being prepared{% else %}Unconfirmed{% endif %}</h5>
+
+    <p class="card-text">
+      {{ order.items | linebreaksbr }}
+    </p>
+
+    <h5>Total price: {{ order.get_price_display }}</h5>
+    <h5>Time Ordered: {{ order.get_time_display }}</h5>
+  </div>
+</div>
+
+{% endfor %}
+{% else %}
+
+<div class="alert alert-warning">
+  No active orders.
+</div>
+
+{% endif %}
+{% endblock %}
