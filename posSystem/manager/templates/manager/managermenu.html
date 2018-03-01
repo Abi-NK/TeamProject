@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Manager Menu</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% load static %}
+
+{% block title %}Manager Menu{% endblock %}
+
+{% block content %}
+
+
+<h1 class="text-center">Adjust Menu</h1>
+
+{% for menu_item in menu %}
+<div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action"><b>{{ menu_item.name }}</b> - {{ menu_item.category }}</a>
+</div>
+{% endfor %}
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/index.js" %}"></script>{% endblock %}
