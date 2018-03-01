@@ -177,7 +177,11 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
           </div>
           <div class="modal-body">
-            search bar etc...
+            <form action="/filter/" method="post">
+              <label for="search_term">Search Term: </label>
+              <input id="search_term" type="text" name="search_term" value="{{ term }}">
+              <input type="submit" value="OK">
+            </form>
           </div>
           <div class="modal-footer">
           </div>
