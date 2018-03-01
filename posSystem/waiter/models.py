@@ -18,6 +18,7 @@ class Order(models.Model):
     confirmed = models.BooleanField(default=False)  # order has been confirmed
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
+    delayed = models.BooleanField(default=False) #order is delayed
 
     def __str__(self):
         if self.confirmed:
@@ -41,7 +42,13 @@ class Order(models.Model):
         """sets the order as delivered"""
         self.delivered = True
         self.save()
-        print("Order %s is has been delivery" % self.id)
+        print("Order %s has been delivered" % self.id)
+
+    def set_delayed(self):
+        """sets the order as delayed"""
+        self.delayed = True
+        self.save()
+        print("Order %s has been delayed" % self.id)
 
     def get_all_orders(self):
         """returns all the orders"""
