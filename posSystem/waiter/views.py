@@ -124,3 +124,9 @@ def cancel_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["id"]
     Seating.objects.get(pk=seating_id).set_assistance_false()
     return HttpResponse("recieved")
+
+@require_http_methods(["POST"])
+def delay_order(request):
+    seating_id = json.loads(request.body.decode('utf-8'))["id"]
+    Seating.objects.get(pk=seating_id).set_delayed()
+    return HttpResponse("recieved")
