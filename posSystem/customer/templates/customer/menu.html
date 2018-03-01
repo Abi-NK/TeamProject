@@ -168,7 +168,22 @@
       <h5>Not found what you're looking for?</h5>
     </div>
     <div class="col-md-4">
-      <button type="button" class="btn btn-primary btn-sm btn-block" onclick="buttonHelp(this)">Filter menu</button>
+      <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#sortMenu">Filter menu</button>
+      <div class="modal fade" id="sortMenu">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Search Oaxaca Menu:</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            search bar etc...
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
   {% if all_menu %}
