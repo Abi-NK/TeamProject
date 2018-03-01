@@ -31,23 +31,17 @@ def take_seat(request):
 
 
 def payment(request):
-    payments = Payment.get_payments(all)
-
-    if "id" not in request.session:
-        print("no order id")
-    order = Order.objects.get(pk=request.session.session_key)
-
     if request.method == "POST":
         Payment(
-            table=request.POST.get('table'),
-            order=request.POST.get('order'),
+            table=Seating.objects.filter(request.session['seating_label']),
+            # order=request.POST.get('order'), - commented for attempting db keys
             card_holder=request.POST.get('name'),
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),
             expiry=request.POST.get('expiry'),
             terms_conditions=checkbox_check(request.POST.get('cbx'))
         ).save(force_insert=True)
-    return render(request, "customer/e_payment.html", {'payment': Payment}, {'order': order})
+    return render(request, "customer/e_payment.html", {'payment': Payment}, {'order': Order})
 
 
 def checkbox_check(val):
