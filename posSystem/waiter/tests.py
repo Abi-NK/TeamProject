@@ -174,3 +174,15 @@ class TestMarkingDelivery(TestCase):
         Order.objects.get(pk=100).set_delivered()
         Order.objects.get(pk=200).set_delivered()
         self.assertEqual(Order.delivered_today_objects.count(), 2)
+
+    def test_delivered_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                confirmed=True,
+                ready_delivery=True,
+                delivered=True,
+            )
+        self.assertEqual(Order.delivered_week_objects.count(), 7)

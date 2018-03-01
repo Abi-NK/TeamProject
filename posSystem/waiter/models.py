@@ -35,6 +35,14 @@ class DeliveredTodayOrderManager(models.Manager):
         return super().get_queryset().filter(delivered=True).filter(time__date=date.today())
 
 
+class DeliveredWeekOrderManager(models.Manager):
+    """Filter for this week's delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(delivered=True).filter(
+            time__date__gt=timezone.now().date()-timedelta(days=7)
+        )
+
+
 class Order(models.Model):
 
     objects = models.Manager()
@@ -43,6 +51,7 @@ class Order(models.Model):
     unconfirmed_objects = UnconfirmedOrderManager()
     ready_objects = ReadyOrderManager()
     delivered_today_objects = DeliveredTodayOrderManager()
+    delivered_week_objects = DeliveredWeekOrderManager()
 
     # Order db
     table = models.CharField(max_length=100, default='na')

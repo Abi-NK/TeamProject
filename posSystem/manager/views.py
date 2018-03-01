@@ -34,6 +34,7 @@ def get_summary(request):
             "confirmed_count": len(Order.confirmed_objects.all()),
             "ready_count": len(Order.ready_objects.all()),
             "delivered_today": len(Order.delivered_today_objects.all()),
+            "delivered_week": len(Order.delivered_week_objects.all()),
         },
     }
     return render(request, 'manager/get/summary.html', context)
