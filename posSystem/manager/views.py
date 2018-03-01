@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
-from customer.models import Seating
+from customer.models import Seating, Menu
 from waiter.models import Order
 
 
@@ -55,3 +55,12 @@ def get_tables(request):
         "seating": Seating.occupied_objects.all(),
     }
     return render(request, 'manager/get/tables.html', context)
+
+
+def show_menu(request):
+    """Return the menu in formatted HTML."""
+    context = {
+        "menu": Menu.objects.all(),
+    }
+    return render(request, 'manager/managermenu.html', context)
+
