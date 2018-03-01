@@ -63,11 +63,11 @@ def index(request):
 @login_required
 def get_orders_confirm(request):
     """Return all orders which need confirmation as formatted HTML."""
-    #orders = Order.get_not_confirmed_orders(all)
     orders = Order.objects.filter(confirmed=False,cancelled=False)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
+# cancel orders get request
 @require_http_methods(["GET"])
 @login_required
 def get_orders_cancel(request):
@@ -118,6 +118,7 @@ def confirm_order(request):
     return HttpResponse("recieved")
 
 
+# cancel orders post request
 @require_http_methods(["POST"])
 @login_required
 def cancel_order(request):
