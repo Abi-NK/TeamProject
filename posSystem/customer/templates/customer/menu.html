@@ -173,15 +173,26 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Search Oaxaca Menu:</h4>
+            <h4 class="modal-title">Filter Oaxaca Menu:</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-          </div>
+           </div>
           <div class="modal-body">
-            <form action="/filter/" method="post">
-              <label for="search_term">Search Term: </label>
-              <input id="search_term" type="text" name="search_term" value="{{ term }}">
-              <input type="submit" value="OK">
-            </form>
+             <button type="button" class="btn btn-success btn-sm btn-block" data-toggle="modal" data-target="#sorted">Go!</button>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="modal fade" id="sorted">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Asznee:</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+           </div>
+          <div class="modal-body">
           </div>
           <div class="modal-footer">
           </div>
