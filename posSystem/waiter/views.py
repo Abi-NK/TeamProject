@@ -57,6 +57,14 @@ def index(request):
 
 
 @require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_payment(request):
+    """Return all payment information."""
+    payment = Payment.objects.all()
+    return render(request, "waiter/ordercards.html", {'payment': payment})
+
+
+@require_http_methods(["GET"])
 @login_required
 def get_orders_confirm(request):
     """Return all orders which need confirmation as formatted HTML."""
@@ -103,6 +111,18 @@ def confirm_order(request):
     order = Order.objects.get(pk=order_id)
     order.confirmed = True
     order.save()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+@login_required
+def confirm_payment(request):
+    """Confirm the provided payment in the database."""
+    payment_id = json.loads(request.body.decode('utf-8'))["id"]
+    print("Recieved ID: " + str(payment_id))
+    payment = Payment.objects.get(pk=payment_id)
+    payment.payment_accepted = True
+    payment.save()
     return HttpResponse("recieved")
 
 
