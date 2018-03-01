@@ -3,7 +3,7 @@ from customer.models import Menu, Seating
 from waiter.models import Order
 import random
 from django.utils import timezone
-from datetime import timedelta
+from datetime import date, datetime, time, timedelta
 
 
 def random_order_json():
@@ -92,3 +92,34 @@ class Command(BaseCommand):
                 order.delivered = True
             order.save()
             print(str(order))
+
+        # create a history of delivered orders
+        orders_per_day = [25, 50]
+        days_of_history = 7
+
+        all_seating = [item for item in Seating.objects.all()]
+        random.shuffle(all_seating)
+        table_count = len(all_seating)
+        date_now = date.today()
+
+        for i in range(days_of_history):
+            day_offset = timedelta(days=i)
+            order_date = date_now - day_offset
+            for j in range(random.randrange(orders_per_day[0], orders_per_day[1])):
+                order_json = random_order_json()
+                random_hour = random.randrange(8, 23)
+                random_minute = random.randrange(60)
+                random_second = random.randrange(60)
+                order_time = time(hour=random_hour, minute=random_minute, second=random_second)
+                combined = datetime.combine(order_date, order_time)
+                order_datetime = timezone.make_aware(combined, timezone.get_default_timezone())
+                order = Order.objects.create(
+                    table=all_seating[random.randrange(table_count)].label,
+                    time=order_datetime,
+                    items=items_string_from_json(order_json),
+                    total_price=total_price_from_json(order_json),
+                    confirmed=True,
+                    ready_delivery=True,
+                    delivered=True,
+                )
+                print(str(order))
