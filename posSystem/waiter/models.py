@@ -20,10 +20,17 @@ class Order(models.Model):
     delivered = models.BooleanField(default=False)  # order has been delivered
 
     def __str__(self):
-        if self.confirmed:
-            return "Order: " + str(self.id) + ' -> ' + 'READY'
+        status = ""
+        if self.delivered:
+            status = "delivered"
+        elif self.ready_delivery:
+            status = "ready for delivery"
+        elif self.confirmed:
+            status = "preparing"
         else:
-            return "Order: " + str(self.id) + ' -> ' + 'Not ready'
+            status = "unconfirmed"
+        return "Order #%s: %s, status: %s, price: %s, time placed: %s" % \
+            (self.id, self.table, status, self.get_price_display(), self.time)
 
     def set_confirmed(self):
         """sets the order as confirmed"""
