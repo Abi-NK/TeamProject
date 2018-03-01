@@ -30,6 +30,7 @@ class Order(models.Model):
         self.save()
         print("Order %s is confirmed" % self.id)
     
+    # Set cancelled in db
     def set_cancelled(self):
         """sets the order as cancelled"""
         self.cancelled = True
