@@ -53,6 +53,6 @@ def get_orders(request):
 def get_tables(request):
     """Return all occupied tables in formatted HTML."""
     context = {
-        "seating": Seating.occupied_objects.all(),
+        "seating": Seating.objects.all(),
     }
     return render(request, 'manager/get/tables.html', context)
