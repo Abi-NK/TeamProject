@@ -153,3 +153,20 @@ $(document).ready(function() {
     console.log("Already seated at " + seatingLabel);
   }
 });
+
+
+// method called by submission button of menu filtering modal
+$('.btn-filter').on('click', function() {
+  // if selected "vegan"
+  if($("#vegan").is(':checked')){
+    alert("clinton");
+  }
+  // if selected "vegetarian"
+  if($("#vegetarian").is(':checked')){
+    alert("trump");
+  }
+  // if selected "wheat-free"
+  if($("#wheat-free").is(':checked')){
+    alert("kanye");
+  }
+});
