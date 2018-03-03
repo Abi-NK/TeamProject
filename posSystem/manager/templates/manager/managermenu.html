@@ -5,13 +5,39 @@
 {% block title %}Manager Menu{% endblock %}
 
 {% block content %}
+<!-- Modal - showing additional information - -->
+{% for menu_item in menu %}
+<div class="modal fade" id="{{menu_item.id}}" role="dialog">
+  <div class="modal-dialog">
 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{menu_item.name}} - £{{menu_item.price}}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-image text-center">
+          <p><img class="img-responsive" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
+        </div>
+        <p>{{menu_item.description}}</p>
+        <p><i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></p>
+        <p>{{menu_item.calories}}kcal</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
 
 <h1 class="text-center">Adjust Menu</h1>
 
 {% for menu_item in menu %}
 <div class="list-group">
-    <a href="#" class="list-group-item list-group-item-action"><b>{{ menu_item.name }}</b> - {{ menu_item.category }}</a>
+    <a class="list-group-item list-group-item-action" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}"><b>{{ menu_item.name }}</b> - {{ menu_item.category }}</a>
+
 </div>
 {% endfor %}
 {% endblock %}
