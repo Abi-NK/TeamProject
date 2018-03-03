@@ -159,14 +159,15 @@ $(document).ready(function() {
 $('.btn-filter').on('click', function() {
   // if selected "vegan"
   if($("#vegan").is(':checked')){
-    alert("clinton");
+    // for example
+    $('button').hide();
   }
   // if selected "vegetarian"
   if($("#vegetarian").is(':checked')){
-    alert("trump");
+
   }
   // if selected "wheat-free"
   if($("#wheat-free").is(':checked')){
-    alert("kanye");
+
   }
 });
