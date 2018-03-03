@@ -1,7 +1,7 @@
 [
-  ["Guacamole with tortilla chips", 4.75, "Freshly made every day with Hass avocados, lime and coriander", "Nibbles", "", "Wheat", 700, "https://i.imgur.com/IqlRr8U.jpg", true],
-  ["Roast tomato salsa & tortilla chips", 3.85, " Charred & mashed with fresh lime & a touch of chilli", "Nibbles", "", "Wheat", 500, "https://i.imgur.com/BMXWF5n.jpg", true],
-  ["Frijoles & tortilla chips", 3.85, "Creamy twice-cooked black beans", "Nibbles", "", "Wheat", 600, "https://i.imgur.com/V0HrL2v.jpg", true],
+  ["Guacamole with tortilla chips", 4.75, "Freshly made every day with Hass avocados, lime and coriander", "Nibbles", "Tortilla Chips", "Wheat", 700, "https://i.imgur.com/IqlRr8U.jpg", true],
+  ["Roast tomato salsa & tortilla chips", 3.85, " Charred & mashed with fresh lime & a touch of chilli", "Nibbles", "Tortilla Chips", "Wheat", 500, "https://i.imgur.com/BMXWF5n.jpg", true],
+  ["Frijoles & tortilla chips", 3.85, "Creamy twice-cooked black beans", "Nibbles", "Tortilla Chips", "Wheat", 600, "https://i.imgur.com/V0HrL2v.jpg", true],
   ["Pork pibil", 4.60, "The original, and still the best! Slow braised shoulder of pork cooked in Yucatecan spices & orange, with fiery pink pickled onions", "Street Food", "Classic Tacos", "", 500, "https://i.imgur.com/UT9gZB7.jpg", false],
   ["Grilled chicken and avocado", 4.95, "Chicken thigh with sweet ancho chilli, fresh guacamole & tomatillo salsa", "Street Food", "Classic Tacos", "", 700, "https://i.imgur.com/l8Wewwp.jpg", false],
   ["Grilled British steak", 4.95, "Flash-grilled skirt steak with chipotle salsa", "Street Food", "Classic Tacos", "", 600, "https://i.imgur.com/xRV1OQu.jpg", false],
