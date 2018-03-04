@@ -1,67 +1,45 @@
-    <style>
+{% extends "base.html" %}
 
-    .footer {
+{% load static %}
 
-    position: fixed;
+{% block title %}Manager Menu{% endblock %}
 
-    height: 60px;
-
-    bottom: 0;
-
-    width: 100%;
-
-    background-color: #f5f5f5f5;
-
-    }
-
-    </style>
-<!DOCTYPE html>
-<html lang="en">
+{% block content %}
 
 <head>
-    <meta charset="UTF-8">
-    <title>Oaxaca Restaurant System</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 
 <body>
 <main>
-    <div class="jumbotron text-center">
-        <h1>Oaxaca Restaurant System</h1>
-        <p>Oaxaca - home to unique delicious Mexcian street food and first class table service since 2007.</p>
-    </div>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <h3>Customer:</h3>
-                {% load static %}
+    <video autoplay muted loop id="myVideo" style="
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;">
+        <source src="https://cf-e2.streamablevideo.com/video/mp4/r9n36.mp4?token=1520189873-aNMtRceH02R%2FngAHh3JvlvE5J9FEWWw3FHkAa9Sixp8%3D" type="video/mp4">
+    </video>
+    <div class="content" style="text-align:center;
+    position: fixed;
+    color: #f1f1f1;
+    width: 50%;
+    padding: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);">
+        <h1 style="text-shadow: -1px 0 black, 0 3px black, 1px 0 black, 0 -1px black;"><font size="50">Oaxaca Restaurant System</font></h1>
+        <p style="text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;"><font size="5">Home to unique delicious Mexcian street food and first class table service since 2007</p>
+
                 <a href="/customer/">
-                <img class="img-responsive" src="{% static "customer/media/customer.jpg" %}" alt="Customer"/>
+                <img class="img-responsive" src="http://midlandbagel.com/wp-content/themes/midland-bagel/assets/images/start-order-button.png" alt="Customer"/>
                 </a>
-            </div>
-            <div class="col-sm-4">
-                <h3>Waiter:</h3>
-                {% load static %}
-                <a href="/waiter/">
-                <img class="img-responsive" src="{% static "customer/media/waiter.jpg" %}" alt="Customer"/>
-                </a>
-            </div>
-            <div class="col-sm-4">
-                <h3>Kitchen:</h3>
-                {% load static %}
-                <a href="/kitchen/">
-                <img class="img-responsive" src="{% static "customer/media/kitchen.jpg" %}" alt="Customer"/>
-                </a>
-            </div>
-        </div>
-    </div>
-    <div class="footer">
-        <p>&copy;Oaxaca 2018</p>
+
     </div>
 </main>
 </body>
 </html>
 
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/index.js" %}"></script>{% endblock %}
