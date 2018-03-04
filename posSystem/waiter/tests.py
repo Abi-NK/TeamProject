@@ -75,16 +75,15 @@ class TestMarkingDelivery(TestCase):
         test_order.set_confirmed()
         self.assertEqual(test_order.confirmed, True)
 
-    #Tests a cancelled order
-    def test_set_confirmed(self):
+    def test_set_cancelled(self):
         """Order has been cancelled"""
         test_cancel_order = Order.objects.get(pk=300)
-        self.assertEqual(test_cancel_order.confirmed, False) #confirm true
-        self.assertEqual(test_cancel_order.cancelled, False) #cancel false
-        test_cancel_order.set_confirmed() #Order has been unconfirmed
-        test_cancel_order.set_cancelled() #Order has been cancelled
-        self.assertEqual(test_cancel_order.confirmed, True) #confirm false
-        self.assertEqual(test_cancel_order.cancelled, True) #cancel true
+        self.assertEqual(test_cancel_order.confirmed, False)  # confirm true
+        self.assertEqual(test_cancel_order.cancelled, False)  # cancel false
+        test_cancel_order.set_confirmed()  # Order has been unconfirmed
+        test_cancel_order.set_cancelled()  # Order has been cancelled
+        self.assertEqual(test_cancel_order.confirmed, True)  # confirm false
+        self.assertEqual(test_cancel_order.cancelled, True)  # cancel true
 
     def test_set_ready_delivery(self):
         """"Order is ready for delivery"""

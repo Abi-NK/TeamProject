@@ -4,23 +4,24 @@ from customer.models import Menu, Seating
 from django.utils import timezone
 from datetime import datetime, timedelta
 
-class Order(models.Model):
 
-    # Order db
+class Order(models.Model):
     table = models.CharField(max_length=100, default='na')
-    time = models.DateTimeField() # The time at which the order was taken
-    items = models.CharField(max_length=1000, default='na') # Includes prices as plaintext
-    cooking_instructions = models.CharField(max_length=500, default='na') # Preferences, allergies, etc.
+    time = models.DateTimeField()  # The time at which the order was taken
+    items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
+    cooking_instructions = models.CharField(max_length=500, default='na')  # Preferences, allergies, etc.
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    confirmed = models.BooleanField(default=False) # order has been confirmed
+    confirmed = models.BooleanField(default=False)  # order has been confirmed
     cancelled = models.BooleanField(default=False)
-    ready_delivery = models.BooleanField(default=False) # order is ready for delivery
-    delivered = models.BooleanField(default=False) # order has been delivered
+    ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
+    delivered = models.BooleanField(default=False)  # order has been delivered
 
     def __str__(self):
         status = ""
-        if self.delivered:
+        if self.cancelled:
+            status = "cancelled"
+        elif self.delivered:
             status = "delivered"
         elif self.ready_delivery:
             status = "ready for delivery"
@@ -36,14 +37,14 @@ class Order(models.Model):
         self.confirmed = True
         self.save()
         print("Order %s is confirmed" % self.id)
-    
+
     # Set cancelled in db
     def set_cancelled(self):
         """sets the order as cancelled"""
         self.cancelled = True
         self.save()
         print("Order %s is cancelled" % self.id)
-    
+
     def set_ready_delivery(self):
         """sets the order as ready to be delivered"""
         self.ready_delivery = True

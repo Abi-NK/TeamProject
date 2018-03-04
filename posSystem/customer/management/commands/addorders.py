@@ -81,7 +81,7 @@ class Command(BaseCommand):
         random.shuffle(all_orders)
         order_count = len(all_orders)
 
-        # mark some active orders to be confirmed / ready / delivered
+        # mark some active orders to be confirmed / ready / delivered, and about 1/10th to be cancelled
         for i in range(order_count):
             order = all_orders[i]
             if i < order_count * 0.7:
@@ -90,6 +90,8 @@ class Command(BaseCommand):
                 order.ready_delivery = True
             if i < order_count * 0.1:
                 order.delivered = True
+            if random.random() < 0.1:
+                order.cancelled = True
             order.save()
             print(str(order))
 
@@ -122,4 +124,6 @@ class Command(BaseCommand):
                     ready_delivery=True,
                     delivered=True,
                 )
+                if random.random() < 0.1:
+                    order.cancelled = True
                 print(str(order))
