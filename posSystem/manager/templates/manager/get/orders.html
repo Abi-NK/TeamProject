@@ -5,40 +5,22 @@
 {% for order in orders %}
 
 <hr />
-<div data-toggle="modal" data-target="#orderModal{{ order.id }}">
-  <div class="row">
-    <div class="col-6">
-      <h5>Order <strong>#{{ order.id }}</strong> - <strong>{{ order.table }}</strong></h5>
-      <h5>Status: <strong>{% if order.ready_delivery %}ready for delivery{% elif order.confirmed %}being prepared{% else %}unconfirmed{% endif %}</strong></h5>
-        <h5>Total price <strong>{{ order.get_price_display }}</strong></h5>
-        <h5>Ordered at <strong>{{ order.get_time_display }}</strong></h5>
-    </div>
-    <div class="col-6">
-      {{ order.items | linebreaksbr }}
-    </div>
+<div class="row">
+  <div class="col-5">
+    <h5>Order <strong>#{{ order.id }}</strong> - <strong>{{ order.table }}</strong></h5>
+    <h5>Status: <strong>{% if order.ready_delivery %}ready for delivery{% elif order.confirmed %}being prepared{% else %}unconfirmed{% endif %}</strong></h5>
+    <h5>Total price <strong>{{ order.get_price_display }}</strong></h5>
+    <h5>Ordered at <strong>{{ order.get_time_display }}</strong></h5>
   </div>
-</div>
-
-{# the modal containing the list of ordered items #}
-<div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Order <strong>#{{ order.id }}</strong> - <strong>{{ order.table }}</strong></h5>
-        <button type="button" class="close" data-dismiss="modal">
-          <span>&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-      </div>
-    </div>
+  <div class="col-7">
+    {{ order.items | linebreaksbr }}
   </div>
 </div>
 
 {% endfor %}
 {% else %}
 
+<hr />
 <div class="alert alert-warning">
   No active orders.
 </div>
