@@ -12,6 +12,7 @@ class Menu(models.Model):
     allergy = models.CharField(max_length=1000, default="")
     calories = models.IntegerField(default=0)
     image = models.CharField(max_length=1000, default='na')
+    stock = models.IntegerField(default=0)
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.course)
