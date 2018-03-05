@@ -38,6 +38,10 @@ class Seating(models.Model):
         self.save()
         print("%s has been taken" % self.label)
 
+    def set_available(self):
+        self.available = True
+        self.save()
+
     def set_assistance_true(self):
         self.assistance = True
         self.save()
