@@ -1,0 +1,29 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if orders %}
+{% for order in orders %}
+
+<hr />
+<div class="row">
+  <div class="col-5">
+    <h5>Order <strong>#{{ order.id }}</strong> - <strong>{{ order.table }}</strong></h5>
+    <h5>Status: <strong>{% if order.ready_delivery %}ready for delivery{% elif order.confirmed %}being prepared{% else %}unconfirmed{% endif %}</strong></h5>
+    <h5>Total price <strong>{{ order.get_price_display }}</strong></h5>
+    <h5>Ordered at <strong>{{ order.get_time_display }}</strong></h5>
+  </div>
+  <div class="col-7">
+    {{ order.items | linebreaksbr }}
+  </div>
+</div>
+
+{% endfor %}
+{% else %}
+
+<hr />
+<div class="alert alert-warning">
+  No active orders.
+</div>
+
+{% endif %}
+{% endblock %}

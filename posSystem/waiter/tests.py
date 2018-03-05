@@ -148,3 +148,67 @@ class TestMarkingDelivery(TestCase):
             total_price=0,
         )
         self.assertTrue(order.is_late())
+
+    def test_active_order_manager(self):
+        self.assertEqual(Order.active_objects.count(), 4)
+        Order.objects.get(pk=100).set_delivered()
+        Order.objects.get(pk=200).set_delivered()
+        self.assertEqual(Order.active_objects.count(), 2)
+
+    def test_confirmed_order_manager(self):
+        self.assertEqual(Order.confirmed_objects.count(), 0)
+        Order.objects.get(pk=100).set_confirmed()
+        Order.objects.get(pk=200).set_confirmed()
+        Order.objects.get(pk=300).set_confirmed()
+        Order.objects.get(pk=300).set_ready_delivery()
+        Order.objects.get(pk=400).set_confirmed()
+        Order.objects.get(pk=400).set_ready_delivery()
+        self.assertEqual(Order.confirmed_objects.count(), 2)
+
+    def test_unconfirmed_order_manager(self):
+        self.assertEqual(Order.unconfirmed_objects.count(), 3)
+        Order.objects.get(pk=100).set_confirmed()
+        Order.objects.get(pk=200).set_confirmed()
+        Order.objects.get(pk=300).set_confirmed()
+        self.assertEqual(Order.unconfirmed_objects.count(), 0)
+
+    def test_ready_order_manager(self):
+        self.assertEqual(Order.ready_objects.count(), 1)
+        Order.objects.get(pk=100).set_ready_delivery()
+        Order.objects.get(pk=200).set_ready_delivery()
+        Order.objects.get(pk=200).set_delivered()
+        self.assertEqual(Order.ready_objects.count(), 2)
+
+    def test_delivered_today_manager(self):
+        self.assertEqual(Order.delivered_today_objects.count(), 0)
+        Order.objects.get(pk=100).set_delivered()
+        Order.objects.get(pk=200).set_delivered()
+        self.assertEqual(Order.delivered_today_objects.count(), 2)
+
+    def test_delivered_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                confirmed=True,
+                ready_delivery=True,
+                delivered=True,
+            )
+        self.assertEqual(Order.delivered_week_objects.count(), 7)
+
+    def test_cancelled_today_manager(self):
+        self.assertEqual(Order.cancelled_today_objects.count(), 0)
+        Order.objects.get(pk=100).set_cancelled()
+        Order.objects.get(pk=200).set_cancelled()
+        self.assertEqual(Order.cancelled_today_objects.count(), 2)
+
+    def test_cancelled_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                cancelled=True,
+            )
+        self.assertEqual(Order.cancelled_week_objects.count(), 7)

@@ -34,8 +34,15 @@ class Menu(models.Model):
 
 
 class AvailableSeatingManager(models.Manager):
+    """Filter for all available seating."""
     def get_queryset(self):
         return super().get_queryset().filter(available=True)
+
+
+class OccupiedSeatingManager(models.Manager):
+    """Filter for all occupied seating."""
+    def get_queryset(self):
+        return super().get_queryset().filter(available=False)
 
 
 class Seating(models.Model):
@@ -45,6 +52,7 @@ class Seating(models.Model):
 
     objects = models.Manager()
     available_objects = AvailableSeatingManager()
+    occupied_objects = OccupiedSeatingManager()
 
     def __str__(self):
         return self.label
