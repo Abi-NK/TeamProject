@@ -174,3 +174,15 @@ class Order(models.Model):
         allowed_gap = timedelta(minutes=10)
         difference = datetime.now() - self.time.replace(tzinfo=None)
         return difference >= allowed_gap
+
+
+class OrderItem(models.Model):
+    menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return "%s %s" % (self.menu_item, self.quantity)
+
+    def get_price(self):
+        """Return the total price of this item."""
+        return self.menu_item.price * self.quantity
