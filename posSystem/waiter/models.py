@@ -7,11 +7,11 @@ from django.utils import timezone
 class Order(models.Model):
 
     # Order db
-    # items = models. ManyToMany(Menu, on_delete=models.CASCADE)
+    items = models. ManyToManyField(Menu)
     # table = models.OneToOneField(Seating, on_delete=models.CASCADE)
-    table = models.CharField(max_length=100, default='na')
+    #table = models.CharField(max_length=100, default='na')
     time = models.DateTimeField()  # The time at which the order was taken
-    items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
+    #items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
     cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium
     #  rare or without the onions
     purchase_method = models.CharField(max_length=100, default='na')
@@ -72,7 +72,8 @@ class Order(models.Model):
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
         Order(
-            table=Seating.objects.get(pk=request.session["seating_id"]).label,
+            # table=Seating.objects.get(pk=request.session["seating_id"]).label,
+            table=Seating.objects.get(pk=request.session["seating_id"]),
             confirmed=False,
             time=timezone.now(),
             items="<br />\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
@@ -80,7 +81,7 @@ class Order(models.Model):
             purchase_method='none',
             total_price=total_price,
             delivered=False,
-        ).save(force_insert=True)
+        ).create(force_insert=True)
 
 
 class Payment(models.Model):

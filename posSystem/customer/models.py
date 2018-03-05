@@ -1,5 +1,5 @@
 from django.db import models
-# from waiter.models import Order
+from waiter.models import Order
 
 
 class Menu(models.Model):
@@ -23,7 +23,8 @@ class AvailableSeatingManager(models.Manager):
         return super().get_queryset().filter(available=True)
 
 
-class Seating(models.Model):
+class Seating(models.Model): # Table
+    table = models.OneToOneField(Order, on_delete=models.CASCADE)
     # order=models.ForeignKey(Order, on_delete=models.CASCADE)
     label = models.CharField(max_length=25, default='Table 0')
     available = models.BooleanField(default=True)
