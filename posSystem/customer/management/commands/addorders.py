@@ -126,4 +126,5 @@ class Command(BaseCommand):
                 )
                 if random.random() < 0.1:
                     order.cancelled = True
+                    order.save()
                 print(str(order))

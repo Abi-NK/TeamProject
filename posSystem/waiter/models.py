@@ -2,10 +2,73 @@ from django.db import models
 import json
 from customer.models import Menu, Seating
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+
+
+class ActiveOrderManager(models.Manager):
+    """Filter for all non-delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(delivered=False)
+
+
+class UnconfirmedOrderManager(models.Manager):
+    """Filter for unconfirmed orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(confirmed=False)
+
+
+class ConfirmedOrderManager(models.Manager):
+    """Filter for confirmed, non-ready orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(confirmed=True).filter(ready_delivery=False)
+
+
+class ReadyOrderManager(models.Manager):
+    """Filer for ready, non-delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(ready_delivery=True).filter(delivered=False)
+
+
+class DeliveredTodayOrderManager(models.Manager):
+    """Filter for today's delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(delivered=True).filter(time__date=date.today())
+
+
+class DeliveredWeekOrderManager(models.Manager):
+    """Filter for this week's delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(delivered=True).filter(
+            time__date__gt=timezone.now().date()-timedelta(days=7)
+        )
+
+
+class CancelledTodayOrderManager(models.Manager):
+    """Filter for today's cancelled orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(cancelled=True).filter(time__date=date.today())
+
+
+class CancelledWeekOrderManager(models.Manager):
+    """Filter for this week's cancelled orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(cancelled=True).filter(
+            time__date__gt=timezone.now().date()-timedelta(days=7)
+        )
 
 
 class Order(models.Model):
+
+    objects = models.Manager()
+    active_objects = ActiveOrderManager()
+    confirmed_objects = ConfirmedOrderManager()
+    unconfirmed_objects = UnconfirmedOrderManager()
+    ready_objects = ReadyOrderManager()
+    delivered_today_objects = DeliveredTodayOrderManager()
+    delivered_week_objects = DeliveredWeekOrderManager()
+    cancelled_today_objects = CancelledTodayOrderManager()
+    cancelled_week_objects = CancelledWeekOrderManager()
+
     table = models.CharField(max_length=100, default='na')
     time = models.DateTimeField()  # The time at which the order was taken
     items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Realtime Data{% endblock %}
+
+{% block content %}
+
+<div class="row mt-md-3">
+  <div class="col-xl-2">
+    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
+    <div id="container-summary">
+      {# populate summary of restraunt data here #}
+    </div>
+  </div>
+
+  <div class="col-xl-7">
+    <h2 class="text-center">Active Orders</h2>
+    <div id="container-orders">
+      {# populate active orders here #}
+    </div>
+  </div>
+
+  <div class="col-xl-3">
+    <h2 class="text-center">Seating</h2>
+    <hr />
+    <div id="container-tables">
+      {# populate active orders here #}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/data.js" %}"></script>{% endblock %}
