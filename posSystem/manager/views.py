@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
-from customer.models import Seating
+from customer.models import Menu, Seating
 from waiter.models import Order
 
 
@@ -58,3 +58,12 @@ def get_tables(request):
         "seating": Seating.objects.all(),
     }
     return render(request, 'manager/get/tables.html', context)
+
+
+@user_passes_test(group_check)
+def get_stock(request):
+    """Return stock data for the menu in formatted HTML."""
+    context = {
+        "menu": Menu.objects.all(),
+    }
+    return render(request, 'manager/get/stock.html', context)
