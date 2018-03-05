@@ -1,5 +1,4 @@
 from django.db import models
-import json
 from customer.models import Menu, Seating
 from django.utils import timezone
 from datetime import datetime, timedelta, date
@@ -10,7 +9,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return "%s %s" % (self.menu_item, self.quantity)
+        return "%s %s" % (self.quantity, self.menu_item)
 
     def get_price(self):
         """Return the total price of this item."""
@@ -176,6 +175,10 @@ class Order(models.Model):
     def get_price_display(self):
         """Get the price in a displayable format."""
         return "£%.2f" % self.total_price
+
+    def get_items_display(self):
+        """Return the string representation of the items in the order."""
+        return "\n".join([str(item) for item in self.items.all()])
 
     def is_nearly_late(self):
         allowed_gap = timedelta(minutes=7)

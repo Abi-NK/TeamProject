@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from customer.models import Menu, Seating
-from waiter.models import Order
+from waiter.models import Order, OrderItem
 import random
 from django.utils import timezone
 from datetime import date, datetime, time, timedelta
@@ -54,12 +54,18 @@ class Command(BaseCommand):
             order = Order.objects.create(
                 table=seating.label,
                 time=timezone.now() - timedelta(minutes=time_offset),
-                items=items_string_from_json(order_json),
                 total_price=total_price_from_json(order_json),
                 confirmed=False,
                 ready_delivery=False,
                 delivered=False,
             )
+            for menu_id, quantity in order_json.items():
+                order_item = OrderItem.objects.create(
+                    menu_item=Menu.objects.get(pk=menu_id),
+                    quantity=quantity
+                )
+                order.items.add(order_item)
+            order.save()
             print(str(order))
 
             # occasionally add an extra order for the current table
@@ -69,12 +75,18 @@ class Command(BaseCommand):
                 order = Order.objects.create(
                     table=seating.label,
                     time=timezone.now() - timedelta(minutes=time_offset),
-                    items=items_string_from_json(order_json),
                     total_price=total_price_from_json(order_json),
                     confirmed=False,
                     ready_delivery=False,
                     delivered=False,
                 )
+                for menu_id, quantity in order_json.items():
+                    order_item = OrderItem.objects.create(
+                        menu_item=Menu.objects.get(pk=menu_id),
+                        quantity=quantity
+                    )
+                    order.items.add(order_item)
+                order.save()
                 print(str(order))
 
         all_orders = [item for item in Order.objects.all()]
@@ -118,7 +130,6 @@ class Command(BaseCommand):
                 order = Order.objects.create(
                     table=all_seating[random.randrange(table_count)].label,
                     time=order_datetime,
-                    items=items_string_from_json(order_json),
                     total_price=total_price_from_json(order_json),
                     confirmed=True,
                     ready_delivery=True,

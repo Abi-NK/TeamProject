@@ -12,7 +12,7 @@
         <p class="card-text">
           <b>Items:</b>
           <br>
-          {{ order.items | linebreaksbr }}
+          {{ order.get_items_display | linebreaksbr }}
         </p>
         <p>
           <b>Order time:</b> {{ order.get_time_display }}

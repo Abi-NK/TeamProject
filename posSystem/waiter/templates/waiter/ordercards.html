@@ -10,7 +10,7 @@
 
     {% if confirm or delivery %}
     <p class="card-text">
-      {{ order.items | linebreaksbr }}
+      {{ order.get_items_display | linebreaksbr }}
     </p>
     {% endif %}
 
@@ -22,9 +22,9 @@
       {% if order.confirmed %}Confirmed{% else %}Confirm{% endif %}
     </button>
     <!-- Cancel Button Un-Confirms Order, allowing for stats on walkouts -->
-    <button type="button" class="btn btn-danger btn-lg btn-block" 
+    <button type="button" class="btn btn-danger btn-lg btn-block"
             onclick="cancelOrder(this, {{ order.id }})">Cancel</button>
-    
+
     {% endif %}
 
     {% if delivery %}
