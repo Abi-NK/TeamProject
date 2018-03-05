@@ -28,6 +28,13 @@ class TestSeatingModel(TestCase):
         seating.set_unavailable()
         self.assertIs(seating.available, False)
 
+    def test_set_available(self):
+        seating = Seating.objects.get(label="Table 1")
+        seating.set_unavailable()
+        self.assertIs(seating.available, False)
+        seating.set_available()
+        self.assertIs(seating.available, True)
+
     def test_set_assistance_true(self):
         seating = Seating.objects.get(label="Table 1")
         self.assertIs(seating.assistance, False)

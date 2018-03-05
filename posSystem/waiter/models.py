@@ -53,29 +53,44 @@ class Order(models.Model):
     delivered_today_objects = DeliveredTodayOrderManager()
     delivered_week_objects = DeliveredWeekOrderManager()
 
-    # Order db
     table = models.CharField(max_length=100, default='na')
     time = models.DateTimeField()  # The time at which the order was taken
     items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
-    cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium
-    #  rare or without the onions
+    cooking_instructions = models.CharField(max_length=500, default='na')  # Preferences, allergies, etc.
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     confirmed = models.BooleanField(default=False)  # order has been confirmed
+    cancelled = models.BooleanField(default=False)
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
 
     def __str__(self):
-        if self.confirmed:
-            return "Order: " + str(self.id) + ' -> ' + 'READY'
+        status = ""
+        if self.cancelled:
+            status = "cancelled"
+        elif self.delivered:
+            status = "delivered"
+        elif self.ready_delivery:
+            status = "ready for delivery"
+        elif self.confirmed:
+            status = "preparing"
         else:
-            return "Order: " + str(self.id) + ' -> ' + 'Not ready'
+            status = "unconfirmed"
+        return "Order #%s: %s, status: %s, price: %s, time placed: %s" % \
+            (self.id, self.table, status, self.get_price_display(), self.time)
 
     def set_confirmed(self):
         """sets the order as confirmed"""
         self.confirmed = True
         self.save()
         print("Order %s is confirmed" % self.id)
+
+    # Set cancelled in db
+    def set_cancelled(self):
+        """sets the order as cancelled"""
+        self.cancelled = True
+        self.save()
+        print("Order %s is cancelled" % self.id)
 
     def set_ready_delivery(self):
         """sets the order as ready to be delivered"""
@@ -91,7 +106,6 @@ class Order(models.Model):
 
     def get_all_orders(self):
         """returns all the orders"""
-        # return self
         return Order.objects.all()
 
     def get_ready_orders(self):
