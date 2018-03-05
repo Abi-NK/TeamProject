@@ -221,6 +221,12 @@
                 <label class="checkbox-inline">
                   <input type="checkbox" id="wheat-free" value="">Wheat Free
                 </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="milk-free" value="">Milk Free
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="nut-free" value="">Nut Free
+                </label>
                 <button class="btn-filter btn btn-success btn-sm btn-block" >Submit</button>
             </div>
           </div>
@@ -245,6 +251,12 @@
           {% if menu_item.allergy == "Wheat" %}
           <div class="wheat-item">
           {% endif %}
+          {% if menu_item.allergy == "Milk" %}
+          <div class="milk-item">
+          {% endif %}
+          {% if menu_item.allergy == "Nuts" %}
+          <div class="nut-item">
+          {% endif %}
           <div class="card ">
             <div class="card-body">
               <div class="row">
@@ -268,7 +280,6 @@
               </div>
             </div>
           </div>
-        </div>
         {% if menu_item.vegetarian %}
         </div>
         {% endif %}
@@ -278,6 +289,13 @@
         {% if menu_item.allergy == "Wheat" %}
         </div>
         {% endif %}
+        {% if menu_item.allergy == "Milk" %}
+        </div>
+        {% endif %}
+        {% if menu_item.allergy == "Nuts" %}
+        </div>
+        {% endif %}
+        </div>
       {% endfor %}
     </div>
     <div class="col-md-12 mb-md-3">

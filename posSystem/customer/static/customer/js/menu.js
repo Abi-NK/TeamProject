@@ -169,4 +169,12 @@ $('.btn-filter').on('click', function() {
   if($("#wheat-free").is(':checked')){
     $('.wheat-item').hide();
   }
+  // if selected "milk-free"
+  if($("#milk-free").is(':checked')){
+    $('.milk-item').hide();
+  }
+  // if selected "nut-free"
+  if($("#nut-free").is(':checked')){
+    $('.nut-item').hide();
+  }
 });
