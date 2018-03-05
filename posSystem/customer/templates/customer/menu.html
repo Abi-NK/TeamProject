@@ -236,7 +236,16 @@
     <div class="row">
       {% for menu_item in all_menu %}
         <div class="col-md-6 mb-md-3">
-          <div class="card">
+          {% if menu_item.vegetarian %}
+          <div class="card veg-item">
+          {% endif %}
+          {% if menu_item.vegan %}
+          <div class="vegan-item">
+          {% endif %}
+          {% if menu_item.allergy == "Wheat" %}
+          <div class="wheat-item">
+          {% endif %}
+          <div class="card ">
             <div class="card-body">
               <div class="row">
                 <div class="col-md-9">
@@ -260,6 +269,15 @@
             </div>
           </div>
         </div>
+        {% if menu_item.vegetarian %}
+        </div>
+        {% endif %}
+        {% if menu_item.vegan %}
+        </div>
+        {% endif %}
+        {% if menu_item.allergy == "Wheat" %}
+        </div>
+        {% endif %}
       {% endfor %}
     </div>
     <div class="col-md-12 mb-md-3">
