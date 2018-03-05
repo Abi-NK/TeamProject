@@ -1,6 +1,18 @@
 from django.db import models
 
 
+class StockManager(models.Manager):
+    def reduce_stock(self, json):
+        """Take a JSON description of an order and reduce each item's stock appropriately."""
+        print(json)
+        for item_id, quantity in json.items():
+            item = Menu.objects.get(pk=item_id)
+            print("%s current: %s" % (item, item.stock))
+            item.stock -= quantity
+            item.save()
+            print("%s updated: %s" % (item, item.stock))
+
+
 class Menu(models.Model):
 
     # Table attributes
@@ -13,6 +25,9 @@ class Menu(models.Model):
     calories = models.IntegerField(default=0)
     image = models.CharField(max_length=1000, default='na')
     stock = models.IntegerField(default=0)
+
+    objects = models.Manager()
+    stock_manager = StockManager()
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.course)
