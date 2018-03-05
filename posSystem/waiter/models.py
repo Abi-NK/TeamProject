@@ -43,6 +43,20 @@ class DeliveredWeekOrderManager(models.Manager):
         )
 
 
+class CancelledTodayOrderManager(models.Manager):
+    """Filter for today's cancelled orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(cancelled=True).filter(time__date=date.today())
+
+
+class CancelledWeekOrderManager(models.Manager):
+    """Filter for this week's cancelled orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(cancelled=True).filter(
+            time__date__gt=timezone.now().date()-timedelta(days=7)
+        )
+
+
 class Order(models.Model):
 
     objects = models.Manager()
@@ -52,6 +66,8 @@ class Order(models.Model):
     ready_objects = ReadyOrderManager()
     delivered_today_objects = DeliveredTodayOrderManager()
     delivered_week_objects = DeliveredWeekOrderManager()
+    cancelled_today_objects = CancelledTodayOrderManager()
+    cancelled_week_objects = CancelledWeekOrderManager()
 
     table = models.CharField(max_length=100, default='na')
     time = models.DateTimeField()  # The time at which the order was taken

@@ -196,3 +196,19 @@ class TestMarkingDelivery(TestCase):
                 delivered=True,
             )
         self.assertEqual(Order.delivered_week_objects.count(), 7)
+
+    def test_cancelled_today_manager(self):
+        self.assertEqual(Order.cancelled_today_objects.count(), 0)
+        Order.objects.get(pk=100).set_cancelled()
+        Order.objects.get(pk=200).set_cancelled()
+        self.assertEqual(Order.cancelled_today_objects.count(), 2)
+
+    def test_cancelled_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                cancelled=True,
+            )
+        self.assertEqual(Order.cancelled_week_objects.count(), 7)

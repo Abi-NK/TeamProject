@@ -35,6 +35,8 @@ def get_summary(request):
             "ready_count": len(Order.ready_objects.all()),
             "delivered_today": len(Order.delivered_today_objects.all()),
             "delivered_week": len(Order.delivered_week_objects.all()),
+            "cancelled_today": len(Order.cancelled_today_objects.all()),
+            "cancelled_week": len(Order.cancelled_week_objects.all()),
         },
     }
     return render(request, 'manager/get/summary.html', context)
