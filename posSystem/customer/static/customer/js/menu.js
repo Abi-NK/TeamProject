@@ -159,15 +159,14 @@ $(document).ready(function() {
 $('.btn-filter').on('click', function() {
   // if selected "vegan"
   if($("#vegan").is(':checked')){
-    // for example
-    $('button').hide();
+    $('.vegan-item').hide();
   }
   // if selected "vegetarian"
   if($("#vegetarian").is(':checked')){
-
+    $('.veg-item').hide();
   }
   // if selected "wheat-free"
   if($("#wheat-free").is(':checked')){
-
+    $('.wheat-item').hide();
   }
 });
