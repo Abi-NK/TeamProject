@@ -177,6 +177,7 @@ class Order(models.Model):
             )
             order.items.add(order_item)
         order.save()
+        return order
 
     def get_time_display(self):
         """Get the time the order was placed in a displayable format."""
@@ -199,3 +200,11 @@ class Order(models.Model):
         allowed_gap = timedelta(minutes=10)
         difference = datetime.now() - self.time.replace(tzinfo=None)
         return difference >= allowed_gap
+
+    def reduce_stock(self):
+        for order_item in self.items.all():
+            order_item.reduce_item_stock()
+
+    def refund_stock(self):
+        for order_item in self.items.all():
+            order_item.refund_item_stock()
