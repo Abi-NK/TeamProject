@@ -62,6 +62,7 @@ def show_menu(request):
     if request.method == "POST":
         menu_update = Menu.objects.get(pk=request.POST['menu_id'])
         menu_update.name = request.POST['menu_name']
+        menu_update.price = request.POST['menu_price']
         menu_update.description = request.POST['menu_description']
         menu_update.course = request.POST['menu_course']
         menu_update.category = request.POST['menu_category']
