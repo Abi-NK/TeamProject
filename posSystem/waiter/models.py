@@ -1,5 +1,6 @@
 from django.db import models
 from customer.models import Menu, Seating
+from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 
@@ -189,3 +190,14 @@ class Order(models.Model):
         allowed_gap = timedelta(minutes=10)
         difference = datetime.now() - self.time.replace(tzinfo=None)
         return difference >= allowed_gap
+
+
+class OrderExtra(models.Model):
+    seating = models.ForeignKey(Seating, on_delete=models.CASCADE)
+    waiter = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItem)
+    used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "OrderExtra #%s: %s, waiter: %s, status: %s" % \
+            (self.id, self.table, self.waiter, "active" if self.active else "inactive")

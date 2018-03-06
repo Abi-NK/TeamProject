@@ -1,6 +1,7 @@
 from django.test import TestCase
-from .models import Order, OrderItem
-from customer.models import Menu
+from .models import Order, OrderItem, OrderExtra
+from customer.models import Menu, Seating
+from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date, time
 
@@ -225,3 +226,15 @@ class TestOrderItemModel(TestCase):
     def test_get_price(self):
         order_item = OrderItem.objects.get(pk=0)
         self.assertEqual(order_item.get_price(), 50.0)
+
+
+class TestOrderExtraModel(TestCase):
+    def setUp(self):
+        seating = Seating.objects.create(
+            pk=0,
+            label="Test Seating 1",
+        )
+        OrderExtra.objects.create(
+            seating=seating,
+            waiter=User.objects.get(pk="waiter1"),
+        )
