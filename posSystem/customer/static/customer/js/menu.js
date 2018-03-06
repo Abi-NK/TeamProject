@@ -184,3 +184,13 @@ $('.btn-filter').on('click', function() {
     $('.vegan-item').hide();
   }
 });
+
+// method called by cancel of filters button
+$('.btn-remove').on('click', function() {
+  $('.veg-item').show();
+  $('.vegan-item').show();
+  $('.wheat-item').show();
+  $('.nut-item').show();
+  $('.meat-item').show();
+  $('.milk-item').show();
+});

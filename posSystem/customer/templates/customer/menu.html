@@ -231,7 +231,7 @@
                   <input type="checkbox" id="meat" value="">Meat
                 </label>
                 <button class="btn-filter btn btn-success btn-sm btn-block" >Submit</button>
-                <button class="btn btn-warning btn-sm btn-block" onclick="window.location.reload()">Remove Applied Filters</button>
+                <button class="btn-remove btn btn-warning btn-sm btn-block" >Remove Applied Filters</button>
             </div>
           </div>
           <div class="modal-footer">
@@ -246,11 +246,11 @@
     <div class="row">
       {% for menu_item in all_menu %}
         <div class="col-md-6 mb-md-3">
-          {% if menu_item.vegetarian %}
-          <div class="card veg-item">
-          {% endif %}
           {% if menu_item.vegan %}
           <div class="vegan-item">
+          {% endif %}
+          {% if menu_item.vegetarian %}
+          <div class="veg-item">
           {% endif %}
           {% if menu_item.allergy == "Wheat" %}
           <div class="wheat-item">
