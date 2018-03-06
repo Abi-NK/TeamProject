@@ -201,3 +201,14 @@ class OrderExtra(models.Model):
     def __str__(self):
         return "OrderExtra #%s: %s, waiter: %s, status: %s" % \
             (self.id, self.table, self.waiter, "active" if self.active else "inactive")
+
+    def add_item(self, menu_item_id, quantity):
+        for item in self.items.all():
+            if item.menu_item.id == menu_item_id:
+                item.quantity += quantity
+                item.save()
+                return
+        self.items.add(OrderItem.objects.create(
+            menu_item=Menu.objects.get(pk=menu_item_id),
+            quantity=quantity,
+        ))

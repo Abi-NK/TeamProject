@@ -230,11 +230,27 @@ class TestOrderItemModel(TestCase):
 
 class TestOrderExtraModel(TestCase):
     def setUp(self):
+        waiter = User.objects.create_user(
+            username="waiter1",
+        )
         seating = Seating.objects.create(
             pk=0,
             label="Test Seating 1",
         )
         OrderExtra.objects.create(
+            pk=0,
             seating=seating,
-            waiter=User.objects.get(pk="waiter1"),
+            waiter=waiter,
         )
+        Menu.objects.create(pk=0, price=5.00)
+        Menu.objects.create(pk=1, price=10.00)
+        Menu.objects.create(pk=2, price=15.00)
+
+    def test_add_item(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        order_extra.add_item(0, 3)
+        order_extra.add_item(1, 4)
+        order_extra.add_item(2, 5)
+        order_extra.add_item(2, 5)
+        order_extra.add_item(2, 5)
+        self.assertEqual(sum([item.quantity for item in order_extra.items.all()]), 22)
