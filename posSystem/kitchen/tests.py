@@ -8,7 +8,6 @@ class TestMakingDelivery(TestCase):
     def setUp(self):
         Order.objects.create(pk=666,
                              table="Test Table",
-                             items="Test item 1",
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",

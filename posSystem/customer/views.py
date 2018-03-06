@@ -4,6 +4,7 @@ from .models import Menu, Seating
 from waiter.models import Payment, Order
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
+from waiter.models import Order
 import json
 
 
@@ -56,3 +57,9 @@ def t_and_c(request):
         payment_update.delivered = True
         payment_update.save()
 
+
+
+def statuses(request):
+    """..."""
+    orders = Order.objects.all()
+    return render(request, 'customer/statuses.html', {'orders': orders})

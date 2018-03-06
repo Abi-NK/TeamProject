@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Statuses{% endblock %}
+{% block content %}
+<meta http-equiv="refresh" content="5" >
+<div class="jumbotron">
+    <h1 class="text-center">Order Statuses:</h1>
+    <br>
+    {% if orders %}
+        {% for order in orders %}
+            <h3>Table Number {{order.table}}:</h3>
+            {% if order.confirmed and not order.ready_delivery and not order.delivered %}
+                <div class="progress">
+                    <div class="progress-bar" style="width:30%">
+                        Being Cooked
+                    </div>
+                </div>
+            {% endif %}
+            {% if order.ready_delivery and not order.delivered %}
+                <div class="progress">
+                    <div class="progress-bar" style="width:30%">
+                        Being Cooked
+                    </div>
+                    <div class="progress-bar bg-warning" style="width:30%">
+                        Ready For Delivery
+                    </div>
+                </div>
+            {% endif %}
+            {% if order.delivered %}
+                <div class="progress">
+                    <div class="progress-bar" style="width:30%">
+                        Being Cooked
+                    </div>
+                    <div class="progress-bar bg-warning" style="width:30%">
+                        Ready For Delivery
+                    </div>
+                    <div class="progress-bar bg-success" style="width:40%">
+                        Delivered
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

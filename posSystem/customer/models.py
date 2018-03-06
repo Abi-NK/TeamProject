@@ -19,6 +19,7 @@ class Menu(models.Model):
 
 
 class AvailableSeatingManager(models.Manager):
+    """Filter for all available seating."""
     def get_queryset(self):
         return super().get_queryset().filter(available=True)
 
@@ -26,12 +27,20 @@ class AvailableSeatingManager(models.Manager):
 class Seating(models.Model): # Table
     table = models.OneToOneField(Order, on_delete=models.CASCADE)
     # order=models.ForeignKey(Order, on_delete=models.CASCADE)
+class OccupiedSeatingManager(models.Manager):
+    """Filter for all occupied seating."""
+    def get_queryset(self):
+        return super().get_queryset().filter(available=False)
+
+
+class Seating(models.Model):
     label = models.CharField(max_length=25, default='Table 0')
     available = models.BooleanField(default=True)
     assistance = models.BooleanField(default=False)
 
     objects = models.Manager()
     available_objects = AvailableSeatingManager()
+    occupied_objects = OccupiedSeatingManager()
 
     def __str__(self):
         return self.label
@@ -40,6 +49,10 @@ class Seating(models.Model): # Table
         self.available = False
         self.save()
         print("%s has been taken" % self.label)
+
+    def set_available(self):
+        self.available = True
+        self.save()
 
     def set_assistance_true(self):
         self.assistance = True
