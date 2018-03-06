@@ -102,8 +102,12 @@ def get_alerts(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    Order.make_order(request)
+    if "seating_id" not in request.session:
+        print("A session without a seating ID tried to place an order.")
+        return HttpResponseNotFound("no seating_id in session")
+
     order_json = json.loads(request.body.decode('utf-8'))["order"]
+    Order.make_order(order_json, request.session["seating_id"])
     Menu.stock_manager.reduce_stock(order_json)
     return HttpResponse("recieved")
 
