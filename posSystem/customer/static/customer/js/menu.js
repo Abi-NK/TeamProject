@@ -159,13 +159,12 @@ $(document).ready(function() {
 $('.btn-filter').on('click', function() {
   // if selected "vegan"
   if($("#vegan").is(':checked')){
-    $('.card').hide();
-    $('.vegan-item').show();
+    $('.veg-item').hide();
+    $('.meat-item').hide();
   }
   // if selected "vegetarian"
   if($("#vegetarian").is(':checked')){
-    $('.card').hide();
-    $('.veg-item').show();
+    $('.meat-item').hide();
   }
   // if selected "wheat-free"
   if($("#wheat-free").is(':checked')){
@@ -178,5 +177,10 @@ $('.btn-filter').on('click', function() {
   // if selected "nut-free"
   if($("#nut-free").is(':checked')){
     $('.nut-item').hide();
+  }
+  // if selected "meat"
+  if($("#meat").is(':checked')){
+    $('.veg-item').hide();
+    $('.vegan-item').hide();
   }
 });

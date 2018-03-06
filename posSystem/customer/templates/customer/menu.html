@@ -227,6 +227,9 @@
                 <label class="checkbox-inline">
                   <input type="checkbox" id="nut-free" value="">Nut Free
                 </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="meat" value="">Meat
+                </label>
                 <button class="btn-filter btn btn-success btn-sm btn-block" >Submit</button>
                 <button class="btn btn-warning btn-sm btn-block" onclick="window.location.reload()">Remove Applied Filters</button>
             </div>
@@ -257,6 +260,9 @@
           {% endif %}
           {% if menu_item.allergy == "Nuts" %}
           <div class="nut-item">
+          {% endif %}
+          {% if menu_item.meat %}
+          <div class="meat-item">
           {% endif %}
           <div class="card ">
             <div class="card-body">
@@ -294,6 +300,9 @@
         </div>
         {% endif %}
         {% if menu_item.allergy == "Nuts" %}
+        </div>
+        {% endif %}
+        {% if menu_item.meat %}
         </div>
         {% endif %}
         </div>
