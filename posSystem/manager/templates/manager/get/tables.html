@@ -1,0 +1,30 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if seating %}
+
+{% for seat in seating %}
+  <div class="row">
+    <div class="col-md-6">
+      <h5>{{ seat.label }}</h5>
+    </div>
+    <div class="col-md-6 text-right">
+      {% if seat.assistance %}
+        <h5><span class="badge badge-primary">Assistance</span></h5>
+      {% elif seat.available %}
+        <h5><span class="badge badge-secondary">Available</span></h5>
+      {% else %}
+        <h5><span class="badge badge-success">Occupied</span></h5>
+      {% endif %}
+    </div>
+  </div>
+{% endfor %}
+
+{% else %}
+
+<div class="alert alert-warning">
+  No occupied tables.
+</div>
+
+{% endif %}
+{% endblock %}
