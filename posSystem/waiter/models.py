@@ -1,8 +1,19 @@
 from django.db import models
-import json
 from customer.models import Menu, Seating
 from django.utils import timezone
 from datetime import datetime, timedelta, date
+
+
+class OrderItem(models.Model):
+    menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return "%s %s" % (self.quantity, self.menu_item)
+
+    def get_price(self):
+        """Return the total price of this item."""
+        return self.menu_item.price * self.quantity
 
 
 class ActiveOrderManager(models.Manager):
@@ -71,7 +82,7 @@ class Order(models.Model):
 
     table = models.CharField(max_length=100, default='na')
     time = models.DateTimeField()  # The time at which the order was taken
-    items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
+    items = models.ManyToManyField(OrderItem)
     cooking_instructions = models.CharField(max_length=500, default='na')  # Preferences, allergies, etc.
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -136,26 +147,26 @@ class Order(models.Model):
         """returns not confirmed orders"""
         return Order.objects.filter(confirmed=False)
 
-    def make_order(request):
+    def make_order(order_json, seating_id):
         """Create an order from the provided JSON."""
-        if "seating_id" not in request.session:
-            print("A session without a seating ID tried to place an order.")
-            return HttpResponseNotFound("no seating_id in session")
-
-        order_json = json.loads(request.body.decode('utf-8'))["order"]
-        print("Recieved order: ", order_json)
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
-        Order(
-            table=Seating.objects.get(pk=request.session["seating_id"]).label,
+        order = Order.objects.create(
+            table=Seating.objects.get(pk=seating_id).label,
             confirmed=False,
             time=timezone.now(),
-            items="\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
             cooking_instructions='none',
             purchase_method='none',
             total_price=total_price,
             delivered=False,
-        ).save(force_insert=True)
+        )
+        for menu_id, quantity in order_json.items():
+            order_item = OrderItem.objects.create(
+                menu_item=Menu.objects.get(pk=menu_id),
+                quantity=quantity
+            )
+            order.items.add(order_item)
+        order.save()
 
     def get_time_display(self):
         """Get the time the order was placed in a displayable format."""
@@ -164,6 +175,10 @@ class Order(models.Model):
     def get_price_display(self):
         """Get the price in a displayable format."""
         return "£%.2f" % self.total_price
+
+    def get_items_display(self):
+        """Return the string representation of the items in the order."""
+        return "\n".join([str(item) for item in self.items.all()])
 
     def is_nearly_late(self):
         allowed_gap = timedelta(minutes=7)

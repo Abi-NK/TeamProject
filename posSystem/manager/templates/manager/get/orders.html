@@ -13,7 +13,7 @@
     <h5>Ordered at <strong>{{ order.get_time_display }}</strong></h5>
   </div>
   <div class="col-7">
-    {{ order.items | linebreaksbr }}
+    {{ order.get_items_display | linebreaksbr }}
   </div>
 </div>
 

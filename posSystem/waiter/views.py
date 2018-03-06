@@ -63,7 +63,7 @@ def index(request):
 @login_required
 def get_orders_confirm(request):
     """Return all orders which need confirmation as formatted HTML."""
-    orders = Order.objects.filter(confirmed=False,cancelled=False)
+    orders = Order.objects.filter(confirmed=False, cancelled=False)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
@@ -72,9 +72,9 @@ def get_orders_confirm(request):
 @login_required
 def get_orders_cancel(request):
     """Return all orders which need cancelling as formatted HTML."""
-    orders = Order.objects.filter(confirmed=False,cancelled=True)
+    orders = Order.objects.filter(confirmed=False, cancelled=True)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
-    
+
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
@@ -102,7 +102,12 @@ def get_alerts(request):
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
-    Order.make_order(request)
+    if "seating_id" not in request.session:
+        print("A session without a seating ID tried to place an order.")
+        return HttpResponseNotFound("no seating_id in session")
+
+    order_json = json.loads(request.body.decode('utf-8'))["order"]
+    Order.make_order(order_json, request.session["seating_id"])
     return HttpResponse("recieved")
 
 
@@ -147,4 +152,3 @@ def cancel_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["id"]
     Seating.objects.get(pk=seating_id).set_assistance_false()
     return HttpResponse("recieved")
-
