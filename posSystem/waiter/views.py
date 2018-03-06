@@ -135,8 +135,7 @@ def cancel_order(request):
     order.confirmed = False
     order.cancelled = True
     for order_item in order.items.all():
-        order_item.menu_item.stock += order_item.quantity
-        order_item.menu_item.save()
+        order_item.refund_item_stock()
     order.save()
     return HttpResponse("recieved")
 

@@ -15,6 +15,16 @@ class OrderItem(models.Model):
         """Return the total price of this item."""
         return self.menu_item.price * self.quantity
 
+    def reduce_item_stock(self):
+        """Reduce the stock count of the menu item by quantity."""
+        self.menu_item.stock -= self.quantity
+        self.menu_item.save()
+
+    def refund_item_stock(self):
+        """Increase the stock count of the menu item by quantity."""
+        self.menu_item.stock += self.quantity
+        self.menu_item.save()
+
 
 class ActiveOrderManager(models.Manager):
     """Filter for all non-delivered orders."""
