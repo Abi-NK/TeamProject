@@ -9,9 +9,9 @@ class AdjustMenuForm(forms.Form):
     description = forms.CharField(max_length=1000)
     course = forms.CharField(max_length=100)
     category = forms.CharField(max_length=100)
-    allergy = forms.CharField(max_length=1000)
+    allergy = forms.CharField(max_length=1000, required=False)
     calories = forms.IntegerField()
-    image = forms.CharField(max_length=1000)
+    image = forms.CharField(max_length=1000, required=False)
 
     class Meta():
         model = Menu

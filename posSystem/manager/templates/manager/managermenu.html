@@ -54,7 +54,8 @@
 
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-default">Confirm changes</button>
+          <button type="submit" class="btn btn-primary mr-auto" name="confirm">Confirm changes</button>
+          <button type="submit" class="btn btn-secondary" name="delete" style="background-color: #f44336;">Delete Item</button>
       </div>
         </form>
     </div>
@@ -70,6 +71,8 @@
 
 </div>
 {% endfor %}
+<br>
+<br>
 {% endblock %}
 
 {% block endjs %}<script src="{% static "manager/js/index.js" %}"></script>{% endblock %}
