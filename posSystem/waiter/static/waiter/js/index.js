@@ -74,6 +74,10 @@ function openModalOrderExtra(){
   });
 }
 
+function placeOrderExtra(){
+  
+}
+
 $(document).ready(function(){
   updateLoop();
 });

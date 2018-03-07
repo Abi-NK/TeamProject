@@ -18,12 +18,14 @@
       </div>
       <div class="modal-body">
 
+        <!-- occupied seating dropdown -->
         <div class="form-group">
           <select id="inputSeating" class="form-control">
             <option selected>Select a table</option>
           </select>
         </div>
 
+        <!-- menu item dropdown -->
         <div class="form-group">
           <select id="inputMenuItem" class="form-control">
             <option selected>Select a menu item</option>
@@ -35,9 +37,23 @@
           </select>
         </div>
 
+        <!-- quantity selection -->
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Quantity</span>
+          </div>
+          <input type="number" class="form-control">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-minus"></i></button>
+            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-lg btn-block">Add to order</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrderExtra()">
+            Add to order
+          </button>
       </div>
     </div>
   </div>
