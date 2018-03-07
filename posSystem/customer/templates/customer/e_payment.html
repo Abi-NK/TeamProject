@@ -21,11 +21,12 @@
                          <form method="POST">{% csrf_token %}
                              <div class="form-group">
                                   <label for="name">Order:</label>
-                                  <input type="text" placeholder="Your order number" class="form-control" name="order">
+                                  <input type="text" placeholder="Your order number" value="{{seating_label}}" class="form-control" name="order" readonly>
+                                 <p>--> {{payment.Order.time}}</p>
                               </div>
                              <div class="form-group">
                                   <label for="name">table:</label>
-                                  <input type="text" placeholder="Your table number" class="form-control" name="table">
+                                  <input type="text" placeholder="Your table number" class="form-control" name="table" readonly>
                               </div>
                               <div class="form-group">
                                   <label for="name">Name:</label>
@@ -62,7 +63,7 @@
                                     <h4 class="modal-title">Your Bill Today:</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>{{ order.id }}</p>
+                                    <p>{{seating_label}}</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

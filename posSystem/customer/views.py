@@ -13,6 +13,7 @@ def index(request):
     """Return the menu page."""
     context = {
         'all_menu': Menu.objects.all(),
+        'payment': Payment.objects.filter(pk=request.session['seating_id']),
     }
     if 'seating_label' in request.session:
         context['seating_label'] = request.session['seating_label']
@@ -34,8 +35,7 @@ def take_seat(request):
 def payment(request):
     if request.method == "POST":
         Payment(
-            table=Seating.objects.filter(request.session['seating_label']),
-            # order=request.POST.get('order'), - commented for attempting db keys
+            order=Order.objects.get(table=request.session['seating_id']),
             card_holder=request.POST.get('name'),
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),

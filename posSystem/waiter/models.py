@@ -80,7 +80,7 @@ class Order(models.Model):
     cancelled_today_objects = CancelledTodayOrderManager()
     cancelled_week_objects = CancelledWeekOrderManager()
 
-    table = models.CharField(max_length=100, default='na')
+    table = models.ForeignKey(Seating, on_delete=models.CASCADE)
     time = models.DateTimeField()  # The time at which the order was taken
     items = models.ManyToManyField(OrderItem)
     cooking_instructions = models.CharField(max_length=500, default='na')  # Preferences, allergies, etc.
@@ -152,7 +152,8 @@ class Order(models.Model):
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
         order = Order.objects.create(
-            table=Seating.objects.get(pk=seating_id).label,
+            # table=Seating.objects.get(pk=seating_id).label,
+            table = Seating.objects.get(pk=seating_id),
             confirmed=False,
             time=timezone.now(),
             cooking_instructions='none',
@@ -168,21 +169,40 @@ class Order(models.Model):
             order.items.add(order_item)
         order.save()
 
+    def get_time_display(self):
+        """Get the time the order was placed in a displayable format."""
+        return str(self.time)[11: 19]
+
+    def get_price_display(self):
+        """Get the price in a displayable format."""
+        return "£%.2f" % self.total_price
+
+    def get_items_display(self):
+        """Return the string representation of the items in the order."""
+        return "\n".join([str(item) for item in self.items.all()])
+
+    def is_nearly_late(self):
+        allowed_gap = timedelta(minutes=7)
+        difference = datetime.now() - self.time.replace(tzinfo=None)
+        return difference >= allowed_gap
+
+    def is_late(self):
+        allowed_gap = timedelta(minutes=10)
+        difference = datetime.now() - self.time.replace(tzinfo=None)
+        return difference >= allowed_gap
+
 
 class Payment(models.Model):
 
-    # payment db
-    # table = models.OneToOneField(Seating, on_delete=models.CASCADE)
-    table = models.CharField(max_length=50, default='na') #- commented for attempting db keys
-    order = models.CharField(max_length=50, default='na') #- commented for attempting db keys
-    card_holder = models.CharField(max_length=50, default='na')     # name of card holder
-    card_number = models.CharField(max_length=12, default='na')     # Card number
-    cvc = models.CharField(max_length=3, default='na')              # CVC
-    expiry = models.CharField(max_length=5, default='na')           # Card expiry date
-    terms_conditions = models.BooleanField(default=False)           # Customer has accepted t and c
-    payment_requested = models.BooleanField(default=False)          # Waiter has asked for payment
-    payment_received = models.BooleanField(default=False)           # Payment information has been received
-    payment_accepted = models.BooleanField(default=False)           # Waiter has accepted the payment
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    card_holder = models.CharField(max_length=50, default='na')  # name of card holder
+    card_number = models.CharField(max_length=12, default='na')  # Card number
+    cvc = models.CharField(max_length=3, default='na')  # CVC
+    expiry = models.CharField(max_length=5, default='na')  # Card expiry date
+    terms_conditions = models.BooleanField(default=False)  # Customer has accepted t and c
+    payment_requested = models.BooleanField(default=False)  # Waiter has asked for payment
+    payment_received = models.BooleanField(default=False)  # Payment information has been received
+    payment_accepted = models.BooleanField(default=False)  # Waiter has accepted the payment
 
     def get_payments(self):
         """Returns all the payments"""
@@ -213,14 +233,6 @@ class Payment(models.Model):
     def get_payment_accepted(self):
         return self.payment_accepted()
 
-    def get_items_display(self):
-        """Return the string representation of the items in the order."""
-        return "\n".join([str(item) for item in self.items.all()])
-
-    def is_nearly_late(self):
-        allowed_gap = timedelta(minutes=7)
-        difference = datetime.now() - self.time.replace(tzinfo=None)
-        return difference >= allowed_gap
     def set_t_and_c(self):
         """Sets the terms and conditions to be accepted"""
         self.terms_conditions = True

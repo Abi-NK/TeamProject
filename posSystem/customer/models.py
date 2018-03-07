@@ -1,5 +1,4 @@
 from django.db import models
-from waiter.models import Order
 
 
 class Menu(models.Model):
@@ -24,9 +23,6 @@ class AvailableSeatingManager(models.Manager):
         return super().get_queryset().filter(available=True)
 
 
-class Seating(models.Model): # Table
-    table = models.OneToOneField(Order, on_delete=models.CASCADE)
-    # order=models.ForeignKey(Order, on_delete=models.CASCADE)
 class OccupiedSeatingManager(models.Manager):
     """Filter for all occupied seating."""
     def get_queryset(self):
