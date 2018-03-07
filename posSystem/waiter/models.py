@@ -177,6 +177,17 @@ class Order(models.Model):
                 quantity=quantity
             )
             order.items.add(order_item)
+
+        # handle an OrderExtra if it exists
+        try:
+            order_extra = OrderExtra.active_objects.get(seating=Seating.objects.get(pk=seating_id))
+            for order_item in order_extra.items.all():
+                order.items.add(order_item)
+            order_extra.used = True
+            order_extra.save()
+        except:
+            pass
+
         order.save()
         return order
 

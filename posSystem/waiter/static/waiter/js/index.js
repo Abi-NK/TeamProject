@@ -109,7 +109,7 @@ $("#btnPlaceOrderExtra").click(function(){
       data: JSON.stringify(data),
       dataType: 'text',
       success: function(result) {
-        alert("Success");
+        $('#modalOrderExtra').modal('hide');
       }
     });
   }
