@@ -12,6 +12,9 @@ class Menu(models.Model):
     allergy = models.CharField(max_length=1000, default="")
     calories = models.IntegerField(default=0)
     image = models.CharField(max_length=1000, default='na')
+    vegetarian = models.BooleanField(default=False)
+    vegan = models.BooleanField(default=False)
+    meat = models.BooleanField(default=False)
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.course)
