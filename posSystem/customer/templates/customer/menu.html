@@ -156,6 +156,40 @@
   </div>
 </div>
 
+<!-- Modal - vegan filtered -->
+<div class="modal fade" id="chooseTableModalCenter" tabindex="-1" role="dialog" aria-labelledby="chooseTableModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="chooseTableModalLongTitle">Where are you sitting?</h5>
+      </div>
+      <div class="modal-body">
+        <h6 class="text-center">Available seating:</h6>
+        <div class="container-fluid">
+          <div class="row">
+            {% if seating %}
+              {% for seat in seating %}
+                <div class="col-md-6 mb-md-1">
+                  <button type="button" class="btn-seating-option btn btn-primary btn-lg btn-block" name="{{ seat.label }}" value="{{ seat.id }}">
+                    {{ seat.label }}
+                  </button>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="alert alert-warning">
+                No seating data recieved
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <!--<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>-->
+    </div>
+  </div>
+</div>
+
 <!-- Visible Menu - main content for the page -->
 <div>
   <h1 class="text-center">Menu</h1>
@@ -165,23 +199,85 @@
       <h2 id="seating-label">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
     </div>
     <div class="col-md-4 text-right">
-        <h3>Need some help?</h3>
+        <h5>Need some help?</h5>
     </div>
     <div class="col-md-4">
-      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="buttonHelp(this)">Call a waiter</button>
+      <button type="button" class="btn btn-primary btn-sm btn-block" onclick="buttonHelp(this)">Call a waiter</button>
+    </div>
+    <div class="col-md-4"></div>
+    <div class="col-md-4 text-right">
+      <h5>Not found what you're looking for?</h5>
+    </div>
+    <div class="col-md-4">
+      <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#sortMenu">Filter menu</button>
+      <div class="modal fade" id="sortMenu">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Filter Oaxaca Menu:</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+           </div>
+          <div class="modal-body">
+            <div class="container">
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="vegetarian" value="">Vegetarian
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="vegan" value="">Vegan
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="wheat-free" value="">Wheat Free
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="milk-free" value="">Milk Free
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="nut-free" value="">Nut Free
+                </label>
+                <label class="checkbox-inline">
+                  <input type="checkbox" id="meat" value="">Meat
+                </label>
+                <button class="btn-filter btn btn-success btn-sm btn-block" >Submit</button>
+                <button class="btn-remove btn btn-warning btn-sm btn-block" >Remove Applied Filters</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
     </div>
   </div>
   {% if all_menu %}
     <div class="row">
       {% for menu_item in all_menu %}
         <div class="col-md-6 mb-md-3">
-          <div class="card">
+          {% if menu_item.vegan %}
+          <div class="vegan-item">
+          {% endif %}
+          {% if menu_item.vegetarian %}
+          <div class="veg-item">
+          {% endif %}
+          {% if menu_item.allergy == "Wheat" %}
+          <div class="wheat-item">
+          {% endif %}
+          {% if menu_item.allergy == "Milk" %}
+          <div class="milk-item">
+          {% endif %}
+          {% if menu_item.allergy == "Nuts" %}
+          <div class="nut-item">
+          {% endif %}
+          {% if menu_item.meat %}
+          <div class="meat-item">
+          {% endif %}
+          <div class="card ">
             <div class="card-body">
               <div class="row">
                 <div class="col-md-9">
                   <h3 class="card-title">{{ menu_item.name }} </h3>
                   <h6 class="card-subtitle text-muted">
-                    {% if menu_item.allergy != "" %}
+                    {% if menu_item.allergy != "na" %}
                       Contains {{ menu_item.allergy }}
                     {% endif %}
                   </h6>
@@ -198,6 +294,24 @@
               </div>
             </div>
           </div>
+        {% if menu_item.vegetarian %}
+        </div>
+        {% endif %}
+        {% if menu_item.vegan %}
+        </div>
+        {% endif %}
+        {% if menu_item.allergy == "Wheat" %}
+        </div>
+        {% endif %}
+        {% if menu_item.allergy == "Milk" %}
+        </div>
+        {% endif %}
+        {% if menu_item.allergy == "Nuts" %}
+        </div>
+        {% endif %}
+        {% if menu_item.meat %}
+        </div>
+        {% endif %}
         </div>
       {% endfor %}
     </div>
@@ -216,7 +330,7 @@
     <br />
   {% else %}
     <div class="alert alert-warning">
-      No menu data recieved
+      No menu data received
     </div>
   {% endif %}
 </div>

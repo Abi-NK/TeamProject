@@ -116,7 +116,8 @@ def make_order(request):
         return HttpResponseNotFound("no seating_id in session")
 
     order_json = json.loads(request.body.decode('utf-8'))["order"]
-    Order.make_order(order_json, request.session["seating_id"])
+    order = Order.make_order(order_json, request.session["seating_id"])
+    order.reduce_stock()
     return HttpResponse("recieved")
 
 
@@ -142,6 +143,7 @@ def cancel_order(request):
     order = Order.objects.get(pk=order_id)
     order.confirmed = False
     order.cancelled = True
+    order.refund_stock()
     order.save()
     return HttpResponse("recieved")
 

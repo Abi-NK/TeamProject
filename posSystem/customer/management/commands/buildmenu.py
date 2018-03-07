@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from customer.models import Menu
 import json
+import random
 
 
 class Command(BaseCommand):
@@ -24,5 +25,9 @@ class Command(BaseCommand):
                 allergy=item[5],
                 calories=item[6],
                 image=item[7],
+                vegetarian=item[8],
+                vegan=item[9],
+                meat=item[10],
+                stock=random.randrange(20, 31),
             ).save()
         print("Sample menu added.")

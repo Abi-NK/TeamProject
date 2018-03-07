@@ -211,11 +211,40 @@ class TestMarkingDelivery(TestCase):
             )
         self.assertEqual(Order.cancelled_week_objects.count(), 7)
 
+    def test_reduce_stock(self):
+        order = Order.objects.get(pk=100)
+        for i in range(3):
+            order.items.add(OrderItem.objects.create(
+                pk=i,
+                menu_item=Menu.objects.create(price=10.00, stock=15+i*5),
+                quantity=5,
+            ))
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 15+i*5)
+        order.reduce_stock()
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 10+i*5)
+
+    def test_refund_stock(self):
+        order = Order.objects.get(pk=100)
+        for i in range(3):
+            order.items.add(OrderItem.objects.create(
+                pk=i,
+                menu_item=Menu.objects.create(price=10.00, stock=15+i*5),
+                quantity=5,
+            ))
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 15+i*5)
+        order.refund_stock()
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 20+i*5)
+
 
 class TestOrderItemModel(TestCase):
     def setUp(self):
         menu_item = Menu.objects.create(
             price=10.00,
+            stock=15,
         )
         OrderItem.objects.create(
             pk=0,
@@ -226,6 +255,18 @@ class TestOrderItemModel(TestCase):
     def test_get_price(self):
         order_item = OrderItem.objects.get(pk=0)
         self.assertEqual(order_item.get_price(), 50.0)
+
+    def test_recude_item_stock(self):
+        order_item = OrderItem.objects.get(pk=0)
+        self.assertEqual(order_item.menu_item.stock, 15)
+        order_item.reduce_item_stock()
+        self.assertEqual(order_item.menu_item.stock, 10)
+
+    def test_refund_item_stock(self):
+        order_item = OrderItem.objects.get(pk=0)
+        self.assertEqual(order_item.menu_item.stock, 15)
+        order_item.refund_item_stock()
+        self.assertEqual(order_item.menu_item.stock, 20)
 
 
 class TestOrderExtraModel(TestCase):

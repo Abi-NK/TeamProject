@@ -17,6 +17,10 @@ function updateData(){
   $.get("gettables", function(data){
     $("#container-tables").html(data);
   });
+
+  $.get("getstock", function(data){
+    $("#container-stock").html(data);
+  });
 }
 
 $(document).ready(function(){
