@@ -25,6 +25,9 @@ class Command(BaseCommand):
                 allergy=item[5],
                 calories=item[6],
                 image=item[7],
-                stock=random.randrange(20, 31)
+                vegetarian=item[8],
+                vegan=item[9],
+                meat=item[10],
+                stock=random.randrange(20, 31),
             ).save()
         print("Sample menu added.")

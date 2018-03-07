@@ -24,6 +24,9 @@ class Menu(models.Model):
     allergy = models.CharField(max_length=1000, default="")
     calories = models.IntegerField(default=0)
     image = models.CharField(max_length=1000, default='na')
+    vegetarian = models.BooleanField(default=False)
+    vegan = models.BooleanField(default=False)
+    meat = models.BooleanField(default=False)
     stock = models.IntegerField(default=0)
 
     objects = models.Manager()
