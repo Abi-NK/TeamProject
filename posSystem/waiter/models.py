@@ -15,6 +15,16 @@ class OrderItem(models.Model):
         """Return the total price of this item."""
         return self.menu_item.price * self.quantity
 
+    def reduce_item_stock(self):
+        """Reduce the stock count of the menu item by quantity."""
+        self.menu_item.stock -= self.quantity
+        self.menu_item.save()
+
+    def refund_item_stock(self):
+        """Increase the stock count of the menu item by quantity."""
+        self.menu_item.stock += self.quantity
+        self.menu_item.save()
+
 
 class ActiveOrderManager(models.Manager):
     """Filter for all non-delivered orders."""
@@ -167,6 +177,7 @@ class Order(models.Model):
             )
             order.items.add(order_item)
         order.save()
+        return order
 
     def get_time_display(self):
         """Get the time the order was placed in a displayable format."""
@@ -189,3 +200,11 @@ class Order(models.Model):
         allowed_gap = timedelta(minutes=10)
         difference = datetime.now() - self.time.replace(tzinfo=None)
         return difference >= allowed_gap
+
+    def reduce_stock(self):
+        for order_item in self.items.all():
+            order_item.reduce_item_stock()
+
+    def refund_stock(self):
+        for order_item in self.items.all():
+            order_item.refund_item_stock()

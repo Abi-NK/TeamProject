@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from .models import Order
-from customer.models import Seating
+from customer.models import Menu, Seating
 import json
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
@@ -107,7 +107,8 @@ def make_order(request):
         return HttpResponseNotFound("no seating_id in session")
 
     order_json = json.loads(request.body.decode('utf-8'))["order"]
-    Order.make_order(order_json, request.session["seating_id"])
+    order = Order.make_order(order_json, request.session["seating_id"])
+    order.reduce_stock()
     return HttpResponse("recieved")
 
 
@@ -133,6 +134,7 @@ def cancel_order(request):
     order = Order.objects.get(pk=order_id)
     order.confirmed = False
     order.cancelled = True
+    order.refund_stock()
     order.save()
     return HttpResponse("recieved")
 
