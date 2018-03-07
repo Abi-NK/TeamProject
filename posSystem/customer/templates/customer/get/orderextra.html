@@ -1,0 +1,26 @@
+{% if order_extra %}
+
+<hr />
+<h4 class="text-center text-muted mb-md-3">Added by your waiter:</h4>
+
+{% for item in order_extra.items.all %}
+
+<div class="row">
+  <div class="col-md-8">
+    <h5>{{ item.quantity }}x {{ item.menu_item.name }}</h5>
+  </div>
+  <div class="col-md-4">
+    <button type="button" class="btn btn-outline-secondary btn-block" onclick="btnOrderExtraRemoveItem(this, {{ order_extra.id }}, {{ item.id }})">
+      remove from order
+    </button>
+  </div>
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<hr />
+<h4 class="text-center text-muted mb-md-3">Want suggestions? Our waiters are happy to help.</h4>
+
+{% endif %}
