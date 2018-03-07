@@ -67,6 +67,13 @@ function cancelOrder(button, orderID){
   });
 }
 
+function openModalOrderExtra(){
+  $.get("getoccupiedseating", function(data){
+    $("#inputSeating").html(data);
+    $('#modalOrderExtra').modal('show')
+  });
+}
+
 $(document).ready(function(){
   updateLoop();
 });

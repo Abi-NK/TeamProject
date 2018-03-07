@@ -7,7 +7,7 @@
 {% block content %}
 
 <!-- modal - adding extra items to a customer's order -->
-<div class="modal fade" id="orderExtraModal" tabindex="-1">
+<div class="modal fade" id="modalOrderExtra" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -17,9 +17,16 @@
           </button>
       </div>
       <div class="modal-body">
+
+        <div class="form-group">
+          <select id="inputSeating" class="form-control">
+            <option selected>Select a table</option>
+          </select>
+        </div>
+
         <div class="form-group">
           <select id="inputMenuItem" class="form-control">
-            <option selected>Select Menu Item</option>
+            <option selected>Select a menu item</option>
             {% if menu %}
               {% for menu_item in menu %}
                 <option value="{{ menu_item.id }}">{{ menu_item }} - £{{ menu_item.price }}</option>
@@ -27,6 +34,7 @@
             {% endif %}
           </select>
         </div>
+
       </div>
       <div class="modal-footer">
           <button type="button" class="btn btn-primary btn-lg btn-block">Add to order</button>
@@ -40,7 +48,9 @@
     <h1 class="text-center">Orders</h1>
   </div>
   <div class="col-md-4">
-    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" data-target="#orderExtraModal" data-toggle="modal">add to an order</button>
+    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="openModalOrderExtra()">
+      <i class="fas fa-plus"></i> add to an order
+    </button>
   </div>
 </div>
 <hr />

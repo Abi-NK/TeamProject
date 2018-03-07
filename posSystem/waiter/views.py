@@ -99,6 +99,14 @@ def get_alerts(request):
     return render(request, "waiter/alerts.html", {'want_assistance': want_assistance})
 
 
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_occupied_seating(request):
+    """Returns the options for occupied seating."""
+    seating = Seating.occupied_objects.all()
+    return render(request, "waiter/get/occupiedseating.html", {'seating': seating})
+
+
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""

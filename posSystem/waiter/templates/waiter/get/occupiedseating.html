@@ -1,0 +1,7 @@
+<option selected>Select a table</option>
+
+{% if seating %}
+{% for seat in seating %}
+<option value="{{ seat.id }}">{{ seat.label }}</option>
+{% endfor %}
+{% endif %}

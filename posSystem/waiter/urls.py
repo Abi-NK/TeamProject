@@ -9,6 +9,7 @@ urlpatterns = [
     path('getorderscancel', views.get_orders_cancel, name='getorderscancel'),
     path('getordersdelivery', views.get_orders_delivery, name='getordersdelivery'),
     path('getordersunpaid', views.get_orders_unpaid, name='getordersunpaid'),
+    path('getoccupiedseating', views.get_occupied_seating, name='getoccupiedseating'),
     path('getalerts', views.get_alerts, name="getalerts"),
     path('confirmorder', views.confirm_order, name='confirmorder'),
     path('cancelorder', views.cancel_order, name='cancelorder'),
