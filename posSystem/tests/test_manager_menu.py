@@ -1,8 +1,6 @@
 from django.test import TestCase
 from customer.models import Menu
-from .forms import *
-from django.utils import timezone
-from datetime import datetime, timedelta, date, time
+from manager.forms import AdjustMenuForm
 
 
 class ManagerFormTest(TestCase):
