@@ -6,9 +6,28 @@
 
 {% block content %}
 
+<div class="modal fade" id="menuStockModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menuStockModalLabel">Current Stock</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="container-stock">
+        {# populate list of menu items and their stock here #}
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="row mt-md-3">
   <div class="col-xl-2">
     <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
+    <button type="button" class="btn btn-outline-secondary btn-block mb-md-3" data-toggle="modal" data-target="#menuStockModal">
+      <i class="fas fa-cubes"></i> View Stock
+    </button>
     <div id="container-summary">
       {# populate summary of restraunt data here #}
     </div>

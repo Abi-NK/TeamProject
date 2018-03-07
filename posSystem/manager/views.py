@@ -61,6 +61,15 @@ def get_tables(request):
     return render(request, 'manager/get/tables.html', context)
 
 
+@user_passes_test(group_check)
+def get_stock(request):
+    """Return stock data for the menu in formatted HTML."""
+    context = {
+        "menu": Menu.objects.all(),
+    }
+    return render(request, 'manager/get/stock.html', context)
+
+
 def adjust_menu(request):
     """Return the menu in formatted HTML and update the table based on inputs."""
     if request.method == "POST":
