@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from customer.models import Seating, Menu
 from waiter.models import Order
+from .forms import AdjustMenuForm
 
 
 def group_check(user):
@@ -60,16 +61,26 @@ def get_tables(request):
 def show_menu(request):
     """Return the menu in formatted HTML and update the table based on inputs."""
     if request.method == "POST":
-        menu_update = Menu.objects.get(pk=request.POST['menu_id'])
-        menu_update.name = request.POST['menu_name']
-        menu_update.price = request.POST['menu_price']
-        menu_update.description = request.POST['menu_description']
-        menu_update.course = request.POST['menu_course']
-        menu_update.category = request.POST['menu_category']
-        menu_update.allergy = request.POST['menu_allergy']
-        menu_update.calories = request.POST['menu_calories']
-        menu_update.image = request.POST['menu_image']
-        menu_update.save()
+        # check if form inputs are valid then send it to database
+        form = AdjustMenuForm(data={'name': request.POST['menu_name'], 'price': request.POST['menu_price'],
+                                    'description': request.POST['menu_description'],
+                                    'course': request.POST['menu_course'], 'category': request.POST['menu_category'],
+                                    'allergy': request.POST['menu_allergy'], 'calories': request.POST['menu_calories'],
+                                    'image': request.POST['menu_image']})
+        if form.is_valid():
+            print("changed")
+            menu_update = Menu.objects.get(pk=request.POST['menu_id'])
+            menu_update.name = request.POST['menu_name']
+            menu_update.price = request.POST['menu_price']
+            menu_update.description = request.POST['menu_description']
+            menu_update.course = request.POST['menu_course']
+            menu_update.category = request.POST['menu_category']
+            menu_update.allergy = request.POST['menu_allergy']
+            menu_update.calories = request.POST['menu_calories']
+            menu_update.image = request.POST['menu_image']
+            menu_update.save()
+        print(form.errors)
+
     context = {
         "menu": Menu.objects.all(),
     }

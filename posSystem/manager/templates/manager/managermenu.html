@@ -21,35 +21,35 @@
         <form method="POST">{% csrf_token %}
             <input type="hidden" name="menu_id" value="{{ menu_item.id }}">
             <label><b>Name </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.name}}" name="menu_name" required>
+            <input type="text" style="width:400px" value="{{menu_item.name}}" name="menu_name" required>
             <br>
             <br>
             <label><b>Price </b></label><br>
-            <input type="number" style="width:400px" step="0.01" cols="40" rows="5" value="{{menu_item.price}}" name="menu_price" required>
+            <input type="number" style="width:400px" step="0.01" value="{{menu_item.price}}" name="menu_price" required>
             <br>
             <br>
             <label><b>Description </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.description}}" name="menu_description" required>
+            <input type="text" style="width:400px" value="{{menu_item.description}}" name="menu_description" required>
             <br>
             <br>
             <label><b>Course </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.course}}" name="menu_course" required>
+            <input type="text" style="width:400px" value="{{menu_item.course}}" name="menu_course" required>
             <br>
             <br>
             <label><b>Category </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.category}}" name="menu_category" required>
+            <input type="text" style="width:400px" value="{{menu_item.category}}" name="menu_category" required>
             <br>
             <br>
             <label><b>Allergy </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.allergy}}" name="menu_allergy">
+            <input type="text" style="width:400px" value="{{menu_item.allergy}}" name="menu_allergy">
             <br>
             <br>
             <label><b>Calories </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.calories}}" name="menu_calories" required>
+            <input type="text" style="width:400px" value="{{menu_item.calories}}" name="menu_calories" required>
             <br>
             <br>
             <label><b>Image link </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" value="{{menu_item.image}}" name="menu_image" required>
+            <input type="text" style="width:400px" value="{{menu_item.image}}" name="menu_image" required>
             <br>
 
       </div>
