@@ -82,7 +82,7 @@ $("#inputQuantityInc").click(function(){
   document.getElementById("inputQuantity").stepUp();
 });
 
-function placeOrderExtra(){
+$("#btnPlaceOrderExtra").click(function(){
   var seating_id = $("#inputSeating").val();
   var menu_item_id = $("#inputMenuItem").val();
   var quantity = $("#inputQuantity").val();
@@ -109,11 +109,11 @@ function placeOrderExtra(){
       data: JSON.stringify(data),
       dataType: 'text',
       success: function(result) {
-		$('#placeOrderModalCenter').modal('show');
+        alert("Success");
       }
     });
   }
-}
+});
 
 $(document).ready(function(){
   updateLoop();

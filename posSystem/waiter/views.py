@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Order
+from .models import Order, OrderExtra
 from customer.models import Menu, Seating
 import json
 from django.shortcuts import render, redirect
@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from kitchen.views import index as waiter_index
 from manager.views import index as manager_index
+from django.contrib.auth.models import User
 
 
 def group_check(user):
@@ -159,4 +160,25 @@ def request_help(request):
 def cancel_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["id"]
     Seating.objects.get(pk=seating_id).set_assistance_false()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def place_order_extra(request):
+    """Create an OrderExtra from the provided JSON, or update an existing one."""
+    received_json = json.loads(request.body.decode('utf-8'))
+    seating_id = received_json["seating_id"]
+    menu_item_id = received_json["menu_item_id"]
+    quantity = received_json["quantity"]
+
+    order_extra = None
+    try:
+        order_extra = OrderExtra.active_objects.get(seating=Seating.occupied_objects.get(pk=seating_id))
+    except:
+        order_extra = OrderExtra.objects.create(
+            seating=Seating.occupied_objects.get(pk=seating_id),
+            waiter=User.objects.get(username=request.user.username),
+        )
+    order_extra.add_item(menu_item_id, quantity)
+    print(order_extra)
     return HttpResponse("recieved")

@@ -192,7 +192,16 @@ class Order(models.Model):
         return difference >= allowed_gap
 
 
+class ActiveOrderExtraManager(models.Manager):
+    """Filter for active (unused) OrderExtras."""
+    def get_queryset(self):
+        return super().get_queryset().filter(used=False)
+
+
 class OrderExtra(models.Model):
+    objects = models.Manager()
+    active_objects = ActiveOrderExtraManager()
+
     seating = models.ForeignKey(Seating, on_delete=models.CASCADE)
     waiter = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
@@ -200,7 +209,7 @@ class OrderExtra(models.Model):
 
     def __str__(self):
         return "OrderExtra #%s: %s, waiter: %s, status: %s" % \
-            (self.id, self.table, self.waiter, "active" if self.active else "inactive")
+            (self.id, self.seating, self.waiter, "inactive" if self.used else "active")
 
     def add_item(self, menu_item_id, quantity):
         for item in self.items.all():
