@@ -162,6 +162,7 @@ class Order(models.Model):
         """Create an order from the provided JSON."""
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
+
         order = Order.objects.create(
             table=Seating.objects.get(pk=seating_id).label,
             confirmed=False,
@@ -185,6 +186,8 @@ class Order(models.Model):
                 order.items.add(order_item)
             order_extra.used = True
             order_extra.save()
+            order.total_price += sum([item.get_price() for item in order_extra.items.all()])
+            order.save()
         except:
             pass
 
