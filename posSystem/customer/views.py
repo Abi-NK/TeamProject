@@ -13,7 +13,6 @@ def index(request):
     """Return the menu page."""
     context = {
         'all_menu': Menu.objects.all(),
-        'payment': Payment.objects.filter(pk=request.session['seating_id']),
     }
     if 'seating_label' in request.session:
         context['seating_label'] = request.session['seating_label']
@@ -31,18 +30,26 @@ def take_seat(request):
     request.session['seating_label'] = Seating.objects.get(pk=table_id).label
     return HttpResponse("received")
 
+        # order': Order.objects.get(table=request.session['seating_id']),
+        # 'payment': ,
 
 def payment(request):
+    context = {
+        'payment': Payment.objects.filter(order=request.session['seating_id']),
+        'order': Order.objects.get(table=request.session['seating_id']),
+        # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
+    }
     if request.method == "POST":
-        Payment(
+        Payment(    # note- table is shown in payment page but not used in model
             order=Order.objects.get(table=request.session['seating_id']),
+            # order=request.POST.get('order'),
             card_holder=request.POST.get('name'),
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),
             expiry=request.POST.get('expiry'),
             terms_conditions=checkbox_check(request.POST.get('cbx'))
         ).save(force_insert=True)
-    return render(request, "customer/e_payment.html", {'payment': Payment}, {'order': Order})
+    return render(request, "customer/e_payment.html", context)
 
 
 def checkbox_check(val):

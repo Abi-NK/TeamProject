@@ -204,6 +204,9 @@ class Payment(models.Model):
     payment_received = models.BooleanField(default=False)  # Payment information has been received
     payment_accepted = models.BooleanField(default=False)  # Waiter has accepted the payment
 
+    def __str__(self):
+       return "Order: %s, Accepted: %s" % (self.order.id, self.payment_accepted)
+
     def get_payments(self):
         """Returns all the payments"""
         print("Payments sent")
