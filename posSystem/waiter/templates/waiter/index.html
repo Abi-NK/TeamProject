@@ -21,14 +21,14 @@
         <!-- occupied seating dropdown -->
         <div class="form-group">
           <select id="inputSeating" class="form-control">
-            <option selected>Select a table</option>
+            <option value="-1" selected>Select a table</option>
           </select>
         </div>
 
         <!-- menu item dropdown -->
         <div class="form-group">
           <select id="inputMenuItem" class="form-control">
-            <option selected>Select a menu item</option>
+            <option value="-1" selected>Select a menu item</option>
             {% if menu %}
               {% for menu_item in menu %}
                 <option value="{{ menu_item.id }}">{{ menu_item }} - £{{ menu_item.price }}</option>
@@ -42,10 +42,10 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Quantity</span>
           </div>
-          <input type="number" class="form-control">
+          <input type="number" value="1" min="1" max="25" class="form-control" id="inputQuantity">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-minus"></i></button>
-            <button class="btn btn-outline-secondary" type="button"><i class="fas fa-plus"></i></button>
+            <button class="btn btn-outline-secondary" type="button" id="inputQuantityDec"><i class="fas fa-minus"></i></button>
+            <button class="btn btn-outline-secondary" type="button" id="inputQuantityInc"><i class="fas fa-plus"></i></button>
           </div>
         </div>
 
