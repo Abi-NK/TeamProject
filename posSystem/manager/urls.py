@@ -8,5 +8,5 @@ urlpatterns = [
     path('getsummary', views.get_summary, name='getsummary'),
     path('getorders', views.get_orders, name='getorders'),
     path('gettables', views.get_tables, name='gettables'),
-    path('managermenu', views.show_menu, name='managermenu'),
+    path('managermenu', views.adjust_menu, name='managermenu'),
 ]

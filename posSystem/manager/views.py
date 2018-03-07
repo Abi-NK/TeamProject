@@ -58,7 +58,7 @@ def get_tables(request):
     return render(request, 'manager/get/tables.html', context)
 
 
-def show_menu(request):
+def adjust_menu(request):
     """Return the menu in formatted HTML and update the table based on inputs."""
     if request.method == "POST":
 
@@ -69,7 +69,7 @@ def show_menu(request):
                                     'allergy': request.POST['menu_allergy'], 'calories': request.POST['menu_calories'],
                                     'image': request.POST['menu_image']})
 
-        # if the confirm change button was pressed, do this
+        # if the confirm change button was pressed, check form for validation and update menu
         if 'confirm' in request.POST:
             if form.is_valid():
                 print("item changed")
@@ -84,9 +84,15 @@ def show_menu(request):
                 menu_update.image = request.POST['menu_image']
                 menu_update.save()
 
-        # if the delete button was pressed, do this
+        # if the delete button was pressed, remove the item from menu
         elif 'delete' in request.POST:
             Menu.objects.filter(pk=request.POST['menu_id']).delete()
+
+        elif 'add_item' in request.POST:
+            Menu.objects.create(name=request.POST['menu_name'], price=request.POST['menu_price'],
+                                description=request.POST['menu_description'], course=request.POST['menu_course'],
+                                category=request.POST['menu_category'], allergy=request.POST['menu_allergy'],
+                                calories=request.POST['menu_calories'], image=request.POST['menu_image'])
 
     context = {"menu": Menu.objects.all(),}
     return render(request, 'manager/managermenu.html', context)
