@@ -131,4 +131,6 @@ STATICFILES_DIRS = [
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # to get logged in users
+
 LOGIN_URL = '/login'
