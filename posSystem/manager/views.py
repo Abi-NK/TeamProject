@@ -21,6 +21,12 @@ def data(request):
 
 
 @user_passes_test(group_check)
+def employee(request):
+    """Return the employee data page."""
+    return render(request, 'manager/employee.html')
+
+
+@user_passes_test(group_check)
 def get_summary(request):
     """Return a summary of restaurant data in formatted HTML."""
     context = {
