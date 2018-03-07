@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from .models import Order
-from customer.models import Seating
+from customer.models import Menu, Seating
 import json
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
@@ -56,7 +56,7 @@ def index(request):
         order_update = Order.objects.get(pk=request.POST['delivery_id'])
         order_update.delivered = True
         order_update.save()
-    return render(request, "waiter/index.html")
+    return render(request, "waiter/index.html", {'menu': Menu.objects.all()})
 
 
 @require_http_methods(["GET"])
