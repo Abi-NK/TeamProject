@@ -3,13 +3,22 @@
 {% block content %}
 {% if seating %}
 
-<div class="card mb-md-3">
-  <div class="card-body py-1">
-    {% for seat in seating %}
-    <h5>{{ seat.label }}{% if seat.assistance %} <span class="badge badge-secondary">requesting assistance</span>{% endif %}</h5>
-    {% endfor %}
+{% for seat in seating %}
+  <div class="row">
+    <div class="col-md-6">
+      <h5>{{ seat.label }}</h5>
+    </div>
+    <div class="col-md-6 text-right">
+      {% if seat.assistance %}
+        <h5><span class="badge badge-primary">Assistance</span></h5>
+      {% elif seat.available %}
+        <h5><span class="badge badge-secondary">Available</span></h5>
+      {% else %}
+        <h5><span class="badge badge-success">Occupied</span></h5>
+      {% endif %}
+    </div>
   </div>
-</div>
+{% endfor %}
 
 {% else %}
 

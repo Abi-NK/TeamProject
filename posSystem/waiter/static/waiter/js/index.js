@@ -52,6 +52,21 @@ function confirmOrder(button, orderID){
   });
 }
 
+function cancelOrder(button, orderID){
+  $.ajax({
+    url: "/waiter/cancelorder",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({id: orderID}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).text("Cancelled");
+    }
+  });
+}
+
 $(document).ready(function(){
   updateLoop();
 });

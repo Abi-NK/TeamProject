@@ -1,5 +1,6 @@
 from django.test import TestCase
-from .models import Order
+from .models import Order, OrderItem
+from customer.models import Menu
 from django.utils import timezone
 from datetime import datetime, timedelta, date, time
 
@@ -9,7 +10,6 @@ class TestMarkingDelivery(TestCase):
     def setUp(self):
         Order.objects.create(pk=100,
                              table="Table 1",
-                             items="Guacamole with tortilla chips",
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -20,7 +20,6 @@ class TestMarkingDelivery(TestCase):
 
         Order.objects.create(pk=200,
                              table="Table 1",
-                             items="Guacamole with tortilla chips",
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -31,7 +30,6 @@ class TestMarkingDelivery(TestCase):
 
         Order.objects.create(pk=300,
                              table="Table 1",
-                             items="Guacamole with tortilla chips",
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -42,7 +40,6 @@ class TestMarkingDelivery(TestCase):
 
         Order.objects.create(pk=400,
                              table="Table 1",
-                             items="Guacamole with tortilla chips",
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -74,6 +71,16 @@ class TestMarkingDelivery(TestCase):
         self.assertEqual(test_order.confirmed, False)
         test_order.set_confirmed()
         self.assertEqual(test_order.confirmed, True)
+
+    def test_set_cancelled(self):
+        """Order has been cancelled"""
+        test_cancel_order = Order.objects.get(pk=300)
+        self.assertEqual(test_cancel_order.confirmed, False)  # confirm true
+        self.assertEqual(test_cancel_order.cancelled, False)  # cancel false
+        test_cancel_order.set_confirmed()  # Order has been unconfirmed
+        test_cancel_order.set_cancelled()  # Order has been cancelled
+        self.assertEqual(test_cancel_order.confirmed, True)  # confirm false
+        self.assertEqual(test_cancel_order.cancelled, True)  # cancel true
 
     def test_set_ready_delivery(self):
         """"Order is ready for delivery"""
@@ -174,3 +181,47 @@ class TestMarkingDelivery(TestCase):
         Order.objects.get(pk=100).set_delivered()
         Order.objects.get(pk=200).set_delivered()
         self.assertEqual(Order.delivered_today_objects.count(), 2)
+
+    def test_delivered_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                confirmed=True,
+                ready_delivery=True,
+                delivered=True,
+            )
+        self.assertEqual(Order.delivered_week_objects.count(), 7)
+
+    def test_cancelled_today_manager(self):
+        self.assertEqual(Order.cancelled_today_objects.count(), 0)
+        Order.objects.get(pk=100).set_cancelled()
+        Order.objects.get(pk=200).set_cancelled()
+        self.assertEqual(Order.cancelled_today_objects.count(), 2)
+
+    def test_cancelled_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                cancelled=True,
+            )
+        self.assertEqual(Order.cancelled_week_objects.count(), 7)
+
+
+class TestOrderItemModel(TestCase):
+    def setUp(self):
+        menu_item = Menu.objects.create(
+            price=10.00,
+        )
+        OrderItem.objects.create(
+            pk=0,
+            menu_item=menu_item,
+            quantity=5,
+        )
+
+    def test_get_price(self):
+        order_item = OrderItem.objects.get(pk=0)
+        self.assertEqual(order_item.get_price(), 50.0)

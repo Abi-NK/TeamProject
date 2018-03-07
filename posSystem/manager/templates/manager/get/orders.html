@@ -4,24 +4,23 @@
 {% if orders %}
 {% for order in orders %}
 
-<div class="card mb-md-3">
-  <div class="card-body py-1">
-    <h5>Order #{{ order.id }} - {{ order.table }}</h5>
-
-    <h5>Status: {% if order.ready_delivery %}Ready for delivery{% elif order.confirmed %}Being prepared{% else %}Unconfirmed{% endif %}</h5>
-
-    <p class="card-text">
-      {{ order.items | linebreaksbr }}
-    </p>
-
-    <h5>Total price: {{ order.get_price_display }}</h5>
-    <h5>Time Ordered: {{ order.get_time_display }}</h5>
+<hr />
+<div class="row">
+  <div class="col-5">
+    <h5>Order <strong>#{{ order.id }}</strong> - <strong>{{ order.table }}</strong></h5>
+    <h5>Status: <strong>{% if order.ready_delivery %}ready for delivery{% elif order.confirmed %}being prepared{% else %}unconfirmed{% endif %}</strong></h5>
+    <h5>Total price <strong>{{ order.get_price_display }}</strong></h5>
+    <h5>Ordered at <strong>{{ order.get_time_display }}</strong></h5>
+  </div>
+  <div class="col-7">
+    {{ order.get_items_display | linebreaksbr }}
   </div>
 </div>
 
 {% endfor %}
 {% else %}
 
+<hr />
 <div class="alert alert-warning">
   No active orders.
 </div>

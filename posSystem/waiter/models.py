@@ -1,8 +1,19 @@
 from django.db import models
-import json
 from customer.models import Menu, Seating
 from django.utils import timezone
 from datetime import datetime, timedelta, date
+
+
+class OrderItem(models.Model):
+    menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return "%s %s" % (self.quantity, self.menu_item)
+
+    def get_price(self):
+        """Return the total price of this item."""
+        return self.menu_item.price * self.quantity
 
 
 class ActiveOrderManager(models.Manager):
@@ -35,6 +46,28 @@ class DeliveredTodayOrderManager(models.Manager):
         return super().get_queryset().filter(delivered=True).filter(time__date=date.today())
 
 
+class DeliveredWeekOrderManager(models.Manager):
+    """Filter for this week's delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(delivered=True).filter(
+            time__date__gt=timezone.now().date()-timedelta(days=7)
+        )
+
+
+class CancelledTodayOrderManager(models.Manager):
+    """Filter for today's cancelled orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(cancelled=True).filter(time__date=date.today())
+
+
+class CancelledWeekOrderManager(models.Manager):
+    """Filter for this week's cancelled orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(cancelled=True).filter(
+            time__date__gt=timezone.now().date()-timedelta(days=7)
+        )
+
+
 class Order(models.Model):
 
     objects = models.Manager()
@@ -43,30 +76,48 @@ class Order(models.Model):
     unconfirmed_objects = UnconfirmedOrderManager()
     ready_objects = ReadyOrderManager()
     delivered_today_objects = DeliveredTodayOrderManager()
+    delivered_week_objects = DeliveredWeekOrderManager()
+    cancelled_today_objects = CancelledTodayOrderManager()
+    cancelled_week_objects = CancelledWeekOrderManager()
 
-    # Order db
     table = models.CharField(max_length=100, default='na')
     time = models.DateTimeField()  # The time at which the order was taken
-    items = models.CharField(max_length=1000, default='na')  # Includes prices as plaintext
-    cooking_instructions = models.CharField(max_length=500, default='na')  # i.e Steak done medium
-    #  rare or without the onions
+    items = models.ManyToManyField(OrderItem)
+    cooking_instructions = models.CharField(max_length=500, default='na')  # Preferences, allergies, etc.
     purchase_method = models.CharField(max_length=100, default='na')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     confirmed = models.BooleanField(default=False)  # order has been confirmed
+    cancelled = models.BooleanField(default=False)
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
 
     def __str__(self):
-        if self.confirmed:
-            return "Order: " + str(self.id) + ' -> ' + 'READY'
+        status = ""
+        if self.cancelled:
+            status = "cancelled"
+        elif self.delivered:
+            status = "delivered"
+        elif self.ready_delivery:
+            status = "ready for delivery"
+        elif self.confirmed:
+            status = "preparing"
         else:
-            return "Order: " + str(self.id) + ' -> ' + 'Not ready'
+            status = "unconfirmed"
+        return "Order #%s: %s, status: %s, price: %s, time placed: %s" % \
+            (self.id, self.table, status, self.get_price_display(), self.time)
 
     def set_confirmed(self):
         """sets the order as confirmed"""
         self.confirmed = True
         self.save()
         print("Order %s is confirmed" % self.id)
+
+    # Set cancelled in db
+    def set_cancelled(self):
+        """sets the order as cancelled"""
+        self.cancelled = True
+        self.save()
+        print("Order %s is cancelled" % self.id)
 
     def set_ready_delivery(self):
         """sets the order as ready to be delivered"""
@@ -82,7 +133,6 @@ class Order(models.Model):
 
     def get_all_orders(self):
         """returns all the orders"""
-        # return self
         return Order.objects.all()
 
     def get_ready_orders(self):
@@ -97,26 +147,26 @@ class Order(models.Model):
         """returns not confirmed orders"""
         return Order.objects.filter(confirmed=False)
 
-    def make_order(request):
+    def make_order(order_json, seating_id):
         """Create an order from the provided JSON."""
-        if "seating_id" not in request.session:
-            print("A session without a seating ID tried to place an order.")
-            return HttpResponseNotFound("no seating_id in session")
-
-        order_json = json.loads(request.body.decode('utf-8'))["order"]
-        print("Recieved order: ", order_json)
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
-        Order(
-            table=Seating.objects.get(pk=request.session["seating_id"]).label,
+        order = Order.objects.create(
+            table=Seating.objects.get(pk=seating_id).label,
             confirmed=False,
             time=timezone.now(),
-            items="\n".join(["%s %s" % (order_json[str(item.id)], str(item)) for item in order_contents]),
             cooking_instructions='none',
             purchase_method='none',
             total_price=total_price,
             delivered=False,
-        ).save(force_insert=True)
+        )
+        for menu_id, quantity in order_json.items():
+            order_item = OrderItem.objects.create(
+                menu_item=Menu.objects.get(pk=menu_id),
+                quantity=quantity
+            )
+            order.items.add(order_item)
+        order.save()
 
     def get_time_display(self):
         """Get the time the order was placed in a displayable format."""
@@ -125,6 +175,10 @@ class Order(models.Model):
     def get_price_display(self):
         """Get the price in a displayable format."""
         return "£%.2f" % self.total_price
+
+    def get_items_display(self):
+        """Return the string representation of the items in the order."""
+        return "\n".join([str(item) for item in self.items.all()])
 
     def is_nearly_late(self):
         allowed_gap = timedelta(minutes=7)

@@ -2,48 +2,25 @@
 
 {% block content %}
 
-<div class="card mb-md-3">
-  <div class="card-header text-center py-1">
-    <h3 class="card-title">Tables</h3>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item py-1">
-      <h5>Occupied:</h5>
-      <h2 class="text-center">{{ seating_data.occupied_count }}</h2>
-    </li>
-    <li class="list-group-item py-1">
-      <h5>Available:</h5>
-      <h2 class="text-center">{{ seating_data.available_count }}</h2>
-    </li>
-  </ul>
-</div>
+<h3>Summary</h3>
+<hr />
 
-<div class="card mb-md-3">
-  <div class="card-header text-center py-1">
-    <h3 class="card-title">Orders</h3>
-  </div>
-  <ul class="list-group list-group-flush">
-    <li class="list-group-item py-1">
-      <h5>Total active:</h5>
-      <h2 class="text-center">{{ order_data.active_count }}</h2>
-    </li>
-    <li class="list-group-item py-1">
-      <h5>Unconfirmed:</h5>
-      <h2 class="text-center">{{ order_data.unconfirmed_count }}</h2>
-    </li>
-    <li class="list-group-item py-1">
-      <h5>Preparing:</h5>
-      <h2 class="text-center">{{ order_data.confirmed_count }}</h2>
-    </li>
-    <li class="list-group-item py-1">
-      <h5>Ready:</h5>
-      <h2 class="text-center">{{ order_data.ready_count }}</h2>
-    </li>
-    <li class="list-group-item py-1">
-      <h5>Delivered (today):</h5>
-      <h2 class="text-center">{{ order_data.delivered_today }}</h2>
-    </li>
-  </ul>
-</div>
+<h4>Tables</h4>
+<h5>Occupied: <strong>{{ seating_data.occupied_count }}</strong></h5>
+<h5>Available: <strong>{{ seating_data.available_count }}</strong></h5>
+<hr />
+
+<h4>Orders</h4>
+<h5><strong>Active</strong></h5>
+<h5>Total active: <strong>{{ order_data.active_count }}</strong></h5>
+<h5>Unconfirmed: <strong>{{ order_data.unconfirmed_count }}</strong></h5>
+<h5>Preparing: <strong>{{ order_data.confirmed_count }}</strong></h5>
+<h5>Ready: <strong>{{ order_data.ready_count }}</strong></h5>
+<h5><strong>Delivered</strong></h5>
+<h5>Today: <strong>{{ order_data.delivered_today }}</strong></h5>
+<h5>This week: <strong>{{ order_data.delivered_week }}</strong></h5>
+<h5><strong>Cancelled</strong></h5>
+<h5>Today: <strong>{{ order_data.cancelled_today }}</strong></h5>
+<h5>This week: <strong>{{ order_data.cancelled_week }}</strong></h5>
 
 {% endblock %}
