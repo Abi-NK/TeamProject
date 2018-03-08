@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import user_passes_test
 from customer.models import Menu, Seating
 from waiter.models import Order
 from django.contrib.auth.models import User
+import random
 
 
 def group_check(user):
@@ -24,8 +25,17 @@ def data(request):
 @user_passes_test(group_check)
 def employee(request):
     """Return the employee data page."""
+    waiter_data = []
+    for waiter in User.objects.filter(username__startswith="waiter"):
+        waiter_data.append({
+            "waiter": waiter,
+            "extra_sales_daily": "£%.2f" % random.randrange(10, 20),
+            "extra_sales_weekly": "£%.2f" % random.randrange(50, 100),
+        })
     return render(request, 'manager/employee.html', {
         "managers": User.objects.filter(username__startswith="manager"),
+        "kitchen_staff": User.objects.filter(username__startswith="kitchen"),
+        "waiters": waiter_data,
     })
 
 
