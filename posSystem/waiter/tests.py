@@ -1,6 +1,7 @@
 from django.test import TestCase
-from .models import Order, OrderItem
-from customer.models import Menu
+from .models import Order, OrderItem, OrderExtra
+from customer.models import Menu, Seating
+from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date, time
 
@@ -266,3 +267,38 @@ class TestOrderItemModel(TestCase):
         self.assertEqual(order_item.menu_item.stock, 15)
         order_item.refund_item_stock()
         self.assertEqual(order_item.menu_item.stock, 20)
+
+
+class TestOrderExtraModel(TestCase):
+    def setUp(self):
+        waiter = User.objects.create_user(
+            username="waiter1",
+        )
+        seating = Seating.objects.create(
+            pk=0,
+            label="Test Seating 1",
+        )
+        OrderExtra.objects.create(
+            pk=0,
+            seating=seating,
+            waiter=waiter,
+        )
+        Menu.objects.create(pk=0, price=5.00)
+        Menu.objects.create(pk=1, price=10.00)
+        Menu.objects.create(pk=2, price=15.00)
+
+    def test_add_item(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        order_extra.add_item(0, 3)
+        order_extra.add_item(1, 4)
+        order_extra.add_item(2, 5)
+        order_extra.add_item(2, 5)
+        order_extra.add_item(2, 5)
+        self.assertEqual(sum([item.quantity for item in order_extra.items.all()]), 22)
+
+    def test_active_order_extra_manager(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        self.assertEqual(OrderExtra.active_objects.count(), 1)
+        order_extra.used = True
+        order_extra.save()
+        self.assertEqual(OrderExtra.active_objects.count(), 0)
