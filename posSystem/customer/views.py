@@ -34,23 +34,24 @@ def take_seat(request):
         # 'payment': ,
 
 def payment(request):
-    context = {
-        'payment': Payment.objects.filter(order=request.session['seating_id']),
-        'order': Order.objects.get(table=request.session['seating_id']),
-        # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
-    }
-    if request.method == "POST":
-        Payment(    # note- table is shown in payment page but not used in model
-            order=Order.objects.get(table=request.session['seating_id']),
-            # order=request.POST.get('order'),
-            card_holder=request.POST.get('name'),
-            card_number=request.POST.get('card-number'),
-            cvc=request.POST.get('cvc'),
-            expiry=request.POST.get('expiry'),
-            terms_conditions=checkbox_check(request.POST.get('cbx')),
-            payment_received=True
-        ).save(force_insert=True)
-    return render(request, "customer/e_payment.html", context)
+
+        context = {
+            'payment': Payment.objects.filter(order=request.session['seating_id']),
+            'order': Order.objects.get(table=request.session['seating_id']),
+            # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
+        }
+        if request.method == "POST":
+            Payment(    # note- table is shown in payment page but not used in model
+                order=Order.objects.get(table=request.session['seating_id']),
+                # order=request.POST.get('order'),
+                card_holder=request.POST.get('name'),
+                card_number=request.POST.get('card-number'),
+                cvc=request.POST.get('cvc'),
+                expiry=request.POST.get('expiry'),
+                terms_conditions=checkbox_check(request.POST.get('cbx')),
+                payment_received=True
+            ).save(force_insert=True)
+        return render(request, "customer/e_payment.html", context)
 
 
 def checkbox_check(val):

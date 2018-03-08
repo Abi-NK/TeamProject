@@ -157,9 +157,9 @@ def confirm_payment(request):
     """Confirm the provided payment in the database."""
     payment_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(payment_id))
-    # payment = Payment.objects.get(pk=payment_id)
-    # payment.payment_accepted = True
-    # payment.save()
+    payment = Payment.objects.get(pk=payment_id)
+    payment.payment_accepted = True
+    payment.save()
     # sets order to paid
     order = Order.objects.get(pk=payment_id)
     order.paid = True
