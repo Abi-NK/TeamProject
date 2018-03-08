@@ -19,6 +19,9 @@ function updateLoop(){
 }
 
 function updateOrders(){
+  $.get("gettables", function(data){
+    $("#container-tables").html(data);
+  });
   $.get("getalerts", function(data){
     $("#container-alerts").html(data);
   });
@@ -63,6 +66,36 @@ function cancelOrder(button, orderID){
     success: function(result) {
       $(button).attr("disabled", true);
       $(button).text("Cancelled");
+    }
+  });
+}
+
+function waiterOnDuty(button, username){
+  $.ajax({
+    url: "/waiter/waiteronduty",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({name: username}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).text("You are On Duty");
+    }
+  });
+}
+
+function waiterOffDuty(button, username){
+  $.ajax({
+    url: "/waiter/waiteroffduty",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({name: username}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).text("You are Off Duty");
     }
   });
 }
