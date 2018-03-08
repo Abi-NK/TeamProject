@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Order
+from .models import Order, Waiter
 from customer.models import Menu, Seating
 import json
 from django.shortcuts import render, redirect
@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from kitchen.views import index as waiter_index
 from manager.views import index as manager_index
+from django.contrib.auth.models import User
 
 
 def group_check(user):
@@ -76,6 +77,67 @@ def get_orders_cancel(request):
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
+# get current waiters on duty
+@user_passes_test(group_check)
+def get_current_waiters(request):
+    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    user_id_list = []
+    for session in active_sessions:
+        data = session.get_decoded()
+        user_id_list.append(data.get('_auth_user_id', None))
+    # Query all logged in users based on id list
+    return User.objects.filter(id__in=user_id_list)
+    
+    
+# gets tables for waiter
+@require_http_methods(["GET"])
+#@user_passes_test(group_check)
+def get_tables(request):
+    #get current waiters
+    waiters = Waiter.objects.all()
+    offduty = Waiter.objects.filter(onduty=False)
+    onduty = Waiter.objects.filter(onduty=True)
+    #waiters = User.objects.all()
+    waitercount = 0
+    # count active waiters ???
+    
+    # get current tables and count
+    tables = Seating.objects.filter(available=False)
+    tablecount = 0
+    for table in tables:
+        tablecount += 1
+        
+    # more than one waiter on duty, divide tables
+    #if waitercount > 1:
+        # divide tables between waiters
+    #    waiters = User.objects.all()
+    #    noofwaiters = waiters.objects.count()
+    #else: # one waiter, assign all tables
+    #    tables = Seating.objects.filter(available=False)
+    #    waiters = User.objects.all()
+        
+    waiter = Waiter.objects.filter(onduty=False)
+    return render(request, "waiter/tables.html", {'tables':tables, 'onduty':onduty, 'offduty': offduty, 'waiters': waiters, 'waiter': waiter })
+
+
+# get waiters on duty
+@require_http_methods(["GET"])
+#@user_passes_test(group_check)
+def get_waiter_on_duty(request):
+    """Return all waiters on duty."""
+    waiter = Waiter.objects.filter(onduty=True)
+    return render(request, "waiter/tables.html", {'waiter': waiter, 'onduty': True})
+    
+
+# get waiters off duty
+@require_http_methods(["GET"])
+#@user_passes_test(group_check)
+def get_waiter_off_duty(request):
+    """Return all waiters off duty."""
+    waiter = Waiter.objects.filter(onduty=False)
+    return render(request, "waiter/tables.html", {'waiter': waiter, 'onduty': False})
+    
+    
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
 def get_orders_delivery(request):
@@ -137,8 +199,38 @@ def cancel_order(request):
     order.refund_stock()
     order.save()
     return HttpResponse("recieved")
-
-
+    
+    
+# waiter on duty
+@require_http_methods(["POST"])
+@login_required
+def waiter_on_duty(request):
+    """set waiter on duty."""
+    order_id = json.loads(request.body.decode('utf-8'))["id"]
+    print("Recieved ID: " + str(order_id))
+    waiter = Waiter.objects.get(pk=order_id)
+    username = json.loads(request.body.decode('utf-8'))["name"]
+    print("Recieved NAME: " + str(username))
+    Waiter.objects.get(pk=username).set_waiter_on_duty()
+    return HttpResponse("recieved")
+    
+    
+# waiter off duty
+@require_http_methods(["POST"])
+@login_required
+def waiter_off_duty(request):
+    """set waiter off duty."""
+    username = json.loads(request.body.decode('utf-8'))["get_username"]
+    Waiter.objects.get(pk=seating_id).set_assistance_false()
+    print("Recieved NAME: " + str(username))
+    waiter = Waiter.objects.get(pk=username)
+    waiter.onduty = False
+    waiter.name = username
+    waiter.set_waiter_off_duty
+    waiter.save()
+    return HttpResponse("recieved")
+    
+    
 @require_http_methods(["POST"])
 def request_help(request):
     if "seating_id" not in request.session:
