@@ -47,7 +47,8 @@ def payment(request):
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),
             expiry=request.POST.get('expiry'),
-            terms_conditions=checkbox_check(request.POST.get('cbx'))
+            terms_conditions=checkbox_check(request.POST.get('cbx')),
+            payment_received=True
         ).save(force_insert=True)
     return render(request, "customer/e_payment.html", context)
 

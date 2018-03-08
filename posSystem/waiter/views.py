@@ -96,10 +96,15 @@ def get_orders_delivery(request):
 @user_passes_test(group_check)
 def get_orders_unpaid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
-    orders = Order.objects.filter(delivered=True) and Payment.objects.filter(payment_accepted=False)
-    payment = Payment.objects.all()
-    return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True, 'payment': payment})
+    orders = Order.objects.filter(delivered=True, paid=False).order_by('time')
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
 
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_orders_paid(request):
+    """Return all orders which have been delivered but not paid for as formatted HTML."""
+    orders = Order.objects.filter(delivered=True, paid=True).order_by('time')
+    return render(request, "waiter/ordercards.html", {'orders': orders})
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
@@ -152,9 +157,13 @@ def confirm_payment(request):
     """Confirm the provided payment in the database."""
     payment_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(payment_id))
-    payment = Payment.objects.get(pk=payment_id)
-    payment.payment_accepted = True
-    payment.save()
+    # payment = Payment.objects.get(pk=payment_id)
+    # payment.payment_accepted = True
+    # payment.save()
+    # sets order to paid
+    order = Order.objects.get(pk=payment_id)
+    order.paid = True
+    order.save()
     return HttpResponse("recieved")
 
 

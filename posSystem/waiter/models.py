@@ -90,6 +90,7 @@ class Order(models.Model):
     cancelled = models.BooleanField(default=False)
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
+    paid = models.BooleanField(default=False)  # order has been paid
 
     def __str__(self):
         status = ""

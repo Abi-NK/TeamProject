@@ -34,11 +34,11 @@
     </form>
     {% endif %}
 
-    {% if unpaid%}
-    <h5>Payment provided: {{ payment.payment_accepted }}</h5>
-    <button type="button" class="btn btn-{% if Payment.payment_received %}success{% else %}primary{% endif %} btn-lg btn-block"
-      onclick="confirmPayment(this, {{ order.id }})" {% if payment.payment_received %}disabled{% endif %}>
-      {% if payment.payment_received %}Confirmed{% else %}Confirm{% endif %}
+    {% if unpaid %}
+       <!-- <h5>Paid: {% if order.paid %}Yes{% else %}No{% endif %}</h5> -->
+    <button type="button" class="btn btn-{% if order.paid %}success{% else %}primary{% endif %} btn-lg btn-block"
+    onclick="confirmPayment(this, {{ order.id }})" {% if order.paid %}disabled{% endif %}>
+      {% if order.paid %}paid{% else %}Confirm{% endif %}
     </button>
     {% endif %}
 
