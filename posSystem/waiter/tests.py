@@ -296,6 +296,14 @@ class TestOrderExtraModel(TestCase):
         order_extra.add_item(2, 5)
         self.assertEqual(sum([item.quantity for item in order_extra.items.all()]), 22)
 
+    def test_get_total(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        self.assertEqual(order_extra.get_total(), 0)
+        order_extra.add_item(0, 1)
+        order_extra.add_item(1, 2)
+        order_extra.add_item(2, 3)
+        self.assertEqual(order_extra.get_total(), 70)
+
     def test_active_order_extra_manager(self):
         order_extra = OrderExtra.objects.get(pk=0)
         self.assertEqual(OrderExtra.active_objects.count(), 1)

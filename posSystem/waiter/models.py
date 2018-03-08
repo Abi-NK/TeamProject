@@ -271,3 +271,6 @@ class OrderExtra(models.Model):
             menu_item=Menu.objects.get(pk=menu_item_id),
             quantity=quantity,
         ))
+
+    def get_total(self):
+        return sum([order_item.get_price() for order_item in self.items.all()])

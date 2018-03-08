@@ -1,9 +1,10 @@
 from django.core.management.base import BaseCommand
 from customer.models import Menu, Seating
-from waiter.models import Order, OrderItem
+from waiter.models import Order, OrderItem, OrderExtra
 import random
 from django.utils import timezone
 from datetime import date, datetime, time, timedelta
+from django.contrib.auth.models import User
 
 
 def random_order_json():
@@ -29,9 +30,13 @@ class Command(BaseCommand):
     help = 'Populates the Order table with sample orders.'
 
     def handle(self, *args, **options):
-        # clear out the existing orders
+        # clear out the existing orders and orderextras
         print("Deleting all entries in Order table...")
         Order.objects.all().delete()
+        print("Deleted.")
+
+        print("Deleting all entries in OrderExtra table...")
+        OrderExtra.objects.all().delete()
         print("Deleted.")
 
         # free up all tables to ensure there are some left at the end
@@ -39,6 +44,12 @@ class Command(BaseCommand):
         for seat in Seating.objects.all():
             seat.set_available()
         print("Done.")
+
+        waiters = [waiter for waiter in User.objects.filter(username__startswith="waiter")]
+
+        menu = {}
+        for item in Menu.objects.all():
+            menu[str(item.pk)] = item
 
         all_seating = [item for item in Seating.objects.all()]
         random.shuffle(all_seating)
@@ -59,16 +70,24 @@ class Command(BaseCommand):
                 ready_delivery=False,
                 delivered=False,
             )
+            order_extra = OrderExtra.objects.create(
+                waiter=waiters[random.randrange(5)],
+                seating=seating,
+                time=timezone.now() - timedelta(minutes=time_offset),
+                used=True,
+            )
             for menu_id, quantity in order_json.items():
                 order_item = OrderItem.objects.create(
-                    menu_item=Menu.objects.get(pk=menu_id),
+                    menu_item=menu[str(menu_id)],
                     quantity=quantity
                 )
                 order.items.add(order_item)
-            order.save()
+                if random.random() < 0.2:
+                    order_extra.items.add(order_item)
+            # order.save()
             print(str(order))
 
-            # occasionally add an extra order for the current table
+            # occasionally add an additional order for the current table
             if random.random() < 0.25:
                 order_json = random_order_json()
                 time_offset = (dummy_table_count - i) / dummy_table_count * 30
@@ -82,7 +101,7 @@ class Command(BaseCommand):
                 )
                 for menu_id, quantity in order_json.items():
                     order_item = OrderItem.objects.create(
-                        menu_item=Menu.objects.get(pk=menu_id),
+                        menu_item=menu[str(menu_id)],
                         quantity=quantity
                     )
                     order.items.add(order_item)
@@ -135,7 +154,20 @@ class Command(BaseCommand):
                     ready_delivery=True,
                     delivered=True,
                 )
+                order_extra = OrderExtra.objects.create(
+                    waiter=waiters[random.randrange(5)],
+                    seating=seating,
+                    time=order_datetime,
+                    used=True,
+                )
                 if random.random() < 0.1:
                     order.cancelled = True
                     order.save()
+                for menu_id, quantity in order_json.items():
+                    if random.random() < 0.2:
+                        order_item = OrderItem.objects.create(
+                            menu_item=menu[str(menu_id)],
+                            quantity=quantity
+                        )
+                        order_extra.items.add(order_item)
                 print(str(order))
