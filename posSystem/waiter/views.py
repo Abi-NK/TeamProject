@@ -97,7 +97,8 @@ def get_orders_delivery(request):
 def get_orders_unpaid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     orders = Order.objects.filter(delivered=True) and Payment.objects.filter(payment_accepted=False)
-    return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
+    payment = Payment.objects.all()
+    return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True, 'payment': payment})
 
 
 @require_http_methods(["GET"])

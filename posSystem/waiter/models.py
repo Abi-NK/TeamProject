@@ -194,15 +194,15 @@ class Order(models.Model):
 
 class Payment(models.Model):
 
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
-    card_holder = models.CharField(max_length=50, default='na')  # name of card holder
-    card_number = models.CharField(max_length=12, default='na')  # Card number
-    cvc = models.CharField(max_length=3, default='na')  # CVC
-    expiry = models.CharField(max_length=5, default='na')  # Card expiry date
-    terms_conditions = models.BooleanField(default=False)  # Customer has accepted t and c
-    payment_requested = models.BooleanField(default=False)  # Waiter has asked for payment
-    payment_received = models.BooleanField(default=False)  # Payment information has been received
-    payment_accepted = models.BooleanField(default=False)  # Waiter has accepted the payment
+    order = models.OneToOneField(Order, on_delete=models.CASCADE)   # order of payment
+    card_holder = models.CharField(max_length=50, default='na')     # name of card holder
+    card_number = models.CharField(max_length=12, default='na')     # Card number
+    cvc = models.CharField(max_length=3, default='na')              # CVC
+    expiry = models.CharField(max_length=5, default='na')           # Card expiry date
+    terms_conditions = models.BooleanField(default=False)           # Customer has accepted t and c
+    payment_requested = models.BooleanField(default=False)          # Waiter has asked for payment
+    payment_received = models.BooleanField(default=False)           # Payment information has been received
+    payment_accepted = models.BooleanField(default=False)           # Waiter has accepted the payment
 
     def __str__(self):
        return "Order: %s, Accepted: %s" % (self.order.id, self.payment_accepted)

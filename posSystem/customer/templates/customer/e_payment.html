@@ -29,19 +29,19 @@
                               </div>
                               <div class="form-group">
                                   <label for="name">Name:</label>
-                                  <input type="text" placeholder="Your Name on Your Card" class="form-control" name="name">
+                                  <input type="text" maxlength="50" placeholder="Your Name on Your Card" class="form-control" name="name">
                               </div>
                               <div class="form-group">
                                   <label for="card-number">Card Number:</label>
-                                  <input type="tel" placeholder="Your Card Number" class="form-control" name="card-number">
+                                  <input type="tel" minlength="12" maxlength="12" placeholder="Your Card Number" class="form-control" name="card-number">
                               </div>
                              <div class="form-group">
                                   <label for="cvc">CVC:</label>
-                                  <input type="tel" placeholder="_ _ _" class="form-control" name="cvc">
+                                  <input type="tel" minlength="3" maxlength="3" placeholder="_ _ _" class="form-control" name="cvc">
                               </div>
                              <div class="form-group">
                                   <label for="expiry">Expiry Date:</label>
-                                  <input type="tel " placeholder="MM / YY" class="form-control" name="expiry">
+                                  <input type="tel"minlength="5" maxlength="5"placeholder="MM / YY" class="form-control" name="expiry">
                               </div>
                               <div class="form-group">
                                   <label><input type="checkbox" name ="cbx"> I agree to the Oaxaca terms and conditions</label>
