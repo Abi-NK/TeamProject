@@ -1,0 +1,43 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+
+<h4>Tables assigned to {{ user.get_username }} </h4>
+    <!-- off duty button -->
+    <div style="float:right">
+    <button type="button" class="btn btn-success btn-lg btn-block"
+            onclick="waiterOnDuty(this, {{ user.get_username }})">On Duty</button>
+    <button type="button" class="btn btn-danger btn-lg btn-block"
+            onclick="waiterOffDuty(this, {{ user.get_username }})">Off Duty</button>
+    </div>
+
+    {% if tables %}
+    
+        {% for table in tables %}
+            {{ table.label }} is allocated to {{ user.get_username }}
+            <br>  
+        {% endfor %}
+    {% endif %}
+    <h5>Waiters on duty</h5>
+    {{ offduty }}
+    {% if waiters %}
+        {% for waiter in waiters %}
+            {{ waiter.label }} is allocated to {{ user.get_username }}
+            {{  waiter.name }}
+            {{  waiter.onduty }}
+            <br>  
+        {% endfor %}
+    {% endif %}
+    
+    
+	{{ waiter.name }} is on duty
+    {% if waiter %}
+        {% for w in waiter %}
+            {{ w.label }} is on duty
+            {{ w.name }} is on duty
+            {{ w.label }} is on duty
+            <br>  
+        {% endfor %}
+    {% endif %}
+    
+{% endblock %}
