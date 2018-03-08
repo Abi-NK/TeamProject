@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from customer.models import Menu, Seating
 from waiter.models import Order
+from django.contrib.auth.models import User
 
 
 def group_check(user):
@@ -23,7 +24,9 @@ def data(request):
 @user_passes_test(group_check)
 def employee(request):
     """Return the employee data page."""
-    return render(request, 'manager/employee.html')
+    return render(request, 'manager/employee.html', {
+        "managers": User.objects.filter(username__startswith="manager"),
+    })
 
 
 @user_passes_test(group_check)

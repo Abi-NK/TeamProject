@@ -11,6 +11,21 @@
     <h3 class="text-center">Managers</h3>
     <div id="container-managers">
       {# populate managers here #}
+      {% if managers %}
+      {% for manager in managers %}
+
+      <hr />
+      <h5>{{ manager.username }}</h5>
+      <h5>{{ manager.get_full_name }}</h5>
+
+      {% endfor %}
+      {% else %}
+
+      <div class="alert alert-warning">
+        No managers.
+      </div>
+
+      {% endif %}
     </div>
   </div>
 
