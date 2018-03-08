@@ -89,19 +89,6 @@ function placeOrder(){
   if (Object.keys(order).length === 0 && Object.keys(orderExtra).length === 0){
     console.log("Not placing order: order is empty.");
   } else {
-
-    var data = {}
-    for (var item in order){
-      data[item] = order[item];
-    }
-    for (var item in orderExtra){
-      if (item in data){
-        data[item] += orderExtra[item]
-      } else {
-        data[item] = orderExtra[item]
-      }
-    }
-
     $.ajax({
       url: "/waiter/makeorder",
       type: 'POST',
