@@ -11,9 +11,17 @@ import json
 @ensure_csrf_cookie
 def index(request):
     """Return the menu page."""
-    context = {
-        'all_menu': Menu.objects.all(),
-    }
+
+    if Order.objects.filter(table=request.session['seating_id']).exists():
+        context = {
+            'all_menu': Menu.objects.all(),
+            'order': Order.objects.get(table=request.session['seating_id']),  # for pay button
+        }
+
+    else:
+        context = {
+            'all_menu': Menu.objects.all(),
+        }
     if 'seating_label' in request.session:
         context['seating_label'] = request.session['seating_label']
     else:
@@ -44,6 +52,10 @@ def take_seat(request):
         # 'payment': ,
 
 def payment(request):
+
+        check_order = order=request.session['seating_id']
+
+        # if Order.
 
         context = {
             'payment': Payment.objects.filter(order=request.session['seating_id']),

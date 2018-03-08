@@ -318,11 +318,12 @@
     <div class="col-md-12 mb-md-3">
       <hr />
       <button type="button" class="btn btn-primary btn-lg btn-block" onclick="showOrder()">Place order</button>
-      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="location.href='http://127.0.0.1:8000/customer/payment'">pay</button>
     </div>
     <br />
   <div class="row">
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {%if order.delivered%}enabled{%else%}disabled{% endif %}>Pay</button>
+    </div>
     <div class="col-md-4"></div>
     <div class="col-md-4">
       <button type="button" class="btn btn-success btn-lg btn-block" onclick="window.location.href='./statuses'">Order Statuses</button>
