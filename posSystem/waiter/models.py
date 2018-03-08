@@ -1,5 +1,6 @@
 from django.db import models
 from customer.models import Menu, Seating
+from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 
@@ -14,6 +15,16 @@ class OrderItem(models.Model):
     def get_price(self):
         """Return the total price of this item."""
         return self.menu_item.price * self.quantity
+
+    def reduce_item_stock(self):
+        """Reduce the stock count of the menu item by quantity."""
+        self.menu_item.stock -= self.quantity
+        self.menu_item.save()
+
+    def refund_item_stock(self):
+        """Increase the stock count of the menu item by quantity."""
+        self.menu_item.stock += self.quantity
+        self.menu_item.save()
 
 
 class ActiveOrderManager(models.Manager):
@@ -152,6 +163,7 @@ class Order(models.Model):
         """Create an order from the provided JSON."""
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
+
         order = Order.objects.create(
             # table=Seating.objects.get(pk=seating_id).label,
             table = Seating.objects.get(pk=seating_id),
@@ -168,7 +180,21 @@ class Order(models.Model):
                 quantity=quantity
             )
             order.items.add(order_item)
+
+        # handle an OrderExtra if it exists
+        try:
+            order_extra = OrderExtra.active_objects.get(seating=Seating.objects.get(pk=seating_id))
+            for order_item in order_extra.items.all():
+                order.items.add(order_item)
+            order_extra.used = True
+            order_extra.save()
+            order.total_price += sum([item.get_price() for item in order_extra.items.all()])
+            order.save()
+        except:
+            pass
+
         order.save()
+        return order
 
     def get_time_display(self):
         """Get the time the order was placed in a displayable format."""
@@ -192,6 +218,44 @@ class Order(models.Model):
         difference = datetime.now() - self.time.replace(tzinfo=None)
         return difference >= allowed_gap
 
+    def reduce_stock(self):
+        for order_item in self.items.all():
+            order_item.reduce_item_stock()
+
+    def refund_stock(self):
+        for order_item in self.items.all():
+            order_item.refund_item_stock()
+
+
+class ActiveOrderExtraManager(models.Manager):
+    """Filter for active (unused) OrderExtras."""
+    def get_queryset(self):
+        return super().get_queryset().filter(used=False)
+
+
+class OrderExtra(models.Model):
+    objects = models.Manager()
+    active_objects = ActiveOrderExtraManager()
+
+    seating = models.ForeignKey(Seating, on_delete=models.CASCADE)
+    waiter = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItem)
+    used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "OrderExtra #%s: %s, waiter: %s, status: %s" % \
+            (self.id, self.seating, self.waiter, "inactive" if self.used else "active")
+
+    def add_item(self, menu_item_id, quantity):
+        for item in self.items.all():
+            if item.menu_item.id == menu_item_id:
+                item.quantity += quantity
+                item.save()
+                return
+        self.items.add(OrderItem.objects.create(
+            menu_item=Menu.objects.get(pk=menu_item_id),
+            quantity=quantity,
+        ))
 
 class Payment(models.Model):
 

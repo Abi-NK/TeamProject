@@ -86,9 +86,22 @@ function showOrder(){
 
 // used to send the order object to the server
 function placeOrder(){
-  if (Object.keys(order).length === 0){
+  if (Object.keys(order).length === 0 && Object.keys(orderExtra).length === 0){
     console.log("Not placing order: order is empty.");
   } else {
+
+    var data = {}
+    for (var item in order){
+      data[item] = order[item];
+    }
+    for (var item in orderExtra){
+      if (item in data){
+        data[item] += orderExtra[item]
+      } else {
+        data[item] = orderExtra[item]
+      }
+    }
+
     $.ajax({
       url: "/waiter/makeorder",
       type: 'POST',
@@ -145,6 +158,40 @@ $('.btn-seating-option').on('click', function(){
   });
 });
 
+function updateOrderExtra(){
+  $.get("getorderextra", function(data){
+    $("#container-order-extra").html(data);
+  });
+}
+
+function updateLoop(){
+  updateOrderExtra();
+  setTimeout(function(){
+     updateLoop();
+  }, 5000);
+}
+
+function btnOrderExtraRemoveItem(button, order_extra_id, order_item_id){
+  $(button).attr("disabled", true);
+  console.log("OrderExtra ID: " + order_extra_id);
+  console.log("OrderItem ID: " + order_item_id);
+  $.ajax({
+    url: "/customer/cancelorderextraitem",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({
+      order_extra_id: order_extra_id,
+      order_item_id: order_item_id,
+    }),
+    dataType: 'text',
+    success: function(result) {
+      // if the selection worked, close the seating selection modal
+      $('#chooseTableModalCenter').modal('hide');
+    }
+  });
+}
+
 $(document).ready(function() {
   updateTotal();
   if (seatingLabel == ""){
@@ -152,4 +199,46 @@ $(document).ready(function() {
   } else {
     console.log("Already seated at " + seatingLabel);
   }
+  updateLoop();
+});
+
+
+// method called by submission button of menu filtering modal
+$('.btn-filter').on('click', function() {
+  // if selected "vegan"
+  if($("#vegan").is(':checked')){
+    $('.veg-item').hide();
+    $('.meat-item').hide();
+  }
+  // if selected "vegetarian"
+  if($("#vegetarian").is(':checked')){
+    $('.meat-item').hide();
+  }
+  // if selected "wheat-free"
+  if($("#wheat-free").is(':checked')){
+    $('.wheat-item').hide();
+  }
+  // if selected "milk-free"
+  if($("#milk-free").is(':checked')){
+    $('.milk-item').hide();
+  }
+  // if selected "nut-free"
+  if($("#nut-free").is(':checked')){
+    $('.nut-item').hide();
+  }
+  // if selected "meat"
+  if($("#meat").is(':checked')){
+    $('.veg-item').hide();
+    $('.vegan-item').hide();
+  }
+});
+
+// method called by cancel of filters button
+$('.btn-remove').on('click', function() {
+  $('.veg-item').show();
+  $('.vegan-item').show();
+  $('.wheat-item').show();
+  $('.nut-item').show();
+  $('.meat-item').show();
+  $('.milk-item').show();
 });

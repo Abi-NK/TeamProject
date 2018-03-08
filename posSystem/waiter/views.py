@@ -1,6 +1,8 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from .models import Order, Payment
 from customer.models import Seating
+from .models import Order, OrderExtra
+from customer.models import Menu, Seating
 import json
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
@@ -8,6 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from kitchen.views import index as waiter_index
 from manager.views import index as manager_index
+from django.contrib.auth.models import User
 
 
 def group_check(user):
@@ -56,7 +59,7 @@ def index(request):
         order_update = Order.objects.get(pk=request.POST['delivery_id'])
         order_update.delivered = True
         order_update.save()
-    return render(request, "waiter/index.html")
+    return render(request, "waiter/index.html", {'menu': Menu.objects.all()})
 
 
 @require_http_methods(["GET"])
@@ -113,6 +116,14 @@ def get_alerts(request):
     return render(request, "waiter/alerts.html", {'want_assistance': want_assistance})
 
 
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_occupied_seating(request):
+    """Returns the options for occupied seating."""
+    seating = Seating.occupied_objects.all()
+    return render(request, "waiter/get/occupiedseating.html", {'seating': seating})
+
+
 @require_http_methods(["POST"])
 def make_order(request):
     """Create an order from the provided JSON."""
@@ -121,7 +132,8 @@ def make_order(request):
         return HttpResponseNotFound("no seating_id in session")
 
     order_json = json.loads(request.body.decode('utf-8'))["order"]
-    Order.make_order(order_json, request.session["seating_id"])
+    order = Order.make_order(order_json, request.session["seating_id"])
+    order.reduce_stock()
     return HttpResponse("recieved")
 
 
@@ -147,6 +159,7 @@ def cancel_order(request):
     order = Order.objects.get(pk=order_id)
     order.confirmed = False
     order.cancelled = True
+    order.refund_stock()
     order.save()
     return HttpResponse("recieved")
 
@@ -181,4 +194,25 @@ def request_help(request):
 def cancel_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["id"]
     Seating.objects.get(pk=seating_id).set_assistance_false()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def place_order_extra(request):
+    """Create an OrderExtra from the provided JSON, or update an existing one."""
+    received_json = json.loads(request.body.decode('utf-8'))
+    seating_id = received_json["seating_id"]
+    menu_item_id = received_json["menu_item_id"]
+    quantity = received_json["quantity"]
+
+    order_extra = None
+    try:
+        order_extra = OrderExtra.active_objects.get(seating=Seating.occupied_objects.get(pk=seating_id))
+    except:
+        order_extra = OrderExtra.objects.create(
+            seating=Seating.occupied_objects.get(pk=seating_id),
+            waiter=User.objects.get(username=request.user.username),
+        )
+    order_extra.add_item(menu_item_id, quantity)
+    print(order_extra)
     return HttpResponse("recieved")
