@@ -64,8 +64,8 @@ def take_seat(request):
         # order': Order.objects.get(table=request.session['seating_id']),
         # 'payment': ,
 
-def payment(request):
 
+def payment(request):
         context = {
             'payment': Payment.objects.filter(order=request.session['seating_id']),
             'order': Order.objects.filter(table=request.session['seating_id']),
@@ -82,8 +82,12 @@ def payment(request):
             ).save(force_insert=True)
             # assign this paymet to its order
 
-            order = Order.objects.filter(table=request.session['seating_id'])
-            order.payment = Payment.objects.filter(card_number=request.POST.get('card-number'))
+            ##allOrders = Order.objects.filter(table=request.session['seating_id'])
+            ##for order in allOrders:
+            order = Order.objects.filter(table=request.session['seating_id']).last()
+            order.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
+            #order = Order.objects.get(table=request.session['seating_id'])
+            #order.payment = Payment.objects.get(card_number=request.POST.get('card-number'))
             order.save()
         return render(request, "customer/e_payment.html", context)
 
