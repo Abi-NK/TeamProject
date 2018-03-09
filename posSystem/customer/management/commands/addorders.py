@@ -63,7 +63,7 @@ class Command(BaseCommand):
             order_json = random_order_json()
             time_offset = (dummy_table_count - i) / dummy_table_count * 30
             order = Order.objects.create(
-                table=seating.label,
+                table=seating,
                 time=timezone.now() - timedelta(minutes=time_offset),
                 total_price=total_price_from_json(order_json),
                 confirmed=False,
@@ -92,7 +92,7 @@ class Command(BaseCommand):
                 order_json = random_order_json()
                 time_offset = (dummy_table_count - i) / dummy_table_count * 30
                 order = Order.objects.create(
-                    table=seating.label,
+                    table=seating,
                     time=timezone.now() - timedelta(minutes=time_offset),
                     total_price=total_price_from_json(order_json),
                     confirmed=False,
@@ -147,7 +147,7 @@ class Command(BaseCommand):
                 combined = datetime.combine(order_date, order_time)
                 order_datetime = timezone.make_aware(combined, timezone.get_default_timezone())
                 order = Order.objects.create(
-                    table=all_seating[random.randrange(table_count)].label,
+                    table=all_seating[random.randrange(table_count)],
                     time=order_datetime,
                     total_price=total_price_from_json(order_json),
                     confirmed=True,
