@@ -4,13 +4,11 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-
-    # This is a regular expression. r'' means that it's a regular expression.
-    # ^ represents the beginning and $ represents the end of a regular expression.
-    # (?P<menu_id>) represents the the number that is assigned to each menu item. This
-    # is used for making links to each item inside the menu. [0-9]+ is used to show
-    # the amount of in
-
+    path('getorderextra', views.get_order_extra, name='getorderextra'),
+    path('cancelorderextraitem', views.cancel_order_extra_item, name='cancelorderextraitem'),
     path('takeseat', views.take_seat, name='takeseat'),
-    path('statuses', views.statuses, name='statuses')
+    path('payment', views.payment, name='payment'),
+    path('takeseat', views.take_seat, name='takeseat'),
+    path('statuses', views.statuses, name='statuses'),
+    path('getOrderInfo', views.getOrderInfo, name='getOrderInfo')
 ]

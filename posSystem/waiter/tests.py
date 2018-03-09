@@ -1,5 +1,7 @@
 from django.test import TestCase
-from .models import Order
+from .models import Order, OrderItem, OrderExtra
+from customer.models import Menu, Seating
+from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date, time
 
@@ -8,8 +10,7 @@ class TestMarkingDelivery(TestCase):
 
     def setUp(self):
         Order.objects.create(pk=100,
-                             table="Table 1",
-                             items="Guacamole with tortilla chips",
+                             table=Seating.objects.get(1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -20,8 +21,7 @@ class TestMarkingDelivery(TestCase):
                              delayed=False)
 
         Order.objects.create(pk=200,
-                             table="Table 1",
-                             items="Guacamole with tortilla chips",
+                             table=Seating.objects.get(2),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -32,8 +32,7 @@ class TestMarkingDelivery(TestCase):
                              delayed=False)
 
         Order.objects.create(pk=300,
-                             table="Table 1",
-                             items="Guacamole with tortilla chips",
+                             table=Seating.objects.get(3),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -44,8 +43,7 @@ class TestMarkingDelivery(TestCase):
                              delayed=False)
 
         Order.objects.create(pk=400,
-                             table="Table 1",
-                             items="Guacamole with tortilla chips",
+                             table=Seating.objects.get(4),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -78,6 +76,16 @@ class TestMarkingDelivery(TestCase):
         self.assertEqual(test_order.confirmed, False)
         test_order.set_confirmed()
         self.assertEqual(test_order.confirmed, True)
+
+    def test_set_cancelled(self):
+        """Order has been cancelled"""
+        test_cancel_order = Order.objects.get(pk=300)
+        self.assertEqual(test_cancel_order.confirmed, False)  # confirm true
+        self.assertEqual(test_cancel_order.cancelled, False)  # cancel false
+        test_cancel_order.set_confirmed()  # Order has been unconfirmed
+        test_cancel_order.set_cancelled()  # Order has been cancelled
+        self.assertEqual(test_cancel_order.confirmed, True)  # confirm false
+        self.assertEqual(test_cancel_order.cancelled, True)  # cancel true
 
     def test_set_ready_delivery(self):
         """"Order is ready for delivery"""
@@ -149,3 +157,195 @@ class TestMarkingDelivery(TestCase):
             total_price=0,
         )
         self.assertTrue(order.is_late())
+
+    def test_active_order_manager(self):
+        self.assertEqual(Order.active_objects.count(), 4)
+        Order.objects.get(pk=100).set_delivered()
+        Order.objects.get(pk=200).set_delivered()
+        self.assertEqual(Order.active_objects.count(), 2)
+
+    def test_confirmed_order_manager(self):
+        self.assertEqual(Order.confirmed_objects.count(), 0)
+        Order.objects.get(pk=100).set_confirmed()
+        Order.objects.get(pk=200).set_confirmed()
+        Order.objects.get(pk=300).set_confirmed()
+        Order.objects.get(pk=300).set_ready_delivery()
+        Order.objects.get(pk=400).set_confirmed()
+        Order.objects.get(pk=400).set_ready_delivery()
+        self.assertEqual(Order.confirmed_objects.count(), 2)
+
+    def test_unconfirmed_order_manager(self):
+        self.assertEqual(Order.unconfirmed_objects.count(), 3)
+        Order.objects.get(pk=100).set_confirmed()
+        Order.objects.get(pk=200).set_confirmed()
+        Order.objects.get(pk=300).set_confirmed()
+        self.assertEqual(Order.unconfirmed_objects.count(), 0)
+
+    def test_ready_order_manager(self):
+        self.assertEqual(Order.ready_objects.count(), 1)
+        Order.objects.get(pk=100).set_ready_delivery()
+        Order.objects.get(pk=200).set_ready_delivery()
+        Order.objects.get(pk=200).set_delivered()
+        self.assertEqual(Order.ready_objects.count(), 2)
+
+    def test_delivered_today_manager(self):
+        self.assertEqual(Order.delivered_today_objects.count(), 0)
+        Order.objects.get(pk=100).set_delivered()
+        Order.objects.get(pk=200).set_delivered()
+        self.assertEqual(Order.delivered_today_objects.count(), 2)
+
+    def test_delivered_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                confirmed=True,
+                ready_delivery=True,
+                delivered=True,
+            )
+        self.assertEqual(Order.delivered_week_objects.count(), 7)
+
+    def test_cancelled_today_manager(self):
+        self.assertEqual(Order.cancelled_today_objects.count(), 0)
+        Order.objects.get(pk=100).set_cancelled()
+        Order.objects.get(pk=200).set_cancelled()
+        self.assertEqual(Order.cancelled_today_objects.count(), 2)
+
+    def test_cancelled_week_manager(self):
+        for i in range(10):
+            Order.objects.create(
+                table="WeekTestTable %s" % i,
+                time=timezone.now() - timedelta(days=i),
+                total_price=10.00,
+                cancelled=True,
+            )
+        self.assertEqual(Order.cancelled_week_objects.count(), 7)
+
+    def test_reduce_stock(self):
+        order = Order.objects.get(pk=100)
+        for i in range(3):
+            order.items.add(OrderItem.objects.create(
+                pk=i,
+                menu_item=Menu.objects.create(price=10.00, stock=15+i*5),
+                quantity=5,
+            ))
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 15+i*5)
+        order.reduce_stock()
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 10+i*5)
+
+    def test_refund_stock(self):
+        order = Order.objects.get(pk=100)
+        for i in range(3):
+            order.items.add(OrderItem.objects.create(
+                pk=i,
+                menu_item=Menu.objects.create(price=10.00, stock=15+i*5),
+                quantity=5,
+            ))
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 15+i*5)
+        order.refund_stock()
+        for i, item in enumerate(order.items.all()):
+            self.assertEqual(item.menu_item.stock, 20+i*5)
+
+
+class TestOrderItemModel(TestCase):
+    def setUp(self):
+        menu_item = Menu.objects.create(
+            price=10.00,
+            stock=15,
+        )
+        OrderItem.objects.create(
+            pk=0,
+            menu_item=menu_item,
+            quantity=5,
+        )
+
+    def test_get_price(self):
+        order_item = OrderItem.objects.get(pk=0)
+        self.assertEqual(order_item.get_price(), 50.0)
+
+    def test_recude_item_stock(self):
+        order_item = OrderItem.objects.get(pk=0)
+        self.assertEqual(order_item.menu_item.stock, 15)
+        order_item.reduce_item_stock()
+        self.assertEqual(order_item.menu_item.stock, 10)
+
+    def test_refund_item_stock(self):
+        order_item = OrderItem.objects.get(pk=0)
+        self.assertEqual(order_item.menu_item.stock, 15)
+        order_item.refund_item_stock()
+        self.assertEqual(order_item.menu_item.stock, 20)
+
+
+class TestOrderExtraModel(TestCase):
+    def setUp(self):
+        waiter = User.objects.create_user(
+            username="waiter1",
+        )
+        seating = Seating.objects.create(
+            pk=0,
+            label="Test Seating 1",
+        )
+        OrderExtra.objects.create(
+            pk=0,
+            seating=seating,
+            waiter=waiter,
+        )
+        Menu.objects.create(pk=0, price=5.00)
+        Menu.objects.create(pk=1, price=10.00)
+        Menu.objects.create(pk=2, price=15.00)
+
+    def test_add_item(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        order_extra.add_item(0, 3)
+        order_extra.add_item(1, 4)
+        order_extra.add_item(2, 5)
+        order_extra.add_item(2, 5)
+        order_extra.add_item(2, 5)
+        self.assertEqual(sum([item.quantity for item in order_extra.items.all()]), 22)
+
+    def test_get_total(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        self.assertEqual(order_extra.get_total(), 0)
+        order_extra.add_item(0, 1)
+        order_extra.add_item(1, 2)
+        order_extra.add_item(2, 3)
+        self.assertEqual(order_extra.get_total(), 70)
+
+    def test_active_order_extra_manager(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        self.assertEqual(OrderExtra.active_objects.count(), 1)
+        order_extra.used = True
+        order_extra.save()
+        self.assertEqual(OrderExtra.active_objects.count(), 0)
+
+    def test_used_today_order_extra_manager(self):
+        order_extra = OrderExtra.objects.get(pk=0)
+        self.assertEqual(OrderExtra.used_today_objects.count(), 0)
+        order_extra.used = True
+        order_extra.save()
+        self.assertEqual(OrderExtra.used_today_objects.count(), 1)
+        waiter = User.objects.create_user(username="waiterTest")
+        seating = Seating.objects.create()
+        OrderExtra.objects.create(
+            waiter=waiter,
+            seating=seating,
+            time=timezone.now() - timedelta(days=1),
+            used=True,
+        )
+        self.assertEqual(OrderExtra.used_today_objects.count(), 1)
+
+    def test_used_week_order_extra_manager(self):
+        waiter = User.objects.create_user(username="waiterTest")
+        seating = Seating.objects.create()
+        for i in range(10):
+            OrderExtra.objects.create(
+                waiter=waiter,
+                seating=seating,
+                time=timezone.now() - timedelta(days=i),
+                used=True,
+            )
+        self.assertEqual(OrderExtra.used_week_objects.count(), 7)

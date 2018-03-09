@@ -10,7 +10,7 @@
 
     {% if confirm or delivery %}
     <p class="card-text">
-      {{ order.items | linebreaksbr }}
+      {{ order.get_items_display | linebreaksbr }}
     </p>
     {% endif %}
 
@@ -21,6 +21,10 @@
     onclick="confirmOrder(this, {{ order.id }})" {% if order.confirmed %}disabled{% endif %}>
       {% if order.confirmed %}Confirmed{% else %}Confirm{% endif %}
     </button>
+    <!-- Cancel Button Un-Confirms Order, allowing for stats on walkouts -->
+    <button type="button" class="btn btn-danger btn-lg btn-block"
+            onclick="cancelOrder(this, {{ order.id }})">Cancel</button>
+
     {% endif %}
 
     {% if delivery %}
@@ -28,6 +32,14 @@
       <input type="hidden" name="delivery_id" value="{{ order.id }}">
       <td><button type="submit" class="btn btn-primary btn-lg btn-block">Delivered</button></td>
     </form>
+    {% endif %}
+
+    {% if unpaid %}
+       <!-- <h5>Paid: {% if order.paid %}Yes{% else %}No{% endif %}</h5> -->
+    <button type="button" class="btn btn-{% if order.payment.payment_accepted %}success{% else %}primary{% endif %} btn-lg btn-block"
+    onclick="confirmPayment(this, {{ order.id }})" {% if order.payment.payment_accepted %}disabled{% endif %}>
+      {% if order.payment.payment_accepted %}paid{% else %}Confirm{% endif %}
+    </button>
     {% endif %}
 
   </div>

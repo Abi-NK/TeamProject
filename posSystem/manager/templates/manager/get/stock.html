@@ -1,0 +1,24 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+{% if menu %}
+{% for menu_item in menu %}
+
+<div class="row">
+  <div class="col-10">
+    <h5>{{ menu_item }}</h5>
+  </div>
+  <div class="col-2 text-right">
+    <h5><strong>{{ menu_item.stock }}</strong></h5>
+  </div>
+</div>
+
+{% endfor %}
+{% else %}
+
+<div class="alert alert-warning">
+  No menu items.
+</div>
+
+{% endif %}
+{% endblock %}

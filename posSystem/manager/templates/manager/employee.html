@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Employee Data{% endblock %}
+
+{% block content %}
+
+<div class="row mt-md-3">
+  <div class="col-xl-3">
+    <h3 class="text-center">Managers</h3>
+    <div id="container-managers">
+      {# populate managers here #}
+      {% if managers %}
+      {% for manager in managers %}
+
+      <hr />
+      <h5>{{ manager.username }}</h5>
+      <h5>{{ manager.get_full_name }}</h5>
+
+      {% endfor %}
+      {% else %}
+
+      <div class="alert alert-warning">
+        No managers.
+      </div>
+
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-xl-3">
+    <h3 class="text-center">Kitchen Staff</h3>
+    <div id="container-kitchen">
+      {# populate kitchen staff here #}
+      {% if kitchen_staff %}
+      {% for staff in kitchen_staff %}
+
+      <hr />
+      <h5>{{ staff.username }}</h5>
+      <h5>{{ staff.get_full_name }}</h5>
+
+      {% endfor %}
+      {% else %}
+
+      <div class="alert alert-warning">
+        No kitchen staff.
+      </div>
+
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-xl-6">
+    <h3 class="text-center">Waiters</h3>
+    <div id="container-waiters">
+      {# populate waiter data here #}
+      {% if waiters %}
+      {% for waiter in waiters %}
+
+      <hr />
+      <div class="row">
+        <div class="col-md-4">
+          <h5>{{ waiter.waiter.username }}</h5>
+          <h5>{{ waiter.waiter.get_full_name }}</h5>
+        </div>
+        <div class="col-md-8">
+          <h5>Extra sales today: <strong>{{ waiter.extra_sales_daily }}</strong></h5>
+          <h5>Extra sales this week: <strong>{{ waiter.extra_sales_weekly }}</strong></h5>
+        </div>
+      </div>
+
+      {% endfor %}
+      {% else %}
+
+      <div class="alert alert-warning">
+        No waiters.
+      </div>
+
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/employee.js" %}"></script>{% endblock %}

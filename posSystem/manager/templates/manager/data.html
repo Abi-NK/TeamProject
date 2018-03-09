@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Realtime Data{% endblock %}
+
+{% block content %}
+
+<div class="modal fade" id="menuStockModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menuStockModalLabel">Current Stock</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="container-stock">
+        {# populate list of menu items and their stock here #}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-md-3">
+  <div class="col-xl-2">
+    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
+    <button type="button" class="btn btn-outline-secondary btn-block mb-md-3" data-toggle="modal" data-target="#menuStockModal">
+      <i class="fas fa-cubes"></i> View Stock
+    </button>
+    <div id="container-summary">
+      {# populate summary of restraunt data here #}
+    </div>
+  </div>
+
+  <div class="col-xl-7">
+    <h2 class="text-center">Active Orders</h2>
+    <div id="container-orders">
+      {# populate active orders here #}
+    </div>
+  </div>
+
+  <div class="col-xl-3">
+    <h2 class="text-center">Seating</h2>
+    <hr />
+    <div id="container-tables">
+      {# populate active orders here #}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/data.js" %}"></script>{% endblock %}
