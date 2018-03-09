@@ -52,6 +52,22 @@ function confirmOrder(button, orderID){
   });
 }
 
+function confirmPayment(button, paymentID){
+  $.ajax({
+    url: "/waiter/confirmPayment",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({id: paymentID}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).removeClass("btn-primary").addClass("btn-success")
+      $(button).text("Confirmed");
+    }
+  });
+}
+
 function cancelOrder(button, orderID){
   $.ajax({
     url: "/waiter/cancelorder",

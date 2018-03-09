@@ -7,5 +7,8 @@ urlpatterns = [
     path('getorderextra', views.get_order_extra, name='getorderextra'),
     path('cancelorderextraitem', views.cancel_order_extra_item, name='cancelorderextraitem'),
     path('takeseat', views.take_seat, name='takeseat'),
-    path('statuses', views.statuses, name='statuses')
+    path('payment', views.payment, name='payment'),
+    path('takeseat', views.take_seat, name='takeseat'),
+    path('statuses', views.statuses, name='statuses'),
+    path('getOrderInfo', views.getOrderInfo, name='getOrderInfo')
 ]

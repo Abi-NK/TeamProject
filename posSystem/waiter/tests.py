@@ -10,7 +10,7 @@ class TestMarkingDelivery(TestCase):
 
     def setUp(self):
         Order.objects.create(pk=100,
-                             table="Table 1",
+                             table=Seating.objects.get(1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -20,7 +20,7 @@ class TestMarkingDelivery(TestCase):
                              delivered=False)
 
         Order.objects.create(pk=200,
-                             table="Table 1",
+                             table=Seating.objects.get(2),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -30,7 +30,7 @@ class TestMarkingDelivery(TestCase):
                              delivered=False)
 
         Order.objects.create(pk=300,
-                             table="Table 1",
+                             table=Seating.objects.get(3),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
@@ -40,7 +40,7 @@ class TestMarkingDelivery(TestCase):
                              delivered=False)
 
         Order.objects.create(pk=400,
-                             table="Table 1",
+                             table=Seating.objects.get(4),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
