@@ -18,7 +18,14 @@
                         Payment Details:
                     </div>
                     <div class="panel-body">
-                         <form method="POST">{% csrf_token %}
+
+                            <script>
+                            function endPay() {
+                                alert('Payment sent, Thank you!');
+                                window.location.href = 'www.google.com';
+                            }
+                            </script>
+                         <form method="POST" onsubmit="return endPay();">{% csrf_token %}
                              <div class="form-group">
                                   <label for="name">Order:</label>
                                   <input type="text" placeholder="Your order number" value="{{order.id}}" class="form-control" name="order" readonly>
@@ -33,7 +40,7 @@
                               </div>
                               <div class="form-group">
                                   <label for="card-number">Card Number:</label>
-                                  <input type="tel" minlength="12" maxlength="12" placeholder="Your Card Number" class="form-control" name="card-number">
+                                  <input type="tel" minlength="16" maxlength="16" placeholder="Your Card Number" class="form-control" name="card-number">
                               </div>
                              <div class="form-group">
                                   <label for="cvc">CVC:</label>

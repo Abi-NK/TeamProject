@@ -322,7 +322,7 @@
     <br />
   <div class="row">
     <div class="col-md-4">
-      <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {%if order.delivered%}enabled{%else%}disabled{% endif %}>Pay</button>
+      <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {%if order.delivered and not order.payment.payment_accepted%}enabled{%else%}disabled{% endif %}>Pay</button>
     </div>
     <div class="col-md-4"></div>
     <div class="col-md-4">

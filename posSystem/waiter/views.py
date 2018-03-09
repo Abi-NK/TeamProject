@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from kitchen.views import index as waiter_index
 from manager.views import index as manager_index
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 def group_check(user):
@@ -99,7 +100,8 @@ def get_orders_delivery(request):
 @user_passes_test(group_check)
 def get_orders_unpaid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
-    orders = Order.objects.filter(delivered=True, paid=False).order_by('time')
+    orders = Order.objects.filter(Q(delivered=True) | Q(payment__payment_accepted=True)).order_by('time')
+    # orders = Order.objects.filter(delivered=True, payment_accepted=True).order_by('time')
     return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
 
 @require_http_methods(["GET"])
@@ -170,13 +172,13 @@ def confirm_payment(request):
     """Confirm the provided payment in the database."""
     payment_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(payment_id))
-    payment = Payment.objects.get(pk=payment_id)
+    payment = Order.objects.get(pk=payment_id).payment
     payment.payment_accepted = True
     payment.save()
     # sets order to paid
-    order = Order.objects.get(pk=payment_id)
-    order.paid = True
-    order.save()
+    # # order = Order.objects.get(pk=payment_id)
+    # # order.paid = True
+    # # order.save()
     return HttpResponse("recieved")
 
 

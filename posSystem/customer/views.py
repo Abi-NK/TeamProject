@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Menu, Seating
 from waiter.models import Payment, Order
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -12,20 +12,33 @@ import json
 def index(request):
     """Return the menu page."""
 
-    if Order.objects.filter(table=request.session['seating_id']).exists():
-        context = {
-            'all_menu': Menu.objects.all(),
-            'order': Order.objects.get(table=request.session['seating_id']),  # for pay button
-        }
-
-    else:
-        context = {
-            'all_menu': Menu.objects.all(),
-        }
     if 'seating_label' in request.session:
-        context['seating_label'] = request.session['seating_label']
+
+        context = {
+            'all_menu': Menu.objects.all(),
+            'order': Order.objects.get(table=request.session['seating_id']),
+        }
+        if 'seating_label' in request.session:
+            context['seating_label'] = request.session['seating_label']
+        else:
+            context['seating'] = Seating.available_objects.all()
     else:
-        context['seating'] = Seating.available_objects.all()
+        context = {
+            'all_menu': Menu.objects.all(),
+        }
+        if 'seating_label' in request.session:
+            context['seating_label'] = request.session['seating_label']
+        else:
+            context['seating'] = Seating.available_objects.all()
+    return render(request, 'customer/menu.html', context)
+
+
+@require_http_methods(["GET"])
+def getOrderInfo(request):
+    context = {
+        'all_menu': Menu.objects.all(),
+        'order': Order.objects.filter(table=request.session['seating_id'])
+    }
     return render(request, 'customer/menu.html', context)
 
 
@@ -53,19 +66,13 @@ def take_seat(request):
 
 def payment(request):
 
-        check_order = order=request.session['seating_id']
-
-        # if Order.
-
         context = {
             'payment': Payment.objects.filter(order=request.session['seating_id']),
             'order': Order.objects.get(table=request.session['seating_id']),
             # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
         }
         if request.method == "POST":
-            Payment(    # note- table is shown in payment page but not used in model
-                order=Order.objects.get(table=request.session['seating_id']),
-                # order=request.POST.get('order'),
+            Payment(
                 card_holder=request.POST.get('name'),
                 card_number=request.POST.get('card-number'),
                 cvc=request.POST.get('cvc'),
@@ -73,6 +80,11 @@ def payment(request):
                 terms_conditions=checkbox_check(request.POST.get('cbx')),
                 payment_received=True
             ).save(force_insert=True)
+            # assign this paymet to its order
+
+            order = Order.objects.get(table=request.session['seating_id'])
+            order.payment = Payment.objects.get(card_number=request.POST.get('card-number'))
+            order.save()
         return render(request, "customer/e_payment.html", context)
 
 

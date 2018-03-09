@@ -81,7 +81,7 @@ class CancelledWeekOrderManager(models.Manager):
 class Payment(models.Model):
 
     card_holder = models.CharField(max_length=50, default='na')     # name of card holder
-    card_number = models.CharField(max_length=12, default='na')     # Card number
+    card_number = models.CharField(max_length=16, default='na')     # Card number
     cvc = models.CharField(max_length=3, default='na')              # CVC
     expiry = models.CharField(max_length=5, default='na')           # Card expiry date
     terms_conditions = models.BooleanField(default=False)           # Customer has accepted t and c
@@ -90,7 +90,7 @@ class Payment(models.Model):
     payment_accepted = models.BooleanField(default=False)           # Waiter has accepted the payment
 
     def __str__(self):
-       return "Order: %s, Accepted: %s" % (self.order.id, self.payment_accepted)
+       return "Order: %s, Accepted: %s" % (self.id, self.payment_accepted)
 
     def get_payments(self):
         """Returns all the payments"""
@@ -158,7 +158,7 @@ class Order(models.Model):
     cancelled_today_objects = CancelledTodayOrderManager()
     cancelled_week_objects = CancelledWeekOrderManager()
 
-    payment = models.OneToOneField(Payment, on_delete=models.CASCADE)  # order of payment
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, blank=True, null=True)  # order of payment
     table = models.ForeignKey(Seating, on_delete=models.CASCADE)
     time = models.DateTimeField()  # The time at which the order was taken
     items = models.ManyToManyField(OrderItem)
@@ -233,7 +233,6 @@ class Order(models.Model):
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
 
         order = Order.objects.create(
-            # table=Seating.objects.get(pk=seating_id).label,
             table = Seating.objects.get(pk=seating_id),
             confirmed=False,
             time=timezone.now(),
