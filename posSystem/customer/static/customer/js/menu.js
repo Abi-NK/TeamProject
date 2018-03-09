@@ -151,7 +151,14 @@ function updateOrderExtra(){
   });
 }
 
+function pay(){
+    $.get("getOrderInfo");
+
+
+}
+
 function updateLoop(){
+  pay()
   updateOrderExtra();
   setTimeout(function(){
      updateLoop();
