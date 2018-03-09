@@ -231,6 +231,10 @@ class Order(models.Model):
         """Create an order from the provided JSON."""
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
+        # pastOrder collects total of previos order and adds to current order.
+        pastOrder = Order.objects.filter(table= seating_id)
+        for ord in pastOrder:
+            total_price += ord.total_price  # when reading total order look at the last order customer made
 
         order = Order.objects.create(
             table = Seating.objects.get(pk=seating_id),

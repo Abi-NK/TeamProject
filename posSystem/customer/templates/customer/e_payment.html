@@ -28,11 +28,11 @@
                          <form method="POST" onsubmit="return endPay();">{% csrf_token %}
                              <div class="form-group">
                                   <label for="name">Order:</label>
-                                  <input type="text" placeholder="Your order number" value="{{order.id}}" class="form-control" name="order" readonly>
+                                  <input type="text" placeholder="Your order number" {% for ord in order%} value="{{ ord.id }}"{% endfor %} class="form-control" name="order" readonly>
                               </div>
                              <div class="form-group">
                                   <label for="name">table:</label>
-                                  <input type="text" placeholder="Your table number" value="{{order.table.id}}" class="form-control" name="table" readonly>
+                                  <input type="text" placeholder="Your table number" {% for ord in order%} value="{{ord.table}}" {% endfor %} class="form-control" name="table" readonly>
                               </div>
                               <div class="form-group">
                                   <label for="name">Name:</label>
@@ -69,11 +69,13 @@
                                     <h4 class="modal-title">Your Bill Today:</h4>
                                 </div>
                                 <div class="modal-body">
-                                    {% for item in order.items.all %}
-                                    <p>{{item}}</p>
+                                    {% for ord in order %}
+                                        {% for item in ord.items.all %}
+                                        <p>{{item}}</p>
+                                        {% endfor %}
                                     {% endfor %}
                                     <hr>
-                                    <H3>Total: £{{order.total_price}}</H3>
+                                    <H3>Total: £{% for ord in order %}{% if forloop.last %}{{ord.total_price}}{% endif %}{% endfor %}</H3>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

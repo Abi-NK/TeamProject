@@ -16,7 +16,7 @@ def index(request):
 
         context = {
             'all_menu': Menu.objects.all(),
-            'order': Order.objects.get(table=request.session['seating_id']),
+            'order': Order.objects.filter(table=request.session['seating_id']).first(),
         }
         if 'seating_label' in request.session:
             context['seating_label'] = request.session['seating_label']
@@ -37,7 +37,7 @@ def index(request):
 def getOrderInfo(request):
     context = {
         'all_menu': Menu.objects.all(),
-        'order': Order.objects.filter(table=request.session['seating_id'])
+        'order': Order.objects.filter(table=request.session['seating_id']).first()
     }
     return render(request, 'customer/menu.html', context)
 
@@ -68,7 +68,7 @@ def payment(request):
 
         context = {
             'payment': Payment.objects.filter(order=request.session['seating_id']),
-            'order': Order.objects.get(table=request.session['seating_id']),
+            'order': Order.objects.filter(table=request.session['seating_id']),
             # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
         }
         if request.method == "POST":
@@ -82,8 +82,8 @@ def payment(request):
             ).save(force_insert=True)
             # assign this paymet to its order
 
-            order = Order.objects.get(table=request.session['seating_id'])
-            order.payment = Payment.objects.get(card_number=request.POST.get('card-number'))
+            order = Order.objects.filter(table=request.session['seating_id'])
+            order.payment = Payment.objects.filter(card_number=request.POST.get('card-number'))
             order.save()
         return render(request, "customer/e_payment.html", context)
 
