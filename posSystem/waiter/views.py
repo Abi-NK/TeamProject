@@ -89,17 +89,7 @@ def get_orders_cancel(request):
 @user_passes_test(group_check)
 def get_tables(request):
     """Get tables for waiter."""
-    waiters = Waiter.objects.all()
-    offduty = Waiter.objects.filter(onduty=False)
-    onduty = Waiter.objects.filter(onduty=True)
-    tables = Seating.objects.filter(available=False)
-
-    return render(request, "waiter/get/tables.html", {
-        'tables': tables,
-        'onduty': onduty,
-        'offduty': offduty,
-        'waiters': waiters,
-        })
+    return render(request, "waiter/get/tables.html")
 
 
 @require_http_methods(["GET"])
