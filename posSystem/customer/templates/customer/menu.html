@@ -14,20 +14,22 @@
           </button>
       </div>
       <div class="modal-body">
-        <div id="order-container">
-          <div class="card">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-9">
-                  <h4>Item Name</h4>
-                </div>
-                <div class="col-md-3">
-                  <h4>Price</h4>
-                </div>
+
+      <div id="order-container">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-9">
+                <h4>Item Name</h4>
+              </div>
+              <div class="col-md-3">
+                <h4>Price</h4>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
       <div class="card">
         <div class="card-body">
           <div class="row">
@@ -40,6 +42,11 @@
           </div>
         </div>
       </div>
+
+      <div id="container-order-extra">
+
+      </div>
+
       </div>
       <div class="modal-footer">
           <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder()">Place order</button>
@@ -314,7 +321,9 @@
     </div>
     <br />
   <div class="row">
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {%if order.delivered and not order.payment.payment_accepted and not order.payment.payment_received%}enabled{%else%}disabled{% endif %}>Pay</button>
+    </div>
     <div class="col-md-4"></div>
     <div class="col-md-4">
       <button type="button" class="btn btn-success btn-lg btn-block" onclick="window.location.href='./statuses'">Order Statuses</button>

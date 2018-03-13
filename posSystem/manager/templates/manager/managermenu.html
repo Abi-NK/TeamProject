@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Manager Menu{% endblock %}
+
+{% block content %}
+
+<!-- Modal - adding menu item - -->
+<div class="modal fade" id="add_item" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Enter item details</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <form method="POST">{% csrf_token %}
+            <label><b>Name </b></label><br>
+            <input type="text" style="width:400px" cols="40" rows="5" name="menu_name" required>
+            <br>
+            <br>
+            <label><b>Price </b></label><br>
+            <input type="number" style="width:400px" step="0.01" cols="40" rows="5" name="menu_price" required>
+            <br>
+            <br>
+            <label><b>Description </b></label><br>
+            <input type="text" style="width:400px" cols="40" rows="5" name="menu_description" required>
+            <br>
+            <br>
+            <label><b>Course </b></label><br>
+            <input type="text" style="width:400px" cols="40" rows="5" name="menu_course" required>
+            <br>
+            <br>
+            <label><b>Category </b></label><br>
+            <input type="text" style="width:400px" cols="40" rows="5" name="menu_category" required>
+            <br>
+            <br>
+            <label><b>Allergy </b></label><br>
+            <input type="text" style="width:400px" cols="40" rows="5" name="menu_allergy">
+            <br>
+            <br>
+            <label><b>Calories </b></label><br>
+            <input type="number" style="width:400px" cols="40" rows="5" name="menu_calories" required>
+            <br>
+            <br>
+            <label><b>Image link </b></label><br>
+            <input type="text" style="width:400px" cols="40" rows="5" name="menu_image">
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Stock </b></label>
+            <input type="number" name="menu_stock" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Vegetarian</b></label>
+            <select name="menu_vegetarian">
+                <option value="False">No</option>
+                <option value="True">Yes</option>
+            </select>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Vegan</b></label>
+            <select name="menu_vegan">
+                <option value="False">No</option>
+                <option value="True">Yes</option>
+            </select>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Meat</b></label>
+            <select name="menu_meat">
+                <option value="False">No</option>
+                <option value="True">Yes</option>
+            </select>
+            <br>
+
+      </div>
+      <div class="modal-footer">
+          <button type="submit" class="btn btn-primary mr-auto" name="add_item">Add Item</button>
+          </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Modal - adjusting selected menu item - -->
+{% for menu_item in menu %}
+<div class="modal fade" id="{{menu_item.id}}" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">{{menu_item.name}} - £{{menu_item.price}}</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <form method="POST">{% csrf_token %}
+            <input type="hidden" name="menu_id" value="{{ menu_item.id }}">
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Name</b></label>
+            <input type="text" style="width:400px; float:right;" value="{{menu_item.name}}" name="menu_name" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Price</b></label>
+            <input type="number" style="width:400px; float:right;" step="0.01" value="{{menu_item.price}}" name="menu_price" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Description</b></label>
+            <input type="text" style="width:360px; float:right;" value="{{menu_item.description}}" name="menu_description" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Course</b></label>
+            <input type="text" style="width:400px; float:right;" value="{{menu_item.course}}" name="menu_course" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Category</b></label>
+            <input type="text" style="width:380px; float:right;" value="{{menu_item.category}}" name="menu_category" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Allergy</b></label>
+            <input type="text" style="width:400px; float:right;" value="{{menu_item.allergy}}" name="menu_allergy">
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Calories</b></label>
+            <input type="number" style="width:390px; float:right;" value="{{menu_item.calories}}" name="menu_calories" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Image link</b></label>
+            <input type="text" style="width:370px; float:right;" value="{{menu_item.image}}" name="menu_image" required>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Stock </b></label>
+            <input type="number" value="{{menu_item.stock}}" name="menu_stock">
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Vegetarian</b></label>
+            <select name="menu_vegetarian">
+                {% if menu_item.vegetarian %}
+                    <option value="True">Yes</option>
+                    <option value="False">No</option>
+                {% else %}
+                    <option value="False">No</option>
+                    <option value="True">Yes</option>
+                {% endif %}
+            </select>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Vegan</b></label>
+            <select name="menu_vegan">
+                {% if menu_item.vegan %}
+                    <option value="True">Yes</option>
+                    <option value="False">No</option>
+                {% else %}
+                    <option value="False">No</option>
+                    <option value="True">Yes</option>
+                {% endif %}
+            </select>
+            <br>
+            <br>
+            <label style="clear:left; text-align:right; padding-right:10px;"><b>Meat</b></label>
+            <select name="menu_meat">
+                {% if menu_item.meat %}
+                    <option value="True">Yes</option>
+                    <option value="False">No</option>
+                {% else %}
+                    <option value="False">No</option>
+                    <option value="True">Yes</option>
+                {% endif %}
+            </select>
+            <br>
+      </div>
+      <div class="modal-footer">
+          <button type="submit" class="btn btn-primary mr-auto" name="confirm">Confirm changes</button>
+          <button type="submit" class="btn btn-secondary" name="delete" style="background-color: #f44336;">Delete Item</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<br>
+<div class="col-xl-2">
+    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
+</div>
+<h1 class="text-center">Adjust Menu</h1>
+<div style="text-align:center">
+    <br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_item">Add item</button>
+</div>
+<br>
+{% for menu_item in menu %}
+<div class="list-group">
+    <a class="list-group-item list-group-item-action" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}"><b>{{ menu_item.name }}</b> - {{ menu_item.category }}</a>
+
+</div>
+{% endfor %}
+<br>
+<br>
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/index.js" %}"></script>{% endblock %}

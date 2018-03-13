@@ -55,6 +55,22 @@ function confirmOrder(button, orderID){
   });
 }
 
+function confirmPayment(button, paymentID){
+  $.ajax({
+    url: "/waiter/confirmPayment",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({id: paymentID}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).removeClass("btn-primary").addClass("btn-success")
+      $(button).text("Confirmed");
+    }
+  });
+}
+
 function cancelOrder(button, orderID){
   $.ajax({
     url: "/waiter/cancelorder",
@@ -69,6 +85,54 @@ function cancelOrder(button, orderID){
     }
   });
 }
+
+function openModalOrderExtra(){
+  $.get("getoccupiedseating", function(data){
+    $("#inputSeating").html(data);
+    $('#modalOrderExtra').modal('show');
+  });
+}
+
+$("#inputQuantityDec").click(function(){
+  document.getElementById("inputQuantity").stepDown();
+});
+
+$("#inputQuantityInc").click(function(){
+  document.getElementById("inputQuantity").stepUp();
+});
+
+$("#btnPlaceOrderExtra").click(function(){
+  var seating_id = $("#inputSeating").val();
+  var menu_item_id = $("#inputMenuItem").val();
+  var quantity = $("#inputQuantity").val();
+  console.log("Seating ID: " + seating_id);
+  console.log("Menu item ID: " + menu_item_id);
+  console.log("Quantity: " + quantity);
+
+  if (seating_id == -1){
+    console.log("Seating was not selected.");
+  } else if (menu_item_id == -1){
+    console.log("Menu item was not selected.");
+  } else {
+    var data = {
+      seating_id: seating_id,
+      menu_item_id: menu_item_id,
+      quantity: quantity,
+    }
+
+    $.ajax({
+      url: "/waiter/placeorderextra",
+      type: 'POST',
+      headers: {'X-CSRFToken': csrfToken},
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(data),
+      dataType: 'text',
+      success: function(result) {
+        $('#modalOrderExtra').modal('hide');
+      }
+    });
+  }
+});
 
 function waiterOnDuty(button, username){
   $.ajax({
