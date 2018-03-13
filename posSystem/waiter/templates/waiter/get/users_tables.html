@@ -7,10 +7,13 @@
   <h4>Tables assigned to {{ user.get_full_name }} ({{ user.get_username }}):</h4>
 
     {% if users_tables %}
-    {% for table in users_tables %}
-      <h5>{{ table.label }}</h5>
-    {% endfor %}
-
+    <div class="row">
+      {% for table in users_tables %}
+        <div class="col-md-2">
+          <h5>{{ table.label }}</h5>
+        </div>
+      {% endfor %}
+    </div>
     {% else %}
       <div class="alert alert-warning">
         None assigned.

@@ -90,7 +90,6 @@ def get_orders_cancel(request):
 def get_tables(request):
     """Get tables for waiter."""
     users_tables = Seating.objects.filter(waiter=request.user.username)
-    print(users_tables)
     return render(request, "waiter/get/users_tables.html", {'users_tables': users_tables})
 
 
@@ -195,6 +194,19 @@ def cancel_order(request):
     order.cancelled = True
     order.refund_stock()
     order.save()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+@login_required
+def assign_to_seating(request):
+    """Set the provided seating's current waiter to be the provided username."""
+    username = json.loads(request.body.decode('utf-8'))["username"]
+    seating_id = json.loads(request.body.decode('utf-8'))["seating_id"]
+    seating = Seating.objects.get(pk=seating_id)
+    seating.waiter = username
+    seating.save()
+    print("%s has been assigned to %s" % (username, seating.label))
     return HttpResponse("recieved")
 
 

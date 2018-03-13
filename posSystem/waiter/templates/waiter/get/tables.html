@@ -20,7 +20,9 @@
   </div>
 
   <div class="col-md-4">
-    Button
+    <button type="button" class="btn btn-outline-primary btn-block mb-md-1" onclick="assignWaiter(this, '{{ seat.id }}', '{{ user.get_username }}')">
+      assign self
+    </button>
   </div>
 
   {% endfor %}
