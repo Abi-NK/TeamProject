@@ -10,8 +10,7 @@ class Waiter(models.Model):
     name = models.CharField(max_length=50, default='waiter1')
 
     def __str__(self):
-        return "Waiter: %s, onduty: %s, currwaiters: %s, name: %s" % \
-            (self.id, self.onduty, self.get_current_waiters(), self.name)
+        return "%s: %s" % (self.name, "on duty" if self.onduty else "off duty")
 
     def set_waiter_on_duty(self):
         """Set the waiter to be on duty."""
