@@ -136,7 +136,10 @@ $("#btnPlaceOrderExtra").click(function(){
 });
 
 function openModalSeating(){
-  $('#modalSeating').modal('show');
+  $.get("getseating", function(data){
+    $("#container-seating").html(data);
+    $('#modalSeating').modal('show');
+  });
 }
 
 function waiterOnDuty(button, username){

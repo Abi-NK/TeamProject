@@ -13,6 +13,7 @@ urlpatterns = [
     path('getoccupiedseating', views.get_occupied_seating, name='getoccupiedseating'),
     path('getalerts', views.get_alerts, name="getalerts"),
     path('gettables', views.get_tables, name="gettables"),
+    path('getseating', views.get_seating, name="getseating"),
     path('getwaiteronduty', views.get_waiter_on_duty, name='getwaiteronduty'),
     path('getwaiteroffduty', views.get_waiter_off_duty, name='getwaiteroffduty'),
     path('waiteronduty', views.waiter_on_duty, name='waiteronduty'),

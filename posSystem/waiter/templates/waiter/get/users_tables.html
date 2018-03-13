@@ -10,6 +10,11 @@
     {% for table in users_tables %}
       <h5>{{ table.label }}</h5>
     {% endfor %}
+
+    {% else %}
+      <div class="alert alert-warning">
+        None assigned.
+      </div>
     {% endif %}
   </div>
 

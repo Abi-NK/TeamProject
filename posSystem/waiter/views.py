@@ -96,6 +96,14 @@ def get_tables(request):
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
+def get_seating(request):
+    """Get all of the restaurant's seating."""
+    seating = Seating.objects.all()
+    return render(request, "waiter/get/tables.html", {'seating': seating})
+
+
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
 def get_waiter_on_duty(request):
     """Return all waiters on duty."""
     waiter = Waiter.objects.filter(onduty=True)
