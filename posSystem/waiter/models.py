@@ -4,41 +4,28 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 
+
 class Waiter(models.Model):
-    
     onduty = models.BooleanField(default=False)
     name = models.CharField(max_length=50, default='waiter1')
-    
+
     def __str__(self):
         return "Waiter: %s, onduty: %s, currwaiters: %s, name: %s" % \
             (self.id, self.onduty, self.get_current_waiters(), self.name)
-    
-    ### https://www.codingforentrepreneurs.com/blog/django-tutorial-get-list-of-current-users/ ###
-    # return current waiters, not sure if it works
-    def get_current_waiters():
-        active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
-        user_id_list = []
-        for session in active_sessions:
-            data = session.get_decoded()
-            user_id_list.append(data.get('_auth_user_id', None))
-        return User.objects.filter(id__in=user_id_list)
-    
-    # Set waiter on duty
+
     def set_waiter_on_duty(self):
-        """sets the waiter availability for tables"""
+        """Set the waiter to be on duty."""
         self.onduty = True
-        self.name = request.user.get_username()
         self.save()
         print("waiter %s is on duty" % self.name)
-    
-    # Set waiter off duty
+
     def set_waiter_off_duty(self):
-        """sets the waiter availability for tables"""
+        """Set the waiter to be off duty."""
         self.onduty = False
-        self.name = request.user.get_username()
         self.save()
         print("waiter %s is off duty" % self.name)
-        
+
+
 class OrderItem(models.Model):
     menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
     quantity = models.IntegerField()

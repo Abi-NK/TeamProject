@@ -85,52 +85,20 @@ def get_orders_cancel(request):
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
-@user_passes_test(group_check)
-def get_current_waiters(request):
-    """Get current waiters on duty."""
-    active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
-    user_id_list = []
-    for session in active_sessions:
-        data = session.get_decoded()
-        user_id_list.append(data.get('_auth_user_id', None))
-    # Query all logged in users based on id list
-    return User.objects.filter(id__in=user_id_list)
-
-
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
 def get_tables(request):
     """Get tables for waiter."""
-    # get current waiters
     waiters = Waiter.objects.all()
     offduty = Waiter.objects.filter(onduty=False)
     onduty = Waiter.objects.filter(onduty=True)
-    # waiters = User.objects.all()
-    waitercount = 0
-    # count active waiters ???
-
-    # get current tables and count
     tables = Seating.objects.filter(available=False)
-    tablecount = 0
-    for table in tables:
-        tablecount += 1
 
-    # more than one waiter on duty, divide tables
-    # if waitercount > 1:
-        # divide tables between waiters
-    #    waiters = User.objects.all()
-    #    noofwaiters = waiters.objects.count()
-    # else: # one waiter, assign all tables
-    #    tables = Seating.objects.filter(available=False)
-    #    waiters = User.objects.all()
-
-    waiter = Waiter.objects.filter(onduty=False)
-    return render(request, "waiter/tables.html", {
+    return render(request, "waiter/get/tables.html", {
         'tables': tables,
         'onduty': onduty,
         'offduty': offduty,
         'waiters': waiters,
-        'waiter': waiter,
         })
 
 
@@ -230,33 +198,21 @@ def cancel_order(request):
     return HttpResponse("recieved")
 
 
-# waiter on duty
 @require_http_methods(["POST"])
 @login_required
 def waiter_on_duty(request):
-    """set waiter on duty."""
-    order_id = json.loads(request.body.decode('utf-8'))["id"]
-    print("Recieved ID: " + str(order_id))
-    waiter = Waiter.objects.get(pk=order_id)
+    """Set the provided waiter to be on duty."""
     username = json.loads(request.body.decode('utf-8'))["name"]
-    print("Recieved NAME: " + str(username))
-    Waiter.objects.get(pk=username).set_waiter_on_duty()
+    Waiter.objects.get(name=username).set_waiter_on_duty()
     return HttpResponse("recieved")
 
 
-# waiter off duty
 @require_http_methods(["POST"])
 @login_required
 def waiter_off_duty(request):
-    """set waiter off duty."""
-    username = json.loads(request.body.decode('utf-8'))["get_username"]
-    Waiter.objects.get(pk=seating_id).set_assistance_false()
-    print("Recieved NAME: " + str(username))
-    waiter = Waiter.objects.get(pk=username)
-    waiter.onduty = False
-    waiter.name = username
-    waiter.set_waiter_off_duty
-    waiter.save()
+    """Set the provided waiter to be off duty."""
+    username = json.loads(request.body.decode('utf-8'))["name"]
+    Waiter.objects.get(name=username).set_waiter_off_duty()
     return HttpResponse("recieved")
 
 

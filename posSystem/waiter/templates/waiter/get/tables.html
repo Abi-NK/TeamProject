@@ -12,10 +12,10 @@
     </div>
 
     {% if tables %}
-    
+
         {% for table in tables %}
             {{ table.label }} is allocated to {{ user.get_username }}
-            <br>  
+            <br>
         {% endfor %}
     {% endif %}
     <h5>Waiters on duty</h5>
@@ -25,19 +25,19 @@
             {{ waiter.label }} is allocated to {{ user.get_username }}
             {{  waiter.name }}
             {{  waiter.onduty }}
-            <br>  
+            <br>
         {% endfor %}
     {% endif %}
-    
-    
+
+
 	{{ waiter.name }} is on duty
-    {% if waiter %}
-        {% for w in waiter %}
+    {% if offduty %}
+        {% for w in offduty %}
             {{ w.label }} is on duty
             {{ w.name }} is on duty
             {{ w.label }} is on duty
-            <br>  
+            <br>
         {% endfor %}
     {% endif %}
-    
+
 {% endblock %}
