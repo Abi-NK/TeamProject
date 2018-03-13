@@ -135,6 +135,10 @@ $("#btnPlaceOrderExtra").click(function(){
   }
 });
 
+function openModalSeating(){
+  $('#modalSeating').modal('show');
+}
+
 function waiterOnDuty(button, username){
   $.ajax({
     url: "/waiter/waiteronduty",
