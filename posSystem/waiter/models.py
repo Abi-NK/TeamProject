@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, date
 class Waiter(models.Model):
     onduty = models.BooleanField(default=False)
     name = models.CharField(max_length=50, default='waiter1')
+    seating = models.ManyToManyField(Seating)
 
     def __str__(self):
         return "%s: %s" % (self.name, "on duty" if self.onduty else "off duty")
@@ -348,7 +349,7 @@ class OrderExtra(models.Model):
     waiter = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
     used = models.BooleanField(default=False)
-    time = models.DateTimeField(default=timezone.now())
+    time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return "OrderExtra #%s: %s, waiter: %s, status: %s" % \
