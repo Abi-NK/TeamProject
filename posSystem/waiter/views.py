@@ -1,5 +1,4 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from customer.models import Seating
 from .models import Order, OrderExtra, Payment, Waiter
 from customer.models import Menu, Seating
 import json
@@ -78,7 +77,6 @@ def get_orders_confirm(request):
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
-# cancel orders get request
 @require_http_methods(["GET"])
 @login_required
 def get_orders_cancel(request):
@@ -87,9 +85,9 @@ def get_orders_cancel(request):
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
-# get current waiters on duty
 @user_passes_test(group_check)
 def get_current_waiters(request):
+    """Get current waiters on duty."""
     active_sessions = Session.objects.filter(expire_date__gte=timezone.now())
     user_id_list = []
     for session in active_sessions:
@@ -99,15 +97,15 @@ def get_current_waiters(request):
     return User.objects.filter(id__in=user_id_list)
 
 
-# gets tables for waiter
 @require_http_methods(["GET"])
-#@user_passes_test(group_check)
+@user_passes_test(group_check)
 def get_tables(request):
-    #get current waiters
+    """Get tables for waiter."""
+    # get current waiters
     waiters = Waiter.objects.all()
     offduty = Waiter.objects.filter(onduty=False)
     onduty = Waiter.objects.filter(onduty=True)
-    #waiters = User.objects.all()
+    # waiters = User.objects.all()
     waitercount = 0
     # count active waiters ???
 
@@ -118,30 +116,34 @@ def get_tables(request):
         tablecount += 1
 
     # more than one waiter on duty, divide tables
-    #if waitercount > 1:
+    # if waitercount > 1:
         # divide tables between waiters
     #    waiters = User.objects.all()
     #    noofwaiters = waiters.objects.count()
-    #else: # one waiter, assign all tables
+    # else: # one waiter, assign all tables
     #    tables = Seating.objects.filter(available=False)
     #    waiters = User.objects.all()
 
     waiter = Waiter.objects.filter(onduty=False)
-    return render(request, "waiter/tables.html", {'tables':tables, 'onduty':onduty, 'offduty': offduty, 'waiters': waiters, 'waiter': waiter })
+    return render(request, "waiter/tables.html", {
+        'tables': tables,
+        'onduty': onduty,
+        'offduty': offduty,
+        'waiters': waiters,
+        'waiter': waiter,
+        })
 
 
-# get waiters on duty
 @require_http_methods(["GET"])
-#@user_passes_test(group_check)
+@user_passes_test(group_check)
 def get_waiter_on_duty(request):
     """Return all waiters on duty."""
     waiter = Waiter.objects.filter(onduty=True)
     return render(request, "waiter/tables.html", {'waiter': waiter, 'onduty': True})
 
 
-# get waiters off duty
 @require_http_methods(["GET"])
-#@user_passes_test(group_check)
+@user_passes_test(group_check)
 def get_waiter_off_duty(request):
     """Return all waiters off duty."""
     waiter = Waiter.objects.filter(onduty=False)
@@ -164,12 +166,14 @@ def get_orders_unpaid(request):
     # orders = Order.objects.filter(delivered=True, payment_accepted=True).order_by('time')
     return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
 
+
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
 def get_orders_paid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     orders = Order.objects.filter(delivered=True, paid=True).order_by('time')
     return render(request, "waiter/ordercards.html", {'orders': orders})
+
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)

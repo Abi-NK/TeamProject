@@ -22,6 +22,7 @@ function updateOrders(){
   $.get("gettables", function(data){
     $("#container-tables").html(data);
   });
+
   $.get("getalerts", function(data){
     $("#container-alerts").html(data);
   });
