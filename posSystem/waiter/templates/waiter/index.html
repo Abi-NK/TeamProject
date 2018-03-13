@@ -59,6 +59,27 @@
   </div>
 </div>
 
+
+<!-- menu item removal -->
+<div id="removal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit the Oaxaca Menu</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- content here -->
+      <p>hello there - general kenobi</p>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Waiter front-page -->
 <div class="row">
   <div class="col-md-4 offset-md-4">
     <h1 class="text-center">Orders</h1>
@@ -67,7 +88,7 @@
     <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="openModalOrderExtra()">
       <i class="fas fa-plus"></i> add to an order
     </button>
-    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="">
+    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" data-toggle="modal" data-target="#removal">
       <i class="fas fa-minus"></i> remove from menu
     </button>
   </div>
