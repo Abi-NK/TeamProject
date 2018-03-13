@@ -21,9 +21,9 @@
 
                             <script>
                             function endPay() {
-                                alert('Payment sent, Thank you!')
-                                window.location.href = "/customer"
-                                return
+                                alert('Payment sent, Thank you!');
+                                window.location.href = "/customer";
+                                return true;
                             }
                             </script>
                          <form method="POST" onsubmit="return endPay();">{% csrf_token %}
