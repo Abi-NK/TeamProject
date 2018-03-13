@@ -212,6 +212,19 @@ def assign_to_seating(request):
 
 @require_http_methods(["POST"])
 @login_required
+def unassign_from_seating(request):
+    """Set the provided seating's current waiter to be the provided username."""
+    username = json.loads(request.body.decode('utf-8'))["username"]
+    seating_id = json.loads(request.body.decode('utf-8'))["seating_id"]
+    seating = Seating.objects.get(pk=seating_id)
+    seating.waiter = ""
+    seating.save()
+    print("%s has been unassigned from %s" % (username, seating.label))
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+@login_required
 def waiter_on_duty(request):
     """Set the provided waiter to be on duty."""
     username = json.loads(request.body.decode('utf-8'))["name"]

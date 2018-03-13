@@ -17,6 +17,7 @@ urlpatterns = [
     path('getwaiteronduty', views.get_waiter_on_duty, name='getwaiteronduty'),
     path('getwaiteroffduty', views.get_waiter_off_duty, name='getwaiteroffduty'),
     path('assigntoseating', views.assign_to_seating, name='assigntoseating'),
+    path('unassignfromseating', views.unassign_from_seating, name='unassignfromseating'),
     path('waiteronduty', views.waiter_on_duty, name='waiteronduty'),
     path('waiteroffduty', views.waiter_off_duty, name='waiteroffduty'),
     path('confirmorder', views.confirm_order, name='confirmorder'),

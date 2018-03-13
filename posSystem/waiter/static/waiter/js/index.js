@@ -160,6 +160,24 @@ function assignWaiter(button, seating_id, waiter){
   });
 }
 
+function unassignWaiter(button, seating_id, waiter){
+  $.ajax({
+    url: "/waiter/unassignfromseating",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({username: waiter, seating_id: seating_id}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).text("unassigned");
+      $.get("getseating", function(data){
+        $("#container-seating").html(data);
+      });
+    }
+  });
+}
+
 function waiterOnDuty(button, username){
   $.ajax({
     url: "/waiter/waiteronduty",
