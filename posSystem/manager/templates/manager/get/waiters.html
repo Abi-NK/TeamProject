@@ -23,9 +23,9 @@
 
   <div class="col-md-12">
     {% if waiter.onduty %}
-      <a onclick="" class="btn btn-outline-secondary btn-block mb-md-3">mark as off duty</a>
+      <a onclick="waiterOffDuty(this, '{{ waiter.name }}')" class="btn btn-outline-secondary btn-block mb-md-3">mark as off duty</a>
     {% else %}
-      <a onclick="" class="btn btn-outline-secondary btn-block mb-md-3">mark as on duty</a>
+      <a onclick="waiterOnDuty(this, '{{ waiter.name }}')" class="btn btn-outline-success btn-block mb-md-3">mark as on duty</a>
     {% endif %}
   </div>
 
