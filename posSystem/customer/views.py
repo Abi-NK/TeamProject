@@ -89,7 +89,9 @@ def payment(request):
             #order = Order.objects.get(table=request.session['seating_id'])
             #order.payment = Payment.objects.get(card_number=request.POST.get('card-number'))
             order.save()
+            return redirect('/customer')
         return render(request, "customer/e_payment.html", context)
+
 
 
 def checkbox_check(val):

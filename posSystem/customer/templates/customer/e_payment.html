@@ -23,10 +23,9 @@
                             function endPay() {
                                 alert('Payment sent, Thank you!');
                                 window.location.href = "/customer";
-                                return true;
                             }
                             </script>
-                         <form method="POST" onsubmit="return endPay();">{% csrf_token %}
+                         <form method="POST" onsubmit="endPay();">{% csrf_token %}
                              <div class="form-group">
                                   <label for="name">Order:</label>
                                   <input type="text" placeholder="Your order number" {% for ord in order%} value="{{ ord.id }}"{% endfor %} class="form-control" name="order" readonly>

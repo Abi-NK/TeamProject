@@ -79,7 +79,7 @@ class CancelledWeekOrderManager(models.Manager):
         )
 
 class Payment(models.Model):
-
+    """This model is for payment. Payment stores the payment info and is connected to a order"""
     card_holder = models.CharField(max_length=50, default='na')     # name of card holder
     card_number = models.CharField(max_length=16, default='na')     # Card number
     cvc = models.CharField(max_length=3, default='na')              # CVC
@@ -98,27 +98,35 @@ class Payment(models.Model):
         return Payment.objects.all()
 
     def get_card_holder(self):
+        """Return card holder"""
         return self.card_holder()
 
     def get_card_number(self):
+        """Return card number"""
         return self.card_number()
 
     def get_cvc(self):
+        """Return card cvc"""
         return self.cvc()
 
     def get_card_expiry(self):
+        """Return card expiry"""
         return self.expiry()
 
     def get_t_and_c(self):
+        """Return card T and C"""
         return self.terms_conditions()
 
     def get_payment_requested(self):
-        return self.payment_received()
+        """Return payment requested"""
+        return self.payment_requested()
 
     def get_payment_received(self):
+        """Return payment received"""
         return self.payment_received()
 
     def get_payment_accepted(self):
+        """Return payment accepted"""
         return self.payment_accepted()
 
     def set_t_and_c(self):
