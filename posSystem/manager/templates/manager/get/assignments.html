@@ -7,16 +7,35 @@
 <div class="row">
   {% for seat in seating %}
 
-  <div class="col-md-6">
+  <div class="col-md-2">
     <h5>{{ seat.label }}</h5>
   </div>
 
   <div class="col-md-6">
     {% if seat.waiter != "" %}
-      <h5>{{ seat.waiter }}</h5>
+    <h5>{% for uname, name in names.items %}{% if uname == seat.waiter %}{{ name }}{% endif %}{% endfor %} <span class="text-muted">({{ seat.waiter }})</span></h5>
     {% else %}
       <h5><span class="badge badge-danger">NONE</span></h5>
     {% endif %}
+  </div>
+
+  <div class="col-md-4 text-right">
+    <div class="dropdown mb-md-1">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+        change assignment
+      </button>
+      <div class="dropdown-menu dropdown-menu-right">
+        {% if onduty_waiters %}
+        {% for waiter in onduty_waiters %}
+          <a class="dropdown-item" onclick="assignWaiter(this, '{{ seat.id }}', '{{ waiter.name }}')">{{ waiter.get_full_name }} ({{ waiter.name }})</a>
+        {% endfor %}
+        {% if seat.waiter != "" %}
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" onclick="unassignWaiter(this, '{{ seat.id }}', '{{ seat.waiter }}')">Unassign waiter</a>
+        {% endif %}
+        {% endif %}
+      </div>
+    </div>
   </div>
 
   {% endfor %}

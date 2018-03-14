@@ -20,6 +20,10 @@ class Waiter(models.Model):
 
     def set_waiter_off_duty(self):
         """Set the waiter to be off duty."""
+        for seating in Seating.objects.all():
+            if seating.waiter == self.name:
+                seating.waiter = ""
+                seating.save()
         self.onduty = False
         self.save()
         print("waiter %s is off duty" % self.name)

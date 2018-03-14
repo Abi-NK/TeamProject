@@ -100,7 +100,15 @@ def get_stock(request):
 def get_assignments(request):
     """Get all of the restaurant's seating."""
     seating = Seating.objects.all()
-    return render(request, "manager/get/assignments.html", {'seating': seating})
+    waiters = Waiter.objects.filter(onduty=True)
+    names = {}
+    for waiter in Waiter.objects.all():
+        names[waiter.name] = User.objects.get(username=waiter.name).get_full_name()
+    return render(request, "manager/get/assignments.html", {
+        'seating': seating,
+        'onduty_waiters': waiters,
+        'names': names
+    })
 
 
 @user_passes_test(group_check)

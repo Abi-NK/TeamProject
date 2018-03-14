@@ -15,12 +15,11 @@ function updateData(){
   $.get("getassignments", function(data){
     $("#container-assignments").html(data);
   });
-
   updateWaiters();
 }
 
 $(document).ready(function(){
-  updateLoop();
+  updateData();
 });
 
 function assignWaiter(button, seating_id, waiter){
@@ -32,11 +31,7 @@ function assignWaiter(button, seating_id, waiter){
     data: JSON.stringify({username: waiter, seating_id: seating_id}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
-      $(button).text("assigned");
-      $.get("getseating", function(data){
-        $("#container-seating").html(data);
-      });
+      updateData();
     }
   });
 }
@@ -50,17 +45,14 @@ function unassignWaiter(button, seating_id, waiter){
     data: JSON.stringify({username: waiter, seating_id: seating_id}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
-      $(button).text("unassigned");
-      $.get("getseating", function(data){
-        $("#container-seating").html(data);
-      });
+      updateData();
     }
   });
 }
 
 function waiterOnDuty(button, username){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/waiter/waiteronduty",
     type: 'POST',
@@ -69,13 +61,14 @@ function waiterOnDuty(button, username){
     data: JSON.stringify({name: username}),
     dataType: 'text',
     success: function(result) {
-      updateWaiters();
+      updateData();
     }
   });
 }
 
 function waiterOffDuty(button, username){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/waiter/waiteroffduty",
     type: 'POST',
@@ -84,7 +77,7 @@ function waiterOffDuty(button, username){
     data: JSON.stringify({name: username}),
     dataType: 'text',
     success: function(result) {
-      updateWaiters();
+      updateData();
     }
   });
 }
