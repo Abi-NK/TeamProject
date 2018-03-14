@@ -24,6 +24,9 @@ class Waiter(models.Model):
         self.save()
         print("waiter %s is off duty" % self.name)
 
+    def get_full_name(self):
+        return User.objects.get(username=self.name).get_full_name()
+
 
 class OrderItem(models.Model):
     menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)

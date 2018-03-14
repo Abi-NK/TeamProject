@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from customer.models import Menu, Seating
-from waiter.models import Order, OrderExtra
+from waiter.models import Order, OrderExtra, Waiter
 from django.contrib.auth.models import User
 from .forms import AdjustMenuForm
 
@@ -101,6 +101,13 @@ def get_assignments(request):
     """Get all of the restaurant's seating."""
     seating = Seating.objects.all()
     return render(request, "manager/get/assignments.html", {'seating': seating})
+
+
+@user_passes_test(group_check)
+def get_waiters(request):
+    """Get all of the restaurant's seating."""
+    waiters = Waiter.objects.all()
+    return render(request, "manager/get/waiters.html", {'waiters': waiters})
 
 
 def adjust_menu(request):

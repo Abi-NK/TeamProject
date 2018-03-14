@@ -1,0 +1,42 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+
+{% if waiters %}
+{% for waiter in waiters %}
+
+<hr />
+
+<div class="row">
+
+  <div class="col-md-12">
+    <h5 class="text-center">{{ waiter.get_full_name }} <span class="text-muted">({{ waiter.name }})</span></h5>
+  </div>
+
+  <div class="col-md-12">
+    {% if waiter.onduty %}
+      <h5><span class="badge badge-success d-block">on duty</span></h5>
+    {% else %}
+      <h5><span class="badge badge-secondary d-block">off duty</span></h5>
+    {% endif %}
+  </div>
+
+  <div class="col-md-12">
+    {% if waiter.onduty %}
+      <a onclick="" class="btn btn-outline-secondary btn-block mb-md-3">mark as off duty</a>
+    {% else %}
+      <a onclick="" class="btn btn-outline-secondary btn-block mb-md-3">mark as on duty</a>
+    {% endif %}
+  </div>
+
+</div>
+{% endfor %}
+{% else %}
+
+<div class="alert alert-warning">
+  No waiters.
+</div>
+
+{% endif %}
+
+{% endblock %}
