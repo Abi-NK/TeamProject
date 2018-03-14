@@ -42,6 +42,12 @@ def employee(request):
 
 
 @user_passes_test(group_check)
+def waiter_assignments(request):
+    """Return the waiter seating assignments page."""
+    return render(request, 'manager/assignments.html')
+
+
+@user_passes_test(group_check)
 def get_summary(request):
     """Return a summary of restaurant data in formatted HTML."""
     context = {
@@ -88,6 +94,13 @@ def get_stock(request):
         "menu": Menu.objects.all(),
     }
     return render(request, 'manager/get/stock.html', context)
+
+
+@user_passes_test(group_check)
+def get_assignments(request):
+    """Get all of the restaurant's seating."""
+    seating = Seating.objects.all()
+    return render(request, "manager/get/assignments.html", {'seating': seating})
 
 
 def adjust_menu(request):
