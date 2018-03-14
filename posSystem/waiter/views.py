@@ -90,7 +90,8 @@ def get_orders_cancel(request):
 def get_tables(request):
     """Get tables for waiter."""
     users_tables = Seating.objects.filter(waiter=request.user.username)
-    return render(request, "waiter/get/users_tables.html", {'users_tables': users_tables})
+    waiter = Waiter.objects.get(name=request.user.username)
+    return render(request, "waiter/get/users_tables.html", {'users_tables': users_tables, 'waiter': waiter})
 
 
 @require_http_methods(["GET"])
@@ -98,23 +99,10 @@ def get_tables(request):
 def get_seating(request):
     """Get all of the restaurant's seating."""
     seating = Seating.objects.all()
-    return render(request, "waiter/get/tables.html", {'seating': seating})
-
-
-@require_http_methods(["GET"])
-@user_passes_test(group_check)
-def get_waiter_on_duty(request):
-    """Return all waiters on duty."""
-    waiter = Waiter.objects.filter(onduty=True)
-    return render(request, "waiter/tables.html", {'waiter': waiter, 'onduty': True})
-
-
-@require_http_methods(["GET"])
-@user_passes_test(group_check)
-def get_waiter_off_duty(request):
-    """Return all waiters off duty."""
-    waiter = Waiter.objects.filter(onduty=False)
-    return render(request, "waiter/tables.html", {'waiter': waiter, 'onduty': False})
+    names = {}
+    for waiter in Waiter.objects.all():
+        names[waiter.name] = User.objects.get(username=waiter.name).get_full_name()
+    return render(request, "waiter/get/tables.html", {'seating': seating, 'names': names})
 
 
 @require_http_methods(["GET"])

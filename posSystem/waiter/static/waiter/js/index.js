@@ -179,6 +179,8 @@ function unassignWaiter(button, seating_id, waiter){
 }
 
 function waiterOnDuty(button, username){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/waiter/waiteronduty",
     type: 'POST',
@@ -187,13 +189,14 @@ function waiterOnDuty(button, username){
     data: JSON.stringify({name: username}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
-      $(button).text("You are On Duty");
+      updateOrders();
     }
   });
 }
 
 function waiterOffDuty(button, username){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/waiter/waiteroffduty",
     type: 'POST',
@@ -202,8 +205,7 @@ function waiterOffDuty(button, username){
     data: JSON.stringify({name: username}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
-      $(button).text("You are Off Duty");
+      updateOrders();
     }
   });
 }
