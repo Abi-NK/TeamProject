@@ -20,6 +20,7 @@ urlpatterns = [
     path('unassignfromseating', views.unassign_from_seating, name='unassignfromseating'),
     path('waiteronduty', views.waiter_on_duty, name='waiteronduty'),
     path('waiteroffduty', views.waiter_off_duty, name='waiteroffduty'),
+    path('autoassign', views.auto_assign, name='autoassign'),
     path('confirmorder', views.confirm_order, name='confirmorder'),
     path('cancelorder', views.cancel_order, name='cancelorder'),
     path('requesthelp', views.request_help, name='requesthelp'),

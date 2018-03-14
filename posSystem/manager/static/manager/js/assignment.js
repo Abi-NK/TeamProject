@@ -81,3 +81,21 @@ function waiterOffDuty(button, username){
     }
   });
 }
+
+function autoAssign(button){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
+  $.ajax({
+    url: "/waiter/autoassign",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({}),
+    dataType: 'text',
+    success: function(result) {
+      updateData();
+      $(button).html("Auto-Assign");
+      $(button).prop("disabled", false);
+    }
+  });
+}

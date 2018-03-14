@@ -207,7 +207,7 @@ def assign_to_seating(request):
     seating.waiter = username
     seating.save()
     print("%s has been assigned to %s" % (username, seating.label))
-    return HttpResponse("recieved")
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
@@ -220,7 +220,7 @@ def unassign_from_seating(request):
     seating.waiter = ""
     seating.save()
     print("%s has been unassigned from %s" % (username, seating.label))
-    return HttpResponse("recieved")
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
@@ -229,7 +229,7 @@ def waiter_on_duty(request):
     """Set the provided waiter to be on duty."""
     username = json.loads(request.body.decode('utf-8'))["name"]
     Waiter.objects.get(name=username).set_waiter_on_duty()
-    return HttpResponse("recieved")
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
@@ -238,7 +238,29 @@ def waiter_off_duty(request):
     """Set the provided waiter to be off duty."""
     username = json.loads(request.body.decode('utf-8'))["name"]
     Waiter.objects.get(name=username).set_waiter_off_duty()
-    return HttpResponse("recieved")
+    return HttpResponse("received")
+
+
+@login_required
+def auto_assign(request):
+    """Automatically distribute assignment across all on-duty waiters."""
+    onduty_waiters = [waiter for waiter in Waiter.objects.filter(onduty=True)]
+    seating = [seating for seating in Seating.objects.all()]
+    tables_per_waiter = len(seating) // len(onduty_waiters)
+    remainder = len(seating) % len(onduty_waiters)
+    print("CHECK %s, %s" % (tables_per_waiter, remainder))
+    i = 0
+    for waiter in onduty_waiters:
+        for j in range(tables_per_waiter):
+            seating[i].waiter = waiter.name
+            seating[i].save()
+            i += 1
+        if remainder != 0:
+            seating[i].waiter = waiter.name
+            seating[i].save()
+            remainder -= 1
+            i += 1
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
