@@ -201,8 +201,12 @@ def cancel_help(request):
 
 @require_http_methods(["POST"])
 def delay_order(request):
-    seating_id = json.loads(request.body.decode('utf-8'))["id"]
-    Seating.objects.get(pk=seating_id).set_delayed()
+    """Delay the order."""
+    order_id = json.loads(request.body.decode('utf-8'))["id"]
+    print("Recieved ID: " + str(order_id))
+    order = Order.objects.get(pk=order_id)
+    order.delayed = True
+    order.save()
     return HttpResponse("recieved")
 
 

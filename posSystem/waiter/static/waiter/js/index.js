@@ -61,9 +61,9 @@ function delayOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      /*$(button).attr("disabled", true);
+      $(button).attr("disabled", true);
       $(button).removeClass("btn-primary").addClass("btn-success")
-      $(button).text("Confirmed"); */
+      $(button).text("Delayed");
     }
   });
 }
