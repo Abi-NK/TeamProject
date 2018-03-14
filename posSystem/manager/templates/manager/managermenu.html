@@ -6,6 +6,19 @@
 
 {% block content %}
 
+{% for menu_item in menu %}
+<script>
+function validateForm{{menu_item.id}}(menu_old_price) {
+    var x = document.forms["adjustForm{{menu_item.id}}"]["menu_price"].value;
+    if (x < (menu_old_price*0.6)) {
+        alert("£" + x + " is invalid. The price has to be above a 60% profit margin.\nPrice must be £"
+        + (Math.round((menu_old_price*0.6)*100)/100) +" or more.");
+        return false;
+    }
+}
+</script>
+{% endfor %}
+
 <!-- Modal - adding menu item - -->
 <div class="modal fade" id="add_item" role="dialog">
   <div class="modal-dialog">
@@ -99,7 +112,7 @@
       </div>
       <div class="modal-body">
 
-        <form method="POST">{% csrf_token %}
+        <form name="adjustForm{{menu_item.id}}" method="POST" onsubmit="return validateForm{{menu_item.id}}({{menu_item.price}})">{% csrf_token %}
             <input type="hidden" name="menu_id" value="{{ menu_item.id }}">
             <label style="clear:left; text-align:right; padding-right:10px;"><b>Name</b></label>
             <input type="text" style="width:400px; float:right;" value="{{menu_item.name}}" name="menu_name" required>
