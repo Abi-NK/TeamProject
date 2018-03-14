@@ -14,6 +14,7 @@ urlpatterns = [
     path('getalerts', views.get_alerts, name="getalerts"),
     path('confirmorder', views.confirm_order, name='confirmorder'),
     path('cancelorder', views.cancel_order, name='cancelorder'),
+    path('removemenuitem', views.remove_menu_item, name='removemenuitem'),
     path('requesthelp', views.request_help, name='requesthelp'),
     path('cancelhelp', views.cancel_help, name='cancelhelp'),
     path('confirmPayment', views.confirm_payment, name='confirmPayment'),

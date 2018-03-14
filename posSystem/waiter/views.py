@@ -218,3 +218,11 @@ def place_order_extra(request):
     order_extra.add_item(menu_item_id, quantity)
     print(order_extra)
     return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+def remove_menu_item(request):
+    '''No idea what to do here'''
+    received_json = json.loads(request.body.decode('utf-8'))
+    itemToRemoveID = received_json["itemToRemoveID"]
+    return HttpResponse("received")
