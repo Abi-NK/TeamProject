@@ -33,35 +33,35 @@ function validateForm{{menu_item.id}}(menu_old_price) {
 
         <form method="POST">{% csrf_token %}
             <label><b>Name </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" name="menu_name" required>
+            <input type="text" style="width:400px" name="menu_name" required>
             <br>
             <br>
             <label><b>Price </b></label><br>
-            <input type="number" style="width:400px" step="0.01" cols="40" rows="5" name="menu_price" required>
+            <input type="number" style="width:400px" step="0.01" name="menu_price" required>
             <br>
             <br>
             <label><b>Description </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" name="menu_description" required>
+            <input type="text" style="width:400px" name="menu_description" required>
             <br>
             <br>
             <label><b>Course </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" name="menu_course" required>
+            <input type="text" style="width:400px" name="menu_course" required>
             <br>
             <br>
             <label><b>Category </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" name="menu_category" required>
+            <input type="text" style="width:400px" name="menu_category" required>
             <br>
             <br>
             <label><b>Allergy </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" name="menu_allergy">
+            <input type="text" style="width:400px" name="menu_allergy">
             <br>
             <br>
             <label><b>Calories </b></label><br>
-            <input type="number" style="width:400px" cols="40" rows="5" name="menu_calories" required>
+            <input type="number" style="width:400px" name="menu_calories" required>
             <br>
             <br>
             <label><b>Image link </b></label><br>
-            <input type="text" style="width:400px" cols="40" rows="5" name="menu_image">
+            <input type="text" style="width:400px" name="menu_image">
             <br>
             <br>
             <label style="clear:left; text-align:right; padding-right:10px;"><b>Stock </b></label>
