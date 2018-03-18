@@ -136,7 +136,6 @@ $("#removeButton").click(function(){
   var removalData = {
       itemToRemoveID: itemToRemoveID
   }
-  // I shamelessly nicked this form above :(
     $.ajax({
       url: "/waiter/removemenuitem",
       type: 'POST',
