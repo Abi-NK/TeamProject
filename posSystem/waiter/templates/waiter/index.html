@@ -72,10 +72,10 @@
         <!-- selecting item-->
         <div class="form-group">
           <select id="removeMenuItem" class="form-control">
-            <option value="-1" selected>Select a menu item to remove from the menu</option>
+            <option value="-1" selected>Select a menu item to remove from/add back to the menu</option>
             {% if menu %}
               {% for menu_item in menu %}
-                <option value="{{ menu_item.id }}">{{ menu_item }} - £{{ menu_item.price }}</option>
+                <option value="{{ menu_item.id }}">{{ menu_item }} - Removed = {{ menu_item.removed }}</option>
               {% endfor %}
             {% endif %}
           </select>
@@ -83,7 +83,7 @@
       </div>
       <div class="modal-footer">
           <button type="button" class="btn btn-primary btn-lg btn-block" id="removeButton">
-            Remove
+            Toggle Removal
           </button>
       </div>
     </div>
@@ -101,7 +101,7 @@
       <i class="fas fa-plus"></i> add to an order
     </button>
     <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" data-toggle="modal" data-target="#removal">
-      <i class="fas fa-minus"></i> remove from menu
+      <i class="fas fa-bars"></i> edit the menu
     </button>
   </div>
 </div>

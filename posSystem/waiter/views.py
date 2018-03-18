@@ -226,6 +226,9 @@ def remove_menu_item(request):
     received_json = json.loads(request.body.decode('utf-8'))
     itemToRemoveID = received_json["itemToRemoveID"]
     menu_item = Menu.objects.get(pk=itemToRemoveID)
-    menu_item.removed = True
+    if (menu_item.removed):
+        menu_item.removed = False
+    else:
+        menu_item.removed = True
     menu_item.save()
     return HttpResponse("received")
