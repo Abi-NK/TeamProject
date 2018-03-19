@@ -1,9 +1,8 @@
 from django.db import models
-from customer.models import Menu, Seating
+from core.models import Menu, OrderItem, Seating
 from django.contrib.auth.models import User
 from django.utils import timezone
-from datetime import datetime, timedelta, date
-from core.models import OrderItem
+from datetime import timedelta, date
 
 
 class ActiveOrderExtraManager(models.Manager):
