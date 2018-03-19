@@ -1,13 +1,14 @@
 from django.test import TestCase
 from waiter.models import Order
 from django.utils import timezone
+from customer.models import Seating
 
 
 class TestMakingDelivery(TestCase):
 
     def setUp(self):
         Order.objects.create(pk=666,
-                             table="Test Table",
+                             table=Seating.objects.get(1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",

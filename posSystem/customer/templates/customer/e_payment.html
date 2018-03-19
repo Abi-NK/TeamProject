@@ -15,18 +15,19 @@
             <div class="col-sm-6">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Payment Details:
+                        If you have already paid, please stop and contact a waiter.<br>
+                        <h4>Payment Details:</h4>
+
                     </div>
                     <div class="panel-body">
 
                             <script>
                             function endPay() {
-                                alert('Payment sent, Thank you!')
-                                window.location.href = "/customer"
-                                return false;
+                                alert('Payment sent, Thank you!');
+                                window.location.href = "/customer";
                             }
                             </script>
-                         <form method="POST" onsubmit="return endPay();">{% csrf_token %}
+                         <form method="POST" onsubmit="endPay();">{% csrf_token %}
                              <div class="form-group">
                                   <label for="name">Order:</label>
                                   <input type="text" placeholder="Your order number" {% for ord in order%} value="{{ ord.id }}"{% endfor %} class="form-control" name="order" readonly>
