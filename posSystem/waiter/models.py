@@ -3,6 +3,7 @@ from customer.models import Menu, Seating
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date
+from core.models import OrderItem
 
 
 class Waiter(models.Model):
@@ -30,28 +31,6 @@ class Waiter(models.Model):
 
     def get_full_name(self):
         return User.objects.get(username=self.name).get_full_name()
-
-
-class OrderItem(models.Model):
-    menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-
-    def __str__(self):
-        return "%s %s" % (self.quantity, self.menu_item)
-
-    def get_price(self):
-        """Return the total price of this item."""
-        return self.menu_item.price * self.quantity
-
-    def reduce_item_stock(self):
-        """Reduce the stock count of the menu item by quantity."""
-        self.menu_item.stock -= self.quantity
-        self.menu_item.save()
-
-    def refund_item_stock(self):
-        """Increase the stock count of the menu item by quantity."""
-        self.menu_item.stock += self.quantity
-        self.menu_item.save()
 
 
 class ActiveOrderManager(models.Manager):
@@ -105,6 +84,7 @@ class CancelledWeekOrderManager(models.Manager):
             time__date__gt=timezone.now().date()-timedelta(days=7)
         )
 
+
 class Payment(models.Model):
     """This model is for payment. Payment stores the payment info and is connected to a order"""
     card_holder = models.CharField(max_length=50, default='na')     # name of card holder
@@ -117,7 +97,7 @@ class Payment(models.Model):
     payment_accepted = models.BooleanField(default=False)           # Waiter has accepted the payment
 
     def __str__(self):
-       return "Order: %s, Accepted: %s" % (self.id, self.payment_accepted)
+        return "Order: %s, Accepted: %s" % (self.id, self.payment_accepted)
 
     def get_payments(self):
         """Returns all the payments"""

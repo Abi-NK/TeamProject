@@ -1,10 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import Menu, Seating
-from waiter.models import Payment, Order
+from waiter.models import Payment, Order, OrderExtra
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
-from waiter.models import Order, OrderItem, OrderExtra
+from core.models import OrderItem
 import json
 
 
