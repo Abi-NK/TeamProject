@@ -74,12 +74,43 @@
         <div id="container-seating">
           {# populate restaurant seating information here #}
         </div>
-
       </div>
     </div>
   </div>
 </div>
 
+<!-- menu item removal -->
+<div id="removal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit the Oaxaca Menu:</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- selecting item-->
+        <div class="form-group">
+          <select id="removeMenuItem" class="form-control">
+            <option value="-1" selected>Select a menu item to remove from/add back to the menu</option>
+            {% if menu %}
+              {% for menu_item in menu %}
+                <option value="{{ menu_item.id }}">{{ menu_item }} - Removed = {{ menu_item.removed }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-lg btn-block" id="removeButton">
+            Toggle Removal
+          </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Waiter front-page -->
 <div class="row">
   <div class="col-md-4">
     <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="openModalSeating()">
@@ -92,6 +123,9 @@
   <div class="col-md-4">
     <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="openModalOrderExtra()">
       <i class="fas fa-plus"></i> add to an order
+    </button>
+    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" data-toggle="modal" data-target="#removal">
+      <i class="fas fa-bars"></i> edit the menu
     </button>
   </div>
 </div>

@@ -56,6 +56,22 @@ function confirmOrder(button, orderID){
   });
 }
 
+function delayOrder(button, orderID){
+  $.ajax({
+    url: "/waiter/delayorder",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({id: orderID}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).removeClass("btn-primary").addClass("btn-success")
+      $(button).text("Delayed");
+    }
+  });
+}
+
 function confirmPayment(button, paymentID){
   $.ajax({
     url: "/waiter/confirmPayment",
@@ -209,6 +225,24 @@ function waiterOffDuty(button, username){
     }
   });
 }
+
+$("#removeButton").click(function(){
+  var itemToRemoveID = $("#removeMenuItem").val();
+  var removalData = {
+      itemToRemoveID: itemToRemoveID
+  }
+    $.ajax({
+      url: "/waiter/removemenuitem",
+      type: 'POST',
+      headers: {'X-CSRFToken': csrfToken},
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(removalData),
+      dataType: 'text',
+      success: function(result) {
+        $('#removal').modal('hide');
+      }
+    });
+});
 
 $(document).ready(function(){
   updateLoop();

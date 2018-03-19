@@ -17,7 +17,8 @@ class TestMarkingDelivery(TestCase):
                              total_price=13.20,
                              confirmed=False,
                              ready_delivery=False,
-                             delivered=False)
+                             delivered=False,
+                             delayed=False)
 
         Order.objects.create(pk=200,
                              table=Seating.objects.get(2),
@@ -27,7 +28,8 @@ class TestMarkingDelivery(TestCase):
                              total_price=13.20,
                              confirmed=False,
                              ready_delivery=False,
-                             delivered=False)
+                             delivered=False,
+                             delayed=False)
 
         Order.objects.create(pk=300,
                              table=Seating.objects.get(3),
@@ -37,7 +39,8 @@ class TestMarkingDelivery(TestCase):
                              total_price=13.20,
                              confirmed=False,
                              ready_delivery=False,
-                             delivered=False)
+                             delivered=False,
+                             delayed=False)
 
         Order.objects.create(pk=400,
                              table=Seating.objects.get(4),
@@ -47,7 +50,8 @@ class TestMarkingDelivery(TestCase):
                              total_price=13.20,
                              confirmed=True,
                              ready_delivery=True,
-                             delivered=False)
+                             delivered=False,
+                             delayed=False)
 
     def test_get_confirmed(self):
         """Orders that are unconfirmed"""
@@ -89,6 +93,13 @@ class TestMarkingDelivery(TestCase):
         self.assertEqual(test_order.ready_delivery, False)
         test_order.set_ready_delivery()
         self.assertEqual(test_order.ready_delivery, True)
+
+    def test_set_delayed(self):
+        """"Order is delayed"""
+        test_order = Order.objects.get(pk=300)
+        self.assertEqual(test_order.delayed, False)
+        test_order.set_delayed()
+        self.assertEqual(test_order.delayed, True)
 
     def test_get_not_confirmed_orders_all(self):
         """"List of orders that are not confirmed, tests Orders with ID= 100, 200, 300 (defined above)"""
