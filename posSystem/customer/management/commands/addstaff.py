@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
+from waiter.models import Waiter
 
 
 class Command(BaseCommand):
@@ -43,6 +44,17 @@ class Command(BaseCommand):
             except IntegrityError:
                 print("User %s is already in the database." % username)
         print("Dummy waiter accounts added.")
+
+        print("Deleting all entries in Waiter table...")
+        Waiter.objects.all().delete()
+        print("Deleted.")
+
+        for i in range(1, 6):
+            username = "waiter" + str(i)
+            Waiter.objects.create(
+                name=User.objects.get(username=username)
+            )
+        print("Dummy waiter objects added.")
 
         for i in range(1, 6):
             username = "kitchen" + str(i)

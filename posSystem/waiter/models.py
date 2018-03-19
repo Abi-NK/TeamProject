@@ -5,6 +5,33 @@ from django.utils import timezone
 from datetime import datetime, timedelta, date
 
 
+class Waiter(models.Model):
+    onduty = models.BooleanField(default=False)
+    name = models.CharField(max_length=50, default='waiter1')
+
+    def __str__(self):
+        return "%s: %s" % (self.name, "on duty" if self.onduty else "off duty")
+
+    def set_waiter_on_duty(self):
+        """Set the waiter to be on duty."""
+        self.onduty = True
+        self.save()
+        print("waiter %s is on duty" % self.name)
+
+    def set_waiter_off_duty(self):
+        """Set the waiter to be off duty."""
+        for seating in Seating.objects.all():
+            if seating.waiter == self.name:
+                seating.waiter = ""
+                seating.save()
+        self.onduty = False
+        self.save()
+        print("waiter %s is off duty" % self.name)
+
+    def get_full_name(self):
+        return User.objects.get(username=self.name).get_full_name()
+
+
 class OrderItem(models.Model):
     menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
     quantity = models.IntegerField()
@@ -177,6 +204,7 @@ class Order(models.Model):
     cancelled = models.BooleanField(default=False)
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
+    delayed = models.BooleanField(default=False) #order is delayed
     paid = models.BooleanField(default=False)  # order has been paid
 
     def __str__(self):
@@ -217,7 +245,13 @@ class Order(models.Model):
         """sets the order as delivered"""
         self.delivered = True
         self.save()
-        print("Order %s is has been delivery" % self.id)
+        print("Order %s has been delivered" % self.id)
+
+    def set_delayed(self):
+        """sets the order as delayed"""
+        self.delayed = True
+        self.save()
+        print("Order %s has been delayed" % self.id)
 
     def get_all_orders(self):
         """returns all the orders"""
@@ -336,7 +370,7 @@ class OrderExtra(models.Model):
     waiter = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
     used = models.BooleanField(default=False)
-    time = models.DateTimeField(default=timezone.now())
+    time = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return "OrderExtra #%s: %s, waiter: %s, status: %s" % \

@@ -1,0 +1,45 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+
+{% if seating %}
+
+<div class="row">
+  {% for seat in seating %}
+
+  <div class="col-md-2">
+    <h5>{{ seat.label }}</h5>
+  </div>
+
+  <div class="col-md-6">
+    {% if seat.waiter != "" %}
+      <h5>{% for uname, name in names.items %}{% if uname == seat.waiter %}{{ name }}{% endif %}{% endfor %} <span class="text-muted">({{ seat.waiter }})</span></h5>
+    {% else %}
+      <h5><span class="badge badge-danger">NONE</span></h5>
+    {% endif %}
+  </div>
+
+  <div class="col-md-4">
+    {% if seat.waiter != user.get_username %}
+    <button type="button" class="btn btn-outline-primary btn-block mb-md-1" onclick="assignWaiter(this, '{{ seat.id }}', '{{ user.get_username }}')">
+      assign self
+    </button>
+    {% else %}
+    <button type="button" class="btn btn-outline-danger btn-block mb-md-1" onclick="unassignWaiter(this, '{{ seat.id }}', '{{ user.get_username }}')">
+      unassign self
+    </button>
+    {% endif %}
+  </div>
+
+  {% endfor %}
+</div>
+
+{% else %}
+
+<div class="alert alert-warning">
+  No seating.
+</div>
+
+{% endif %}
+
+{% endblock %}

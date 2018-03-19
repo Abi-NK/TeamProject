@@ -9,6 +9,11 @@
     {% if orders %}
         {% for order in orders %}
             <h3>Table Number {{order.table}}:</h3>
+            {% if order.delayed %}
+                <div class="progress-bar bg-warning" style="width:100%">
+                    Order has been delayed.
+                </div>
+            {% endif %}
             {% if order.confirmed and not order.ready_delivery and not order.delivered %}
                 <div class="progress">
                     <div class="progress-bar" style="width:30%">

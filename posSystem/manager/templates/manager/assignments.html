@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Waiter Assignment{% endblock %}
+
+{% block content %}
+
+<div class="row mt-md-3">
+  <div class="col-xl-2">
+    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
+    <button id="btnAutoAssign" onclick="autoAssign(this)" class="btn btn-outline-secondary btn-block mb-md-3">Auto-Assign</button>
+  </div>
+
+  <div class="col-xl-7">
+    <h3 class="text-center">Waiter Seating Assignments</h3>
+    <hr />
+    <div id="container-assignments">
+      {# populate waiter assignment info here #}
+    </div>
+  </div>
+
+  <div class="col-xl-3">
+    <h3 class="text-center">Waiters</h3>
+    <div id="container-waiters">
+      {# populate waiter info here #}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block endjs %}<script src="{% static "manager/js/assignment.js" %}"></script>{% endblock %}

@@ -24,7 +24,10 @@
     <!-- Cancel Button Un-Confirms Order, allowing for stats on walkouts -->
     <button type="button" class="btn btn-danger btn-lg btn-block"
             onclick="cancelOrder(this, {{ order.id }})">Cancel</button>
-
+    <button type="button" class="btn btn-danger btn-lg btn-block"
+    onclick="delayOrder(this, {{ order.id }})" {% if order.delayed %}disabled{% endif %}>
+      {% if order.delayed %}Delayed{% else %}Delay{% endif %}
+    </button>
     {% endif %}
 
     {% if delivery %}

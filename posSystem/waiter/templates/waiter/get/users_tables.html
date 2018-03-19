@@ -1,0 +1,39 @@
+{% extends debug|yesno:"base.html,empty.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-md-8">
+    <h4>Signed in as {{ user.get_full_name }} <span class="text-muted">({{ user.get_username }})</span></h4>
+  </div>
+
+  <div class="col-md-4">
+    {% if waiter.onduty %}
+    <button type="button" class="btn btn-success btn-block" onclick="waiterOffDuty(this, '{{ user.get_username }}')">
+      currently on duty (click to toggle)
+    </button>
+    {% else %}
+    <button type="button" class="btn btn-warning btn-block" onclick="waiterOnDuty(this, '{{ user.get_username }}')">
+      currently off duty (click to toggle)
+    </button>
+    {% endif %}
+  </div>
+</div>
+
+<h4>Your assigned tables:</h4>
+
+{% if users_tables %}
+<div class="row">
+  {% for table in users_tables %}
+    <div class="col-md-2">
+      <h5>{{ table.label }}</h5>
+    </div>
+  {% endfor %}
+</div>
+{% else %}
+  <div class="alert alert-warning">
+    None assigned.
+  </div>
+{% endif %}
+
+{% endblock %}

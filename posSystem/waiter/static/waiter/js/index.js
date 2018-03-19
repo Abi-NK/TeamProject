@@ -19,6 +19,10 @@ function updateLoop(){
 }
 
 function updateOrders(){
+  $.get("gettables", function(data){
+    $("#container-tables").html(data);
+  });
+
   $.get("getalerts", function(data){
     $("#container-alerts").html(data);
   });
@@ -48,6 +52,22 @@ function confirmOrder(button, orderID){
       $(button).attr("disabled", true);
       $(button).removeClass("btn-primary").addClass("btn-success")
       $(button).text("Confirmed");
+    }
+  });
+}
+
+function delayOrder(button, orderID){
+  $.ajax({
+    url: "/waiter/delayorder",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({id: orderID}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).removeClass("btn-primary").addClass("btn-success")
+      $(button).text("Delayed");
     }
   });
 }
@@ -129,6 +149,99 @@ $("#btnPlaceOrderExtra").click(function(){
       }
     });
   }
+});
+
+function openModalSeating(){
+  $.get("getseating", function(data){
+    $("#container-seating").html(data);
+    $('#modalSeating').modal('show');
+  });
+}
+
+function assignWaiter(button, seating_id, waiter){
+  $.ajax({
+    url: "/waiter/assigntoseating",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({username: waiter, seating_id: seating_id}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).text("assigned");
+      $.get("getseating", function(data){
+        $("#container-seating").html(data);
+      });
+    }
+  });
+}
+
+function unassignWaiter(button, seating_id, waiter){
+  $.ajax({
+    url: "/waiter/unassignfromseating",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({username: waiter, seating_id: seating_id}),
+    dataType: 'text',
+    success: function(result) {
+      $(button).attr("disabled", true);
+      $(button).text("unassigned");
+      $.get("getseating", function(data){
+        $("#container-seating").html(data);
+      });
+    }
+  });
+}
+
+function waiterOnDuty(button, username){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
+  $.ajax({
+    url: "/waiter/waiteronduty",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({name: username}),
+    dataType: 'text',
+    success: function(result) {
+      updateOrders();
+    }
+  });
+}
+
+function waiterOffDuty(button, username){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
+  $.ajax({
+    url: "/waiter/waiteroffduty",
+    type: 'POST',
+    headers: {'X-CSRFToken': csrfToken},
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify({name: username}),
+    dataType: 'text',
+    success: function(result) {
+      updateOrders();
+    }
+  });
+}
+
+$("#removeButton").click(function(){
+  var itemToRemoveID = $("#removeMenuItem").val();
+  var removalData = {
+      itemToRemoveID: itemToRemoveID
+  }
+    $.ajax({
+      url: "/waiter/removemenuitem",
+      type: 'POST',
+      headers: {'X-CSRFToken': csrfToken},
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(removalData),
+      dataType: 'text',
+      success: function(result) {
+        $('#removal').modal('hide');
+      }
+    });
 });
 
 $(document).ready(function(){

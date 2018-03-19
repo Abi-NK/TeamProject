@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from customer.models import Menu, Seating
-from waiter.models import Order, OrderExtra
+from waiter.models import Order, OrderExtra, Waiter
 from django.contrib.auth.models import User
 from .forms import AdjustMenuForm
 
@@ -39,6 +39,12 @@ def employee(request):
         "kitchen_staff": User.objects.filter(username__startswith="kitchen"),
         "waiters": waiter_data,
     })
+
+
+@user_passes_test(group_check)
+def waiter_assignments(request):
+    """Return the waiter seating assignments page."""
+    return render(request, 'manager/assignments.html')
 
 
 @user_passes_test(group_check)
@@ -90,12 +96,35 @@ def get_stock(request):
     return render(request, 'manager/get/stock.html', context)
 
 
+@user_passes_test(group_check)
+def get_assignments(request):
+    """Get all of the restaurant's seating."""
+    seating = Seating.objects.all()
+    waiters = Waiter.objects.filter(onduty=True)
+    names = {}
+    for waiter in Waiter.objects.all():
+        names[waiter.name] = User.objects.get(username=waiter.name).get_full_name()
+    return render(request, "manager/get/assignments.html", {
+        'seating': seating,
+        'onduty_waiters': waiters,
+        'names': names
+    })
+
+
+@user_passes_test(group_check)
+def get_waiters(request):
+    """Get all of the restaurant's seating."""
+    waiters = Waiter.objects.all()
+    return render(request, "manager/get/waiters.html", {'waiters': waiters})
+
+
 def adjust_menu(request):
     """Return the menu in formatted HTML and update the table based on inputs."""
     if request.method == "POST":
 
         # VALIDATION: check if form inputs are valid then send it to database
-        form = AdjustMenuForm(data={'name': request.POST['menu_name'], 'price': request.POST['menu_price'],
+        form = AdjustMenuForm(data={'id': request.POST['menu_id'], 'name': request.POST['menu_name'],
+                                    'price': request.POST['menu_price'],
                                     'description': request.POST['menu_description'],
                                     'course': request.POST['menu_course'], 'category': request.POST['menu_category'],
                                     'allergy': request.POST['menu_allergy'], 'calories': request.POST['menu_calories'],
