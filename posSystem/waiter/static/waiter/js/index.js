@@ -131,6 +131,24 @@ $("#btnPlaceOrderExtra").click(function(){
   }
 });
 
+$("#removeButton").click(function(){
+  var itemToRemoveID = $("#removeMenuItem").val();
+  var removalData = {
+      itemToRemoveID: itemToRemoveID
+  }
+    $.ajax({
+      url: "/waiter/removemenuitem",
+      type: 'POST',
+      headers: {'X-CSRFToken': csrfToken},
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify(removalData),
+      dataType: 'text',
+      success: function(result) {
+        $('#removal').modal('hide');
+      }
+    });
+});
+
 $(document).ready(function(){
   updateLoop();
 });

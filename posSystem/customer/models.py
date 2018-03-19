@@ -28,6 +28,7 @@ class Menu(models.Model):
     vegan = models.BooleanField(default=False)
     meat = models.BooleanField(default=False)
     stock = models.IntegerField(default=0)
+    removed = models.BooleanField(default=False)
 
     objects = models.Manager()
     stock_manager = StockManager()
