@@ -53,6 +53,7 @@ class Seating(models.Model):
     label = models.CharField(max_length=25, default='Table 0')
     available = models.BooleanField(default=True)
     assistance = models.BooleanField(default=False)
+    waiter = models.CharField(max_length=50, default="")
 
     objects = models.Manager()
     available_objects = AvailableSeatingManager()

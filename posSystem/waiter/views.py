@@ -1,7 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Order, Payment
-from customer.models import Seating
-from .models import Order, OrderExtra
+from .models import Order, OrderExtra, Payment, Waiter
 from customer.models import Menu, Seating
 import json
 from django.shortcuts import render, redirect
@@ -79,13 +77,32 @@ def get_orders_confirm(request):
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
 
 
-# cancel orders get request
 @require_http_methods(["GET"])
 @login_required
 def get_orders_cancel(request):
     """Return all orders which need cancelling as formatted HTML."""
     orders = Order.objects.filter(confirmed=False, cancelled=True)
     return render(request, "waiter/ordercards.html", {'orders': orders, 'confirm': True})
+
+
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_tables(request):
+    """Get tables for waiter."""
+    users_tables = Seating.objects.filter(waiter=request.user.username)
+    waiter = Waiter.objects.get(name=request.user.username)
+    return render(request, "waiter/get/users_tables.html", {'users_tables': users_tables, 'waiter': waiter})
+
+
+@require_http_methods(["GET"])
+@user_passes_test(group_check)
+def get_seating(request):
+    """Get all of the restaurant's seating."""
+    seating = Seating.objects.all()
+    names = {}
+    for waiter in Waiter.objects.all():
+        names[waiter.name] = User.objects.get(username=waiter.name).get_full_name()
+    return render(request, "waiter/get/tables.html", {'seating': seating, 'names': names})
 
 
 @require_http_methods(["GET"])
@@ -104,12 +121,14 @@ def get_orders_unpaid(request):
     # orders = Order.objects.filter(delivered=True, payment_accepted=True).order_by('time')
     return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
 
+
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
 def get_orders_paid(request):
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     orders = Order.objects.filter(delivered=True, paid=True).order_by('time')
     return render(request, "waiter/ordercards.html", {'orders': orders})
+
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
@@ -164,6 +183,72 @@ def cancel_order(request):
     order.refund_stock()
     order.save()
     return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
+@login_required
+def assign_to_seating(request):
+    """Set the provided seating's current waiter to be the provided username."""
+    username = json.loads(request.body.decode('utf-8'))["username"]
+    seating_id = json.loads(request.body.decode('utf-8'))["seating_id"]
+    seating = Seating.objects.get(pk=seating_id)
+    seating.waiter = username
+    seating.save()
+    print("%s has been assigned to %s" % (username, seating.label))
+    return HttpResponse("received")
+
+
+@require_http_methods(["POST"])
+@login_required
+def unassign_from_seating(request):
+    """Set the provided seating's current waiter to be the provided username."""
+    username = json.loads(request.body.decode('utf-8'))["username"]
+    seating_id = json.loads(request.body.decode('utf-8'))["seating_id"]
+    seating = Seating.objects.get(pk=seating_id)
+    seating.waiter = ""
+    seating.save()
+    print("%s has been unassigned from %s" % (username, seating.label))
+    return HttpResponse("received")
+
+
+@require_http_methods(["POST"])
+@login_required
+def waiter_on_duty(request):
+    """Set the provided waiter to be on duty."""
+    username = json.loads(request.body.decode('utf-8'))["name"]
+    Waiter.objects.get(name=username).set_waiter_on_duty()
+    return HttpResponse("received")
+
+
+@require_http_methods(["POST"])
+@login_required
+def waiter_off_duty(request):
+    """Set the provided waiter to be off duty."""
+    username = json.loads(request.body.decode('utf-8'))["name"]
+    Waiter.objects.get(name=username).set_waiter_off_duty()
+    return HttpResponse("received")
+
+
+@login_required
+def auto_assign(request):
+    """Automatically distribute assignment across all on-duty waiters."""
+    onduty_waiters = [waiter for waiter in Waiter.objects.filter(onduty=True)]
+    seating = [seating for seating in Seating.objects.all()]
+    tables_per_waiter = len(seating) // len(onduty_waiters)
+    remainder = len(seating) % len(onduty_waiters)
+    print("CHECK %s, %s" % (tables_per_waiter, remainder))
+    i = 0
+    for waiter in onduty_waiters:
+        for j in range(tables_per_waiter):
+            seating[i].waiter = waiter.name
+            seating[i].save()
+            i += 1
+        if remainder != 0:
+            seating[i].waiter = waiter.name
+            seating[i].save()
+            remainder -= 1
+            i += 1
+    return HttpResponse("received")
 
 
 @require_http_methods(["POST"])
