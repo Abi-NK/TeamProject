@@ -90,8 +90,8 @@ def payment(request):
             nOrder.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
             nOrder.save()
 
-            return redirect('/customer')
-        return render(request, "customer/e_payment.html", context)
+        return redirect('/customer')
+    return render(request, "customer/e_payment.html", context)
 
 
 
