@@ -1,5 +1,5 @@
 from django.db import models
-from customer.models import Menu
+from core.models import Menu
 
 
 class OrderItem(models.Model):
