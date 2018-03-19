@@ -200,6 +200,17 @@ def cancel_help(request):
 
 
 @require_http_methods(["POST"])
+def delay_order(request):
+    """Delay the order."""
+    order_id = json.loads(request.body.decode('utf-8'))["id"]
+    print("Recieved ID: " + str(order_id))
+    order = Order.objects.get(pk=order_id)
+    order.delayed = True
+    order.save()
+    return HttpResponse("recieved")
+
+
+@require_http_methods(["POST"])
 def place_order_extra(request):
     """Create an OrderExtra from the provided JSON, or update an existing one."""
     received_json = json.loads(request.body.decode('utf-8'))

@@ -17,6 +17,7 @@ urlpatterns = [
     path('removemenuitem', views.remove_menu_item, name='removemenuitem'),
     path('requesthelp', views.request_help, name='requesthelp'),
     path('cancelhelp', views.cancel_help, name='cancelhelp'),
+    path('delayorder', views.delay_order, name='delayorder'),
     path('confirmPayment', views.confirm_payment, name='confirmPayment'),
     path('getorderspaid', views.get_orders_paid, name='getorderspaid'),
 ]
