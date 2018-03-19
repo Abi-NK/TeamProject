@@ -1,9 +1,7 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from core.models import Menu, Order, OrderExtra, OrderItem, Payment, Seating
+from core.models import Menu, Order, Payment, Seating
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
-import json
 
 
 @ensure_csrf_cookie
@@ -38,26 +36,6 @@ def getOrderInfo(request):
         'order': Order.objects.filter(table=request.session['seating_id']).first()
     }
     return render(request, 'customer/menu.html', context)
-
-
-@require_http_methods(["GET"])
-def get_order_extra(request):
-    """Return the suggested order items as formatted HTML."""
-    try:
-        order_extra = OrderExtra.active_objects.get(seating=Seating.occupied_objects.get(pk=request.session['seating_id']))
-        return render(request, "customer/get/orderextra.html", {'order_extra': order_extra})
-    except:
-        return render(request, "customer/get/orderextra.html")
-
-
-@require_http_methods(["POST"])
-def take_seat(request):
-    """Marks the provided seating as unavailable in the database."""
-    table_id = json.loads(request.body.decode('utf-8'))["tableID"]
-    Seating.objects.get(pk=table_id).set_unavailable()
-    request.session['seating_id'] = table_id
-    request.session['seating_label'] = Seating.objects.get(pk=table_id).label
-    return HttpResponse("received")
 
 
 def payment(request):
@@ -105,21 +83,3 @@ def t_and_c(request):
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True
         payment_update.save()
-
-
-@require_http_methods(["POST"])
-def cancel_order_extra_item(request):
-    """Remove an OrderItem from an OrderExtra."""
-    received_json = json.loads(request.body.decode('utf-8'))
-    order_extra = OrderExtra.active_objects.get(pk=received_json["order_extra_id"])
-    order_item = OrderItem.objects.get(pk=received_json["order_item_id"])
-    order_extra.items.remove(order_item)
-    if order_extra.items.count() == 0:
-        order_extra.delete()
-    return HttpResponse("received")
-
-
-def statuses(request):
-    """..."""
-    orders = Order.objects.all()
-    return render(request, 'customer/statuses.html', {'orders': orders})
