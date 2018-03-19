@@ -1,10 +1,9 @@
 from django.core.management.base import BaseCommand
-from customer.models import Menu, Seating
-from waiter.models import Order, OrderItem, OrderExtra
+from core.models import Menu, Order, OrderItem, OrderExtra, Seating
+from django.contrib.auth.models import User
 import random
 from django.utils import timezone
 from datetime import date, datetime, time, timedelta
-from django.contrib.auth.models import User
 
 
 def random_order_json():

@@ -1,9 +1,7 @@
-from django.http import HttpResponse, JsonResponse
-from waiter.models import Order
+from django.http import HttpResponse
+from core.models import Order
 import json
-from django.utils import timezone
 from django.shortcuts import render
-from django.core.serializers import serialize
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required, user_passes_test

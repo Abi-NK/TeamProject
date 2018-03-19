@@ -1,10 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .models import Menu, Seating
-from waiter.models import Payment, Order, OrderExtra
+from core.models import Menu, Order, OrderExtra, OrderItem, Payment, Seating
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
-from core.models import OrderItem
 import json
 
 
@@ -94,7 +92,6 @@ def payment(request):
     return render(request, "customer/e_payment.html", context)
 
 
-
 def checkbox_check(val):
     """Converts html checkbox to django model format"""
     if val == 'on':
@@ -108,7 +105,6 @@ def t_and_c(request):
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True
         payment_update.save()
-
 
 
 @require_http_methods(["POST"])

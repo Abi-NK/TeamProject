@@ -1,6 +1,5 @@
 from django import forms
-from customer.models import Menu
-from django.core.exceptions import ValidationError
+from core.models import Menu
 
 
 class AdjustMenuForm(forms.Form):

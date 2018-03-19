@@ -1,5 +1,9 @@
 from django.db import models
-from core.models import Menu, OrderExtra, OrderItem, Payment, Seating
+from .menu_model import Menu
+from .orderextra_model import OrderExtra
+from .orderitem_model import OrderItem
+from .payment_model import Payment
+from .seating_model import Seating
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 

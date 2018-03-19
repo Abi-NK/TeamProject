@@ -1,5 +1,6 @@
 from django.db import models
-from core.models import Seating, User
+from .seating_model import Seating
+from django.contrib.auth.models import User
 
 
 class Waiter(models.Model):

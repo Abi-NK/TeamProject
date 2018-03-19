@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from .models import Order, OrderExtra, Payment, Waiter
-from customer.models import Menu, Seating
+from core.models import Menu, Order, OrderExtra, Payment, Seating, Waiter
+from django.contrib.auth.models import User
 import json
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_http_methods
@@ -8,7 +8,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from kitchen.views import index as waiter_index
 from manager.views import index as manager_index
-from django.contrib.auth.models import User
 from django.db.models import Q
 
 
@@ -115,12 +114,12 @@ def get_orders_delivery(request):
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
-def get_orders_unpaid(request): # what the user does not see, will not hurt them...
+def get_orders_unpaid(request):  # what the user does not see, will not hurt them...
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     # the order quiey bellow checks both the order model and the payment fk model
     orders = Order.objects.filter(Q(delivered=True, paid=False) | Q(payment__payment_accepted=False)).order_by('time')
-    newORder=[] # list to store orders to send but only once instnace of that order
-    listOfTables=[] # track tabkes that are already populated in waiter page
+    newORder=[]  # list to store orders to send but only once instnace of that order
+    listOfTables=[]  # track tabkes that are already populated in waiter page
     for order in orders:
         if order.table in listOfTables:
             print("hide payment")
@@ -129,7 +128,6 @@ def get_orders_unpaid(request): # what the user does not see, will not hurt them
             newORder.append(order)
             listOfTables.append(order.table)
     return render(request, "waiter/ordercards.html", {'orders': newORder, 'unpaid': True})
-
 
 
 @require_http_methods(["GET"])
@@ -265,7 +263,7 @@ def auto_assign(request):
 @login_required
 def confirm_payment(request):
     """Confirm the provided payment in the database."""
-    #This method now takes a table refrance and sets the paid field in all the orders of that table to true.
+    # This method now takes a table refrance and sets the paid field in all the orders of that table to true.
     payment_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(payment_id))
     payment = Order.objects.get(pk=payment_id).payment

@@ -1,5 +1,7 @@
 from django.db import models
-from core.models import Menu, OrderItem, Seating
+from .menu_model import Menu
+from .orderitem_model import OrderItem
+from .seating_model import Seating
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta, date

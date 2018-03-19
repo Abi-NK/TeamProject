@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Menu, Seating
+from core.models import Menu, Seating
 
 
 # Create your tests here.

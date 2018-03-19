@@ -1,7 +1,6 @@
 from django.test import TestCase
-from waiter.models import Order
+from core.models import Order, Seating
 from django.utils import timezone
-from customer.models import Seating
 
 
 class TestMakingDelivery(TestCase):

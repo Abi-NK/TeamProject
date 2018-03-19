@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
-from customer.models import Menu, Seating
-from waiter.models import Order, OrderExtra, Waiter
+from core.models import Menu, Order, OrderExtra, Seating, Waiter
 from django.contrib.auth.models import User
 from .forms import AdjustMenuForm
 

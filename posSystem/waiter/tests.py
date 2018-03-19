@@ -1,6 +1,5 @@
 from django.test import TestCase
-from .models import Order, OrderItem, OrderExtra
-from customer.models import Menu, Seating
+from core.models import Menu, Order, OrderExtra, OrderItem, Seating
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime, timedelta, date, time
