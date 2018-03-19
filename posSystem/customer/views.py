@@ -61,11 +61,9 @@ def take_seat(request):
     request.session['seating_label'] = Seating.objects.get(pk=table_id).label
     return HttpResponse("received")
 
-        # order': Order.objects.get(table=request.session['seating_id']),
-        # 'payment': ,
-
 
 def payment(request):
+    """Either sends out a list of payment and order objects or takes in a payment using POST."""
         context = {
             'payment': Payment.objects.filter(order=request.session['seating_id']),
             'order': Order.objects.filter(table=request.session['seating_id']),
@@ -82,25 +80,31 @@ def payment(request):
             ).save(force_insert=True)
             # assign this paymet to its order
 
-            ##allOrders = Order.objects.filter(table=request.session['seating_id'])
-            ##for order in allOrders:
-            order = Order.objects.filter(table=request.session['seating_id']).last()
-            order.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
-            #order = Order.objects.get(table=request.session['seating_id'])
-            #order.payment = Payment.objects.get(card_number=request.POST.get('card-number'))
-            order.save()
+            order = Order.objects.filter(table=request.session['seating_id'])
+
+            c = len(order)
+
+            #
+            for i in range(c):
+                # for every item in the order list add it to the same payment as it came from the same table
+                nOrder = Order.objects.get(id=order[i].id)
+                nOrder.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
+                nOrder.save()
+
             return redirect('/customer')
         return render(request, "customer/e_payment.html", context)
 
 
 
 def checkbox_check(val):
+    """Converts html checkbox to django model format"""
     if val == 'on':
         return "True"
     return "False"
 
 
 def t_and_c(request):
+    """Sets t and c field in DB from POST (not in html form)"""
     if request.method == "POST":
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True

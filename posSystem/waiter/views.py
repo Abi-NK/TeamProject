@@ -98,12 +98,21 @@ def get_orders_delivery(request):
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
-def get_orders_unpaid(request):
+def get_orders_unpaid(request): # what the user does not see, will not hurt them...
     """Return all orders which have been delivered but not paid for as formatted HTML."""
+    # the order quiey bellow checks both the order model and the payment fk model
     orders = Order.objects.filter(Q(delivered=True, paid=False) | Q(payment__payment_accepted=False)).order_by('time')
-    #orders = Order.objects.filter(delivered=True, payment_accepted=True).order_by('time')
-    #orders = Order.objects.filter(delivered=True, payment__payment_accepted=False).order_by('time')
-    return render(request, "waiter/ordercards.html", {'orders': orders, 'unpaid': True})
+    newORder=[] # list to store orders to send but only once instnace of that order
+    listOfTables=[] # track tabkes that are already populated in waiter page
+    for order in orders:
+        if order.table in listOfTables:
+            print("hide payment")
+        else:
+            # if the order is not in the table then add it the new order field and table
+            newORder.append(order)
+            listOfTables.append(order.table)
+    return render(request, "waiter/ordercards.html", {'orders': newORder, 'unpaid': True})
+
 
 @require_http_methods(["GET"])
 @user_passes_test(group_check)
@@ -171,15 +180,18 @@ def cancel_order(request):
 @login_required
 def confirm_payment(request):
     """Confirm the provided payment in the database."""
+    #This method now takes a table refrance and sets the paid field in all the orders of that table to true.
     payment_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(payment_id))
     payment = Order.objects.get(pk=payment_id).payment
     payment.payment_accepted = True
     payment.save()
-    # sets order to paid
-    order = Order.objects.get(pk=payment_id)
-    order.paid = True
-    order.save()
+    # sets order model paid field
+    allOrders = Order.objects.get(pk=payment_id).table
+    orders = Order.objects.filter(table=allOrders)
+    for order in orders:
+        order.paid = True
+        order.save()
     return HttpResponse("recieved")
 
 
