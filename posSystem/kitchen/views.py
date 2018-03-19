@@ -1,6 +1,4 @@
-from django.http import HttpResponse
 from core.models import Order
-import json
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -24,12 +22,3 @@ def get_orders(request):
     """Return all orders as formatted HTML."""
     orders = Order.get_kitchen_orders(all)
     return render(request, "kitchen/ordercards.html", {'orders': orders})
-
-
-@require_http_methods(["POST"])
-@login_required
-def readyDelivery(request):
-    """sets the ready_delivery in the database to true."""
-    order_id = json.loads(request.body.decode('utf-8'))["id"]
-    Order.objects.get(pk=order_id).set_ready_delivery()
-    return HttpResponse("Order ready, calling waiter")
