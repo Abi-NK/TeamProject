@@ -64,32 +64,31 @@ def take_seat(request):
 
 def payment(request):
     """Either sends out a list of payment and order objects or takes in a payment using POST."""
-        context = {
+    context = {
             'payment': Payment.objects.filter(order=request.session['seating_id']),
             'order': Order.objects.filter(table=request.session['seating_id']),
             # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
-        }
-        if request.method == "POST":
-            Payment(
-                card_holder=request.POST.get('name'),
-                card_number=request.POST.get('card-number'),
-                cvc=request.POST.get('cvc'),
-                expiry=request.POST.get('expiry'),
-                terms_conditions=checkbox_check(request.POST.get('cbx')),
-                payment_received=True
-            ).save(force_insert=True)
-            # assign this paymet to its order
+    }
+    if request.method == "POST":
+        Payment(
+            card_holder=request.POST.get('name'),
+            card_number=request.POST.get('card-number'),
+            cvc=request.POST.get('cvc'),
+            expiry=request.POST.get('expiry'),
+            terms_conditions=checkbox_check(request.POST.get('cbx')),
+            payment_received=True
+        ).save(force_insert=True)
+        # assign this paymet to its order
 
-            order = Order.objects.filter(table=request.session['seating_id'])
+        order = Order.objects.filter(table=request.session['seating_id'])
 
-            c = len(order)
+        c = len(order)
 
-            #
-            for i in range(c):
-                # for every item in the order list add it to the same payment as it came from the same table
-                nOrder = Order.objects.get(id=order[i].id)
-                nOrder.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
-                nOrder.save()
+        for i in range(c):
+            # for every item in the order list add it to the same payment as it came from the same table
+            nOrder = Order.objects.get(id=order[i].id)
+            nOrder.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
+            nOrder.save()
 
             return redirect('/customer')
         return render(request, "customer/e_payment.html", context)
