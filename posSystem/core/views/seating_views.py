@@ -96,3 +96,12 @@ def html_occupied_seating_dropdown(request):
 def html_assistance_alerts(request):
     want_assistance = Seating.objects.filter(assistance=True)
     return render(request, "core/seating/assistance_alerts.html", {'want_assistance': want_assistance})
+
+
+@login_required
+def html_manager_list(request):
+    """Return all tables in formatted HTML."""
+    context = {
+        "seating": Seating.objects.all(),
+    }
+    return render(request, 'core/seating/manager_list.html', context)

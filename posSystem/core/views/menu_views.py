@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from core.models import Menu
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.decorators import login_required
 from manager.forms import AdjustMenuForm
 import json
 
@@ -67,3 +68,15 @@ def remove_menu_item(request):
         menu_item.removed = True
     menu_item.save()
     return HttpResponse("received")
+
+
+# HTML rendering views are listed below
+
+
+@login_required
+def html_stock_list(request):
+    """Return stock data for the menu in formatted HTML."""
+    context = {
+        "menu": Menu.objects.all(),
+    }
+    return render(request, 'core/menu/stock_list.html', context)

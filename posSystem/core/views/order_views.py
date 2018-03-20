@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
-from core.models import Order
+from core.models import Order, Seating
 import json
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -110,3 +110,34 @@ def html_unpaid_cards(request):  # what the user does not see, will not hurt the
             newORder.append(order)
             listOfTables.append(order.table)
     return render(request, "core/order/order_cards.html", {'orders': newORder, 'unpaid': True})
+
+
+@login_required
+def html_summary_list(request):
+    """Return a summary of restaurant data in formatted HTML."""
+    context = {
+        "seating_data": {
+            "occupied_count": len(Seating.occupied_objects.all()),
+            "available_count": len(Seating.available_objects.all()),
+        },
+        "order_data": {
+            "active_count": len(Order.active_objects.all()),
+            "unconfirmed_count": len(Order.unconfirmed_objects.all()),
+            "confirmed_count": len(Order.confirmed_objects.all()),
+            "ready_count": len(Order.ready_objects.all()),
+            "delivered_today": len(Order.delivered_today_objects.all()),
+            "delivered_week": len(Order.delivered_week_objects.all()),
+            "cancelled_today": len(Order.cancelled_today_objects.all()),
+            "cancelled_week": len(Order.cancelled_week_objects.all()),
+        },
+    }
+    return render(request, 'core/order/summary_list.html', context)
+
+
+@login_required
+def html_active_list(request):
+    """Return all active orders in formatted HTML."""
+    context = {
+        "orders": Order.active_objects.all(),
+    }
+    return render(request, 'core/order/active_list.html', context)
