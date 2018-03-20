@@ -11,7 +11,7 @@ class ManagerFormTest(TestCase):
     def setUp(self):
         self.menu = Menu.objects.create(id=100, name="taco", price=10, description="nice good food", course="main",
                                         category="tacos", allergy="uyhg", calories=99, image="imgur.com/sef32",
-                                        vegetarian=False, vegan=False, meat=False, stock=5)
+                                        vegetarian=False, vegan=False, meat=False, stock=5, cost=10)
         self.factory = RequestFactory()
 
     # Test 1
@@ -34,7 +34,7 @@ class ManagerFormTest(TestCase):
         form = AdjustMenuForm(data={'id': 100, 'name': "taco", 'price': 10, 'description': "nice good food",
                                     'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
                                     'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
-                                    'stock': 5})
+                                    'stock': 5, 'cost': 10})
 
         self.assertTrue(form.is_valid())
 
@@ -44,7 +44,7 @@ class ManagerFormTest(TestCase):
         form = AdjustMenuForm(data={'id': 100, 'name': "taco", 'price': 10, 'description': "nice good food",
                                     'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
                                     'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
-                                    'stock': -5})
+                                    'stock': -5, 'cost': 10})
 
         self.assertFalse(form.is_valid())
 
@@ -54,7 +54,7 @@ class ManagerFormTest(TestCase):
         form = AdjustMenuForm(data={'id': 100, 'name': "taco", 'price': 10.555, 'description': "nice good food",
                                     'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
                                     'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
-                                    'stock': 5})
+                                    'stock': 5, 'cost': 10})
 
         self.assertFalse(form.is_valid())
 
@@ -64,7 +64,7 @@ class ManagerFormTest(TestCase):
         form = AdjustMenuForm(data={'id': 100, 'name': "taco", 'price': "wrong", 'description': "nice good food",
                                     'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
                                     'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
-                                    'stock': 5})
+                                    'stock': 5, 'cost': 10})
 
         self.assertFalse(form.is_valid())
 
@@ -74,7 +74,7 @@ class ManagerFormTest(TestCase):
         form = AdjustMenuForm(data={'id': 100, 'name': "a"*10000, 'price': 10, 'description': "nice good food",
                                     'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
                                     'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
-                                    'stock': 5})
+                                    'stock': 5, 'cost': 10})
 
         self.assertFalse(form.is_valid())
 
@@ -84,6 +84,6 @@ class ManagerFormTest(TestCase):
         form = AdjustMenuForm(data={'id': 100, 'name': "taco", 'price': 6, 'description': "nice good food",
                                     'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
                                     'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
-                                    'stock': 5})
+                                    'stock': 5, 'cost': 10})
 
         self.assertTrue(form.is_valid())
