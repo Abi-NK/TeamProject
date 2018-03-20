@@ -19,23 +19,23 @@ function updateLoop(){
 }
 
 function updateOrders(){
-  $.get("gettables", function(data){
+  $.get("/core/seating/html/waiters_seating_list", function(data){
     $("#container-tables").html(data);
   });
 
-  $.get("getalerts", function(data){
+  $.get("/core/seating/html/assistance_alerts", function(data){
     $("#container-alerts").html(data);
   });
 
-  $.get("getordersconfirm", function(data){
+  $.get("/core/order/html/confirm_cards", function(data){
     $("#container-confirm").html(data);
   });
 
-  $.get("getordersdelivery", function(data){
+  $.get("/core/order/html/delivery_cards", function(data){
     $("#container-delivery").html(data);
   });
 
-  $.get("getordersunpaid", function(data){
+  $.get("/core/order/html/unpaid_cards", function(data){
     $("#container-unpaid").html(data);
   });
 }
@@ -104,7 +104,7 @@ function cancelOrder(button, orderID){
 }
 
 function openModalOrderExtra(){
-  $.get("getoccupiedseating", function(data){
+  $.get("/core/seating/html/occupied_seating_dropdown", function(data){
     $("#inputSeating").html(data);
     $('#modalOrderExtra').modal('show');
   });
@@ -152,7 +152,7 @@ $("#btnPlaceOrderExtra").click(function(){
 });
 
 function openModalSeating(){
-  $.get("getseating", function(data){
+  $.get("/core/seating/html/assignment_list", function(data){
     $("#container-seating").html(data);
     $('#modalSeating').modal('show');
   });
@@ -169,7 +169,7 @@ function assignWaiter(button, seating_id, waiter){
     success: function(result) {
       $(button).attr("disabled", true);
       $(button).text("assigned");
-      $.get("getseating", function(data){
+      $.get("/core/seating/html/assignment_list", function(data){
         $("#container-seating").html(data);
       });
     }
@@ -187,7 +187,7 @@ function unassignWaiter(button, seating_id, waiter){
     success: function(result) {
       $(button).attr("disabled", true);
       $(button).text("unassigned");
-      $.get("getseating", function(data){
+      $.get("/core/seating/html/assignment_list", function(data){
         $("#container-seating").html(data);
       });
     }

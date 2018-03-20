@@ -1,8 +1,10 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from core.models import Order
+from django.shortcuts import render
+from core.models import Order, Seating
 import json
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 @require_http_methods(["POST"])
@@ -63,3 +65,79 @@ def delay_order(request):
     order.delayed = True
     order.save()
     return HttpResponse("recieved")
+
+
+# HTML rendering views are listed below
+
+
+@require_http_methods(["GET"])
+@login_required
+def html_kitchen_cards(request):
+    """Return all orders for the kitchen as formatted HTML."""
+    orders = Order.get_kitchen_orders(all)
+    return render(request, "core/order/kitchen_cards.html", {'orders': orders})
+
+
+@require_http_methods(["GET"])
+@login_required
+def html_confirm_cards(request):
+    """Return all orders which need confirmation as formatted HTML."""
+    orders = Order.objects.filter(confirmed=False, cancelled=False)
+    return render(request, "core/order/order_cards.html", {'orders': orders, 'confirm': True})
+
+
+@require_http_methods(["GET"])
+@login_required
+def html_delivery_cards(request):
+    """Return all orders which are ready to be delivered as formatted HTML."""
+    orders = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
+    return render(request, "core/order/order_cards.html", {'orders': orders, 'delivery': True})
+
+
+@require_http_methods(["GET"])
+@login_required
+def html_unpaid_cards(request):  # what the user does not see, will not hurt them...
+    """Return all orders which have been delivered but not paid for as formatted HTML."""
+    # the order quiey bellow checks both the order model and the payment fk model
+    orders = Order.objects.filter(Q(delivered=True, paid=False) | Q(payment__payment_accepted=False)).order_by('time')
+    newORder = []  # list to store orders to send but only once instnace of that order
+    listOfTables = []  # track tabkes that are already populated in waiter page
+    for order in orders:
+        if order.table in listOfTables:
+            print("hide payment")
+        else:
+            # if the order is not in the table then add it the new order field and table
+            newORder.append(order)
+            listOfTables.append(order.table)
+    return render(request, "core/order/order_cards.html", {'orders': newORder, 'unpaid': True})
+
+
+@login_required
+def html_summary_list(request):
+    """Return a summary of restaurant data in formatted HTML."""
+    context = {
+        "seating_data": {
+            "occupied_count": len(Seating.occupied_objects.all()),
+            "available_count": len(Seating.available_objects.all()),
+        },
+        "order_data": {
+            "active_count": len(Order.active_objects.all()),
+            "unconfirmed_count": len(Order.unconfirmed_objects.all()),
+            "confirmed_count": len(Order.confirmed_objects.all()),
+            "ready_count": len(Order.ready_objects.all()),
+            "delivered_today": len(Order.delivered_today_objects.all()),
+            "delivered_week": len(Order.delivered_week_objects.all()),
+            "cancelled_today": len(Order.cancelled_today_objects.all()),
+            "cancelled_week": len(Order.cancelled_week_objects.all()),
+        },
+    }
+    return render(request, 'core/order/summary_list.html', context)
+
+
+@login_required
+def html_active_list(request):
+    """Return all active orders in formatted HTML."""
+    context = {
+        "orders": Order.active_objects.all(),
+    }
+    return render(request, 'core/order/active_list.html', context)
