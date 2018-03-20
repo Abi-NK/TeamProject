@@ -8,6 +8,9 @@ menu_model_urls = [
 
 order_model_html_urls = [
     path('kitchen_cards', views.html_kitchen_cards, name='kitchen_cards'),
+    path('confirm_cards', views.html_confirm_cards, name='confirm_cards'),
+    path('delivery_cards', views.html_delivery_cards, name='delivery_cards'),
+    path('unpaid_cards', views.html_unpaid_cards, name='unpaid_cards'),
 ]
 
 order_model_urls = [
@@ -33,7 +36,15 @@ payment_model_urls = [
     path('confirmPayment', views.confirm_payment, name='confirmPayment'),
 ]
 
+seating_model_html_urls = [
+    path('waiters_seating_list', views.html_waiters_seating_list, name='waiters_seating_list'),
+    path('assignment_list', views.html_assignment_list, name="assignment_list"),
+    path('occupied_seating_dropdown', views.html_occupied_seating_dropdown, name="occupied_seating_dropdown"),
+    path('assistance_alerts', views.html_assistance_alerts, name="assistance_alerts"),
+]
+
 seating_model_urls = [
+    path('html/', include(seating_model_html_urls)),
     path('takeseat', views.take_seat, name='takeseat'),
     path('assigntoseating', views.assign_to_seating, name='assigntoseating'),
     path('unassignfromseating', views.unassign_from_seating, name='unassignfromseating'),
