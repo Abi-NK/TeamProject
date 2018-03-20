@@ -24,7 +24,7 @@ $(document).ready(function(){
 
 function assignWaiter(button, seating_id, waiter){
   $.ajax({
-    url: "/waiter/assigntoseating",
+    url: "/core/seating/assigntoseating",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -38,7 +38,7 @@ function assignWaiter(button, seating_id, waiter){
 
 function unassignWaiter(button, seating_id, waiter){
   $.ajax({
-    url: "/waiter/unassignfromseating",
+    url: "/core/seating/unassignfromseating",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -54,7 +54,7 @@ function waiterOnDuty(button, username){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
   $(button).prop("disabled", true);
   $.ajax({
-    url: "/waiter/waiteronduty",
+    url: "/core/waiter/waiteronduty",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -70,7 +70,7 @@ function waiterOffDuty(button, username){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
   $(button).prop("disabled", true);
   $.ajax({
-    url: "/waiter/waiteroffduty",
+    url: "/core/waiter/waiteroffduty",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -86,7 +86,7 @@ function autoAssign(button){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
   $(button).prop("disabled", true);
   $.ajax({
-    url: "/waiter/autoassign",
+    url: "/core/waiter/autoassign",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',

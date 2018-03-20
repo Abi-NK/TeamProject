@@ -59,7 +59,7 @@ function updateOrders(){
 
 function confirmOrder(button, orderID){
   $.ajax({
-    url: "/waiter/confirmorder",
+    url: "/core/order/confirmorder",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',

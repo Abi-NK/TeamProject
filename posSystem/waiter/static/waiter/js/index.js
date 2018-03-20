@@ -1,6 +1,6 @@
 function requestHelp(id){
   $.ajax({
-    url: "/waiter/cancelhelp",
+    url: "/core/seating/cancelhelp",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -42,7 +42,7 @@ function updateOrders(){
 
 function confirmOrder(button, orderID){
   $.ajax({
-    url: "/waiter/confirmorder",
+    url: "/core/order/confirmorder",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -58,7 +58,7 @@ function confirmOrder(button, orderID){
 
 function delayOrder(button, orderID){
   $.ajax({
-    url: "/waiter/delayorder",
+    url: "/core/order/delayorder",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -74,7 +74,7 @@ function delayOrder(button, orderID){
 
 function confirmPayment(button, paymentID){
   $.ajax({
-    url: "/waiter/confirmPayment",
+    url: "/core/payment/confirmPayment",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -90,7 +90,7 @@ function confirmPayment(button, paymentID){
 
 function cancelOrder(button, orderID){
   $.ajax({
-    url: "/waiter/cancelorder",
+    url: "/core/order/cancelorder",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -138,7 +138,7 @@ $("#btnPlaceOrderExtra").click(function(){
     }
 
     $.ajax({
-      url: "/waiter/placeorderextra",
+      url: "/core/orderextra/placeorderextra",
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
@@ -160,7 +160,7 @@ function openModalSeating(){
 
 function assignWaiter(button, seating_id, waiter){
   $.ajax({
-    url: "/waiter/assigntoseating",
+    url: "/core/seating/assigntoseating",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -178,7 +178,7 @@ function assignWaiter(button, seating_id, waiter){
 
 function unassignWaiter(button, seating_id, waiter){
   $.ajax({
-    url: "/waiter/unassignfromseating",
+    url: "/core/seating/unassignfromseating",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -198,7 +198,7 @@ function waiterOnDuty(button, username){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
   $(button).prop("disabled", true);
   $.ajax({
-    url: "/waiter/waiteronduty",
+    url: "/core/waiter/waiteronduty",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -214,7 +214,7 @@ function waiterOffDuty(button, username){
   $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
   $(button).prop("disabled", true);
   $.ajax({
-    url: "/waiter/waiteroffduty",
+    url: "/core/waiter/waiteroffduty",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -232,7 +232,7 @@ $("#removeButton").click(function(){
       itemToRemoveID: itemToRemoveID
   }
     $.ajax({
-      url: "/waiter/removemenuitem",
+      url: "/core/menu/removemenuitem",
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',

@@ -23,7 +23,7 @@ function updateOrders(){
 // in the Order db to True.
 function setReadyDelivery(button, orderID){
   $.ajax({
-    url: "/kitchen/readyDelivery",
+    url: "/core/order/readyDelivery",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
