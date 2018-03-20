@@ -6,7 +6,12 @@ menu_model_urls = [
     path('removemenuitem', views.remove_menu_item, name='removemenuitem'),
 ]
 
+order_model_html_urls = [
+    path('kitchen_cards', views.html_kitchen_cards, name='kitchen_cards'),
+]
+
 order_model_urls = [
+    path('html/', include(order_model_html_urls)),
     path('makeorder', views.make_order, name='makeorder'),
     path('confirmorder', views.confirm_order, name='confirmorder'),
     path('cancelorder', views.cancel_order, name='cancelorder'),

@@ -1,4 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import render
 from core.models import Order
 import json
 from django.views.decorators.http import require_http_methods
@@ -63,3 +64,11 @@ def delay_order(request):
     order.delayed = True
     order.save()
     return HttpResponse("recieved")
+
+
+@require_http_methods(["GET"])
+@login_required
+def html_kitchen_cards(request):
+    """Return all orders for the kitchen as formatted HTML."""
+    orders = Order.get_kitchen_orders(all)
+    return render(request, "core/order/kitchen_cards.html", {'orders': orders})

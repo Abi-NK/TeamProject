@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from core.models import Menu, Order, Payment, Seating
 from django.views.decorators.csrf import ensure_csrf_cookie
-from django.views.decorators.http import require_http_methods
 
 
 @ensure_csrf_cookie
@@ -74,7 +73,7 @@ def t_and_c(request):
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True
         payment_update.save()
-        
+
 
 def statuses(request):
     """..."""
