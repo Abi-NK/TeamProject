@@ -19,7 +19,7 @@ def adjust_menu(request):
                                     'allergy': request.POST['menu_allergy'], 'calories': request.POST['menu_calories'],
                                     'image': request.POST['menu_image'], 'vegetarian': request.POST['menu_vegetarian'],
                                     'vegan': request.POST['menu_vegan'], 'meat': request.POST['menu_meat'],
-                                    'stock': request.POST['menu_stock']})
+                                    'stock': request.POST['menu_stock'], 'cost': request.POST['menu_cost']})
 
         # if the confirm change button was pressed, check form for validation and update menu
         if form.is_valid():
@@ -31,7 +31,7 @@ def adjust_menu(request):
                     category=request.POST['menu_category'], allergy=request.POST['menu_allergy'],
                     calories=request.POST['menu_calories'], image=request.POST['menu_image'],
                     vegetarian=request.POST['menu_vegetarian'], vegan=request.POST['menu_vegan'],
-                    meat=request.POST['menu_meat'], stock=request.POST['menu_stock'])
+                    meat=request.POST['menu_meat'], stock=request.POST['menu_stock'], cost=request.POST['menu_cost'])
 
             # if the delete button was pressed, remove the item from menu
             elif 'delete' in request.POST:
@@ -43,7 +43,8 @@ def adjust_menu(request):
                                     category=request.POST['menu_category'], allergy=request.POST['menu_allergy'],
                                     calories=request.POST['menu_calories'], image=request.POST['menu_image'],
                                     vegetarian=request.POST['menu_vegetarian'], vegan=request.POST['menu_vegan'],
-                                    meat=request.POST['menu_meat'], stock=request.POST['menu_stock'])
+                                    meat=request.POST['menu_meat'], stock=request.POST['menu_stock'],
+                                    cost=request.POST['menu_cost'])
 
     context = {"menu": Menu.objects.all()}
     return render(request, 'manager/managermenu.html', context)
