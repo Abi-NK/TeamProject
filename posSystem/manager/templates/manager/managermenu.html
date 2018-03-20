@@ -8,11 +8,11 @@
 
 {% for menu_item in menu %}
 <script>
-function validateForm{{menu_item.id}}(menu_old_price) {
+function validateForm{{menu_item.id}}(menu_old_price, menu_old_cost, menu_old_stock) {
     var x = document.forms["adjustForm{{menu_item.id}}"]["menu_price"].value;
-    if (x < (menu_old_price*0.6)) {
+    if (x < (menu_old_cost*0.6)) {
         alert("£" + x + " is invalid. The price has to be above a 60% profit margin.\nPrice must be £"
-        + (Math.round((menu_old_price*0.6)*100)/100) +" or more.");
+        + (Math.round((menu_old_cost*0.6)*100)/100) +" or more.");
         return false;
     }
 }
@@ -38,6 +38,10 @@ function validateForm{{menu_item.id}}(menu_old_price) {
             <br>
             <label><b>Price </b></label><br>
             <input type="number" style="width:400px" step="0.01" name="menu_price" required>
+            <br>
+            <br>
+            <label><b>Cost </b></label><br>
+            <input type="number" style="width:400px" step="0.01" name="menu_cost" required>
             <br>
             <br>
             <label><b>Description </b></label><br>
@@ -112,7 +116,7 @@ function validateForm{{menu_item.id}}(menu_old_price) {
       </div>
       <div class="modal-body">
 
-        <form name="adjustForm{{menu_item.id}}" method="POST" onsubmit="return validateForm{{menu_item.id}}({{menu_item.price}})">{% csrf_token %}
+        <form name="adjustForm{{menu_item.id}}" method="POST" onsubmit="return validateForm{{menu_item.id}}({{menu_item.price}}, {{menu_item.cost}}, {{menu_item.stock}})">{% csrf_token %}
             <input type="hidden" name="menu_id" value="{{ menu_item.id }}">
             <label style="clear:left; text-align:right; padding-right:10px;"><b>Name</b></label>
             <input type="text" style="width:400px; float:right;" value="{{menu_item.name}}" name="menu_name" required>
@@ -120,6 +124,10 @@ function validateForm{{menu_item.id}}(menu_old_price) {
             <br>
             <label style="clear:left; text-align:right; padding-right:10px;"><b>Price</b></label>
             <input type="number" style="width:400px; float:right;" step="0.01" value="{{menu_item.price}}" name="menu_price" required>
+            <br>
+            <br>
+            <label><b>Cost </b></label>
+            <input type="number" style="width:400px; float:right;" step="0.01" value="{{menu_item.cost}}" name="menu_cost" required>
             <br>
             <br>
             <label style="clear:left; text-align:right; padding-right:10px;"><b>Description</b></label>
