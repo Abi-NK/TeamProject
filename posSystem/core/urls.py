@@ -12,7 +12,6 @@ order_model_urls = [
     path('cancelorder', views.cancel_order, name='cancelorder'),
     path('readyDelivery', views.readyDelivery, name='readyDelivery'),
     path('delayorder', views.delay_order, name='delayorder'),
-    path('statuses', views.statuses, name='statuses'),
 ]
 
 orderextra_model_urls = [

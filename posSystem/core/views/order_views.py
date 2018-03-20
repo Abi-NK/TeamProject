@@ -1,15 +1,8 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render
 from core.models import Order
 import json
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-
-
-def statuses(request):
-    """..."""
-    orders = Order.objects.all()
-    return render(request, 'customer/statuses.html', {'orders': orders})
 
 
 @require_http_methods(["POST"])

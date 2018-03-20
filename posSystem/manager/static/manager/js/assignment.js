@@ -6,13 +6,13 @@ function updateLoop(){
 }
 
 function updateWaiters(){
-  $.get("getwaiters", function(data){
+  $.get("/core/waiter/getwaiters", function(data){
     $("#container-waiters").html(data);
   });
 }
 
 function updateData(){
-  $.get("getassignments", function(data){
+  $.get("/core/waiter/getassignments", function(data){
     $("#container-assignments").html(data);
   });
   updateWaiters();

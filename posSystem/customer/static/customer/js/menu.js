@@ -146,19 +146,12 @@ $('.btn-seating-option').on('click', function(){
 });
 
 function updateOrderExtra(){
-  $.get("getorderextra", function(data){
+  $.get("/core/orderextra/getorderextra", function(data){
     $("#container-order-extra").html(data);
   });
 }
 
-function pay(){
-    $.get("getOrderInfo");
-
-
-}
-
 function updateLoop(){
-  pay()
   updateOrderExtra();
   setTimeout(function(){
      updateLoop();

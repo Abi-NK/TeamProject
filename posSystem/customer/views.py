@@ -29,15 +29,6 @@ def index(request):
     return render(request, 'customer/menu.html', context)
 
 
-@require_http_methods(["GET"])
-def getOrderInfo(request):
-    context = {
-        'all_menu': Menu.objects.all(),
-        'order': Order.objects.filter(table=request.session['seating_id']).first()
-    }
-    return render(request, 'customer/menu.html', context)
-
-
 def payment(request):
     """Either sends out a list of payment and order objects or takes in a payment using POST."""
     context = {
@@ -83,3 +74,9 @@ def t_and_c(request):
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True
         payment_update.save()
+        
+
+def statuses(request):
+    """..."""
+    orders = Order.objects.all()
+    return render(request, 'customer/statuses.html', {'orders': orders})
