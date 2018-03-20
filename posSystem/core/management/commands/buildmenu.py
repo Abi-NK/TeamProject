@@ -29,5 +29,6 @@ class Command(BaseCommand):
                 vegan=item[9],
                 meat=item[10],
                 stock=random.randrange(20, 31),
+                cost=item[11],
             ).save()
         print("Sample menu added.")
