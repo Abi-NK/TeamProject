@@ -7,46 +7,53 @@ from datetime import datetime, timedelta, date, time
 class TestOrderModel(TestCase):
 
     def setUp(self):
+
+        Seating.objects.create(pk=1, label='Table 0', available=True, assistance=False, waiter="Sara")
+
         Order.objects.create(pk=100,
-                             table=Seating.objects.get(1),
+                             table=Seating.objects.get(pk=1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
                              total_price=13.20,
                              confirmed=False,
+                             cancelled=False,
                              ready_delivery=False,
                              delivered=False,
                              delayed=False)
 
         Order.objects.create(pk=200,
-                             table=Seating.objects.get(2),
+                             table=Seating.objects.get(pk=1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
                              total_price=13.20,
                              confirmed=False,
+                             cancelled=False,
                              ready_delivery=False,
                              delivered=False,
                              delayed=False)
 
         Order.objects.create(pk=300,
-                             table=Seating.objects.get(3),
+                             table=Seating.objects.get(pk=1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
                              total_price=13.20,
                              confirmed=False,
+                             cancelled=False,
                              ready_delivery=False,
                              delivered=False,
                              delayed=False)
 
         Order.objects.create(pk=400,
-                             table=Seating.objects.get(4),
+                             table=Seating.objects.get(pk=1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
                              total_price=13.20,
                              confirmed=True,
+                             cancelled=False,
                              ready_delivery=True,
                              delivered=False,
                              delayed=False)
@@ -119,40 +126,63 @@ class TestOrderModel(TestCase):
     def test_get_time_display(self):
         order = Order.objects.create(
             time=datetime.combine(date(2018, 1, 1), time(9, 30, 20)),
+            table=Seating.objects.get(pk=1),
             total_price=0,
+            confirmed=True,
+            ready_delivery=True,
+            delivered=True,
         )
         self.assertEqual(order.get_time_display(), "09:30:20")
 
     def test_get_price_display(self):
         order = Order.objects.create(
+            table=Seating.objects.get(pk=1),
             time=timezone.now(),
             total_price=123.45,
+            confirmed=True,
+            ready_delivery=True,
+            delivered=True,
         )
         self.assertEqual(order.get_price_display(), "£123.45")
 
     def test_is_nearly_late(self):
         self.assertFalse(Order.objects.get(pk=100).is_nearly_late())
         order = Order.objects.create(
+            table=Seating.objects.get(pk=1),
             time=datetime.now() - timedelta(minutes=6),
             total_price=0,
-        )
+            confirmed=True,
+            ready_delivery=True,
+            delivered=True,)
         self.assertFalse(order.is_nearly_late())
         order = Order.objects.create(
+            table=Seating.objects.get(pk=1),
             time=datetime.now() - timedelta(minutes=8),
             total_price=0,
+            confirmed=True,
+            ready_delivery=True,
+            delivered=True,
         )
         self.assertTrue(order.is_nearly_late())
 
     def test_is_late(self):
         self.assertFalse(Order.objects.get(pk=100).is_late())
         order = Order.objects.create(
+            table=Seating.objects.get(pk=1),
             time=datetime.now() - timedelta(minutes=9),
             total_price=0,
+            confirmed=True,
+            ready_delivery=True,
+            delivered=True,
         )
         self.assertFalse(order.is_late())
         order = Order.objects.create(
+            table=Seating.objects.get(pk=1),
             time=datetime.now() - timedelta(minutes=11),
             total_price=0,
+            confirmed=True,
+            ready_delivery=True,
+            delivered=True,
         )
         self.assertTrue(order.is_late())
 
@@ -195,7 +225,7 @@ class TestOrderModel(TestCase):
     def test_delivered_week_manager(self):
         for i in range(10):
             Order.objects.create(
-                table="WeekTestTable %s" % i,
+                table=Seating.objects.get(pk=1),
                 time=timezone.now() - timedelta(days=i),
                 total_price=10.00,
                 confirmed=True,
@@ -213,7 +243,7 @@ class TestOrderModel(TestCase):
     def test_cancelled_week_manager(self):
         for i in range(10):
             Order.objects.create(
-                table="WeekTestTable %s" % i,
+                table=Seating.objects.get(pk=1),
                 time=timezone.now() - timedelta(days=i),
                 total_price=10.00,
                 cancelled=True,
@@ -251,7 +281,7 @@ class TestOrderModel(TestCase):
     def test_ready_delivery(self):
         """Orders that are ready for delivery"""
         Order.objects.create(pk=666,
-                             table=Seating.objects.get(1),
+                             table=Seating.objects.get(pk=1),
                              time=timezone.now(),
                              cooking_instructions="none",
                              purchase_method="none",
