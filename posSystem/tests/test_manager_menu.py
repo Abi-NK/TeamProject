@@ -1,5 +1,5 @@
 from django.test import TestCase
-from customer.models import Menu
+from core.models import Menu
 from manager.forms import AdjustMenuForm
 
 

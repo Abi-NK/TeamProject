@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
+from core.models import Waiter
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
-from waiter.models import Waiter
 
 
 class Command(BaseCommand):

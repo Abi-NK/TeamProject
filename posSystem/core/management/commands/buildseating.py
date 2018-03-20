@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from customer.models import Seating
+from core.models import Seating
 
 
 class Command(BaseCommand):

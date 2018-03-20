@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from customer.models import Menu
+from core.models import Menu
 import json
 import random
 

@@ -6,19 +6,19 @@ function updateLoop(){
 }
 
 function updateData(){
-  $.get("getsummary", function(data){
+  $.get("/core/order/html/summary_list", function(data){
     $("#container-summary").html(data);
   });
 
-  $.get("getorders", function(data){
+  $.get("/core/order/html/active_list", function(data){
     $("#container-orders").html(data);
   });
 
-  $.get("gettables", function(data){
+  $.get("/core/seating/html/manager_list", function(data){
     $("#container-tables").html(data);
   });
 
-  $.get("getstock", function(data){
+  $.get("/core/menu/html/stock_list", function(data){
     $("#container-stock").html(data);
   });
 }

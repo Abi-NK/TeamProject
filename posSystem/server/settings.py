@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'core.apps.CoreConfig',
     'kitchen.apps.KitchenConfig',
     'waiter.apps.WaiterConfig',
     'customer.apps.CustomerConfig',

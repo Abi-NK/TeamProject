@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from waiter.models import Order
+from core.models import Order
 
 
 class Command(BaseCommand):

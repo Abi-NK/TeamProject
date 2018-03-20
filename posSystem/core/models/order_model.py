@@ -1,57 +1,11 @@
 from django.db import models
-from customer.models import Menu, Seating
-from django.contrib.auth.models import User
+from .menu_model import Menu
+from .orderextra_model import OrderExtra
+from .orderitem_model import OrderItem
+from .payment_model import Payment
+from .seating_model import Seating
 from django.utils import timezone
 from datetime import datetime, timedelta, date
-
-
-class Waiter(models.Model):
-    onduty = models.BooleanField(default=False)
-    name = models.CharField(max_length=50, default='waiter1')
-
-    def __str__(self):
-        return "%s: %s" % (self.name, "on duty" if self.onduty else "off duty")
-
-    def set_waiter_on_duty(self):
-        """Set the waiter to be on duty."""
-        self.onduty = True
-        self.save()
-        print("waiter %s is on duty" % self.name)
-
-    def set_waiter_off_duty(self):
-        """Set the waiter to be off duty."""
-        for seating in Seating.objects.all():
-            if seating.waiter == self.name:
-                seating.waiter = ""
-                seating.save()
-        self.onduty = False
-        self.save()
-        print("waiter %s is off duty" % self.name)
-
-    def get_full_name(self):
-        return User.objects.get(username=self.name).get_full_name()
-
-
-class OrderItem(models.Model):
-    menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-
-    def __str__(self):
-        return "%s %s" % (self.quantity, self.menu_item)
-
-    def get_price(self):
-        """Return the total price of this item."""
-        return self.menu_item.price * self.quantity
-
-    def reduce_item_stock(self):
-        """Reduce the stock count of the menu item by quantity."""
-        self.menu_item.stock -= self.quantity
-        self.menu_item.save()
-
-    def refund_item_stock(self):
-        """Increase the stock count of the menu item by quantity."""
-        self.menu_item.stock += self.quantity
-        self.menu_item.save()
 
 
 class ActiveOrderManager(models.Manager):
@@ -105,81 +59,6 @@ class CancelledWeekOrderManager(models.Manager):
             time__date__gt=timezone.now().date()-timedelta(days=7)
         )
 
-class Payment(models.Model):
-    """This model is for payment. Payment stores the payment info and is connected to a order"""
-    card_holder = models.CharField(max_length=50, default='na')     # name of card holder
-    card_number = models.CharField(max_length=16, default='na')     # Card number
-    cvc = models.CharField(max_length=3, default='na')              # CVC
-    expiry = models.CharField(max_length=5, default='na')           # Card expiry date
-    terms_conditions = models.BooleanField(default=False)           # Customer has accepted t and c
-    payment_requested = models.BooleanField(default=False)          # Waiter has asked for payment
-    payment_received = models.BooleanField(default=False)           # Payment information has been received
-    payment_accepted = models.BooleanField(default=False)           # Waiter has accepted the payment
-
-    def __str__(self):
-       return "Order: %s, Accepted: %s" % (self.id, self.payment_accepted)
-
-    def get_payments(self):
-        """Returns all the payments"""
-        print("Payments sent")
-        return Payment.objects.all()
-
-    def get_card_holder(self):
-        """Return card holder"""
-        return self.card_holder()
-
-    def get_card_number(self):
-        """Return card number"""
-        return self.card_number()
-
-    def get_cvc(self):
-        """Return card cvc"""
-        return self.cvc()
-
-    def get_card_expiry(self):
-        """Return card expiry"""
-        return self.expiry()
-
-    def get_t_and_c(self):
-        """Return card T and C"""
-        return self.terms_conditions()
-
-    def get_payment_requested(self):
-        """Return payment requested"""
-        return self.payment_requested()
-
-    def get_payment_received(self):
-        """Return payment received"""
-        return self.payment_received()
-
-    def get_payment_accepted(self):
-        """Return payment accepted"""
-        return self.payment_accepted()
-
-    def set_t_and_c(self):
-        """Sets the terms and conditions to be accepted"""
-        self.terms_conditions = True
-        self.save()
-        print("Customer %s has accepted the Terms and conditions" % self.id)
-
-    def set_payment_requested(self):
-        """Sets the payment to be requested"""
-        self.payment_requested = True
-        self.save()
-        print("Customer %s payment has been requested" % self.id)
-
-    def set_payment_received(self):
-        """Sets the payment to be received"""
-        self.payment_received = True
-        self.save()
-        print("Customer %s payment has been received" % self.id)
-
-    def set_payment_accepted(self):
-        """Sets the payment to be accepted"""
-        self.payment_accepted = True
-        self.save()
-        print("Customer %s payment has been accepted" % self.id)
-
 
 class Order(models.Model):
 
@@ -204,7 +83,7 @@ class Order(models.Model):
     cancelled = models.BooleanField(default=False)
     ready_delivery = models.BooleanField(default=False)  # order is ready for delivery
     delivered = models.BooleanField(default=False)  # order has been delivered
-    delayed = models.BooleanField(default=False) #order is delayed
+    delayed = models.BooleanField(default=False)  # order is delayed
     paid = models.BooleanField(default=False)  # order has been paid
 
     def __str__(self):
@@ -274,12 +153,12 @@ class Order(models.Model):
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
         # pastOrder collects total of previos order and adds to current order.
-        pastOrder = Order.objects.filter(table= seating_id)
+        pastOrder = Order.objects.filter(table=seating_id)
         for ord in pastOrder:
             total_price += ord.total_price  # when reading total order look at the last order customer made
 
         order = Order.objects.create(
-            table = Seating.objects.get(pk=seating_id),
+            table=Seating.objects.get(pk=seating_id),
             confirmed=False,
             time=timezone.now(),
             cooking_instructions='none',
@@ -338,54 +217,3 @@ class Order(models.Model):
     def refund_stock(self):
         for order_item in self.items.all():
             order_item.refund_item_stock()
-
-
-class ActiveOrderExtraManager(models.Manager):
-    """Filter for active (unused) OrderExtras."""
-    def get_queryset(self):
-        return super().get_queryset().filter(used=False)
-
-
-class UsedTodayOrderExtraManager(models.Manager):
-    """Filter for today's used OrderExtras."""
-    def get_queryset(self):
-        return super().get_queryset().filter(used=True).filter(time__date=date.today())
-
-
-class UsedWeekOrderExtraManager(models.Manager):
-    """Filter for this week's used OrderExtras."""
-    def get_queryset(self):
-        return super().get_queryset().filter(used=True).filter(
-            time__date__gt=timezone.now().date()-timedelta(days=7)
-        )
-
-
-class OrderExtra(models.Model):
-    objects = models.Manager()
-    active_objects = ActiveOrderExtraManager()
-    used_today_objects = UsedTodayOrderExtraManager()
-    used_week_objects = UsedWeekOrderExtraManager()
-
-    seating = models.ForeignKey(Seating, on_delete=models.CASCADE)
-    waiter = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(OrderItem)
-    used = models.BooleanField(default=False)
-    time = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return "OrderExtra #%s: %s, waiter: %s, status: %s" % \
-            (self.id, self.seating, self.waiter, "inactive" if self.used else "active")
-
-    def add_item(self, menu_item_id, quantity):
-        for item in self.items.all():
-            if item.menu_item.id == menu_item_id:
-                item.quantity += quantity
-                item.save()
-                return
-        self.items.add(OrderItem.objects.create(
-            menu_item=Menu.objects.get(pk=menu_item_id),
-            quantity=quantity,
-        ))
-
-    def get_total(self):
-        return sum([order_item.get_price() for order_item in self.items.all()])

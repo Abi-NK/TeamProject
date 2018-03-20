@@ -90,7 +90,7 @@ function placeOrder(){
     console.log("Not placing order: order is empty.");
   } else {
     $.ajax({
-      url: "/waiter/makeorder",
+      url: "/core/order/makeorder",
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
@@ -105,7 +105,7 @@ function placeOrder(){
 
 function requestHelp(){
   $.ajax({
-    url: "/waiter/requesthelp",
+    url: "/core/seating/requesthelp",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -132,7 +132,7 @@ $('.btn-seating-option').on('click', function(){
   // sends the selected seating ID to the server so it can be marked as taken, and stored in the user's session
   $('#seating-label').text(seatingLabel);
   $.ajax({
-    url: "/customer/takeseat",
+    url: "/core/seating/takeseat",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
@@ -146,19 +146,12 @@ $('.btn-seating-option').on('click', function(){
 });
 
 function updateOrderExtra(){
-  $.get("getorderextra", function(data){
+  $.get("/core/orderextra/getorderextra", function(data){
     $("#container-order-extra").html(data);
   });
 }
 
-function pay(){
-    $.get("getOrderInfo");
-
-
-}
-
 function updateLoop(){
-  pay()
   updateOrderExtra();
   setTimeout(function(){
      updateLoop();
@@ -170,7 +163,7 @@ function btnOrderExtraRemoveItem(button, order_extra_id, order_item_id){
   console.log("OrderExtra ID: " + order_extra_id);
   console.log("OrderItem ID: " + order_item_id);
   $.ajax({
-    url: "/customer/cancelorderextraitem",
+    url: "/core/orderextra/cancelorderextraitem",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',

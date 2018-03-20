@@ -22,9 +22,10 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='static/index.html')),
     path('login', waiter.views.waiter_login, name='login_staff'),
     path('logout', waiter.views.waiter_logout, name='logout_staff'),
+    path('core/', include('core.urls')),
     path('customer/', include('customer.urls')),
-    path('admin/', admin.site.urls),
     path('waiter/', include('waiter.urls')),
     path('kitchen/', include('kitchen.urls')),
     path('manager/', include('manager.urls')),
+    path('admin/', admin.site.urls),
 ]

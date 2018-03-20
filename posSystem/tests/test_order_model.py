@@ -1,12 +1,10 @@
 from django.test import TestCase
-from .models import Order, OrderItem, OrderExtra
-from customer.models import Menu, Seating
-from django.contrib.auth.models import User
+from core.models import Menu, Order, OrderItem, Seating
 from django.utils import timezone
 from datetime import datetime, timedelta, date, time
 
 
-class TestMarkingDelivery(TestCase):
+class TestOrderModel(TestCase):
 
     def setUp(self):
         Order.objects.create(pk=100,
@@ -250,102 +248,19 @@ class TestMarkingDelivery(TestCase):
         for i, item in enumerate(order.items.all()):
             self.assertEqual(item.menu_item.stock, 20+i*5)
 
+    def test_ready_delivery(self):
+        """Orders that are ready for delivery"""
+        Order.objects.create(pk=666,
+                             table=Seating.objects.get(1),
+                             time=timezone.now(),
+                             cooking_instructions="none",
+                             purchase_method="none",
+                             total_price=66.60,
+                             confirmed=False,
+                             ready_delivery=False,
+                             delivered=False)
 
-class TestOrderItemModel(TestCase):
-    def setUp(self):
-        menu_item = Menu.objects.create(
-            price=10.00,
-            stock=15,
-        )
-        OrderItem.objects.create(
-            pk=0,
-            menu_item=menu_item,
-            quantity=5,
-        )
-
-    def test_get_price(self):
-        order_item = OrderItem.objects.get(pk=0)
-        self.assertEqual(order_item.get_price(), 50.0)
-
-    def test_recude_item_stock(self):
-        order_item = OrderItem.objects.get(pk=0)
-        self.assertEqual(order_item.menu_item.stock, 15)
-        order_item.reduce_item_stock()
-        self.assertEqual(order_item.menu_item.stock, 10)
-
-    def test_refund_item_stock(self):
-        order_item = OrderItem.objects.get(pk=0)
-        self.assertEqual(order_item.menu_item.stock, 15)
-        order_item.refund_item_stock()
-        self.assertEqual(order_item.menu_item.stock, 20)
-
-
-class TestOrderExtraModel(TestCase):
-    def setUp(self):
-        waiter = User.objects.create_user(
-            username="waiter1",
-        )
-        seating = Seating.objects.create(
-            pk=0,
-            label="Test Seating 1",
-        )
-        OrderExtra.objects.create(
-            pk=0,
-            seating=seating,
-            waiter=waiter,
-        )
-        Menu.objects.create(pk=0, price=5.00)
-        Menu.objects.create(pk=1, price=10.00)
-        Menu.objects.create(pk=2, price=15.00)
-
-    def test_add_item(self):
-        order_extra = OrderExtra.objects.get(pk=0)
-        order_extra.add_item(0, 3)
-        order_extra.add_item(1, 4)
-        order_extra.add_item(2, 5)
-        order_extra.add_item(2, 5)
-        order_extra.add_item(2, 5)
-        self.assertEqual(sum([item.quantity for item in order_extra.items.all()]), 22)
-
-    def test_get_total(self):
-        order_extra = OrderExtra.objects.get(pk=0)
-        self.assertEqual(order_extra.get_total(), 0)
-        order_extra.add_item(0, 1)
-        order_extra.add_item(1, 2)
-        order_extra.add_item(2, 3)
-        self.assertEqual(order_extra.get_total(), 70)
-
-    def test_active_order_extra_manager(self):
-        order_extra = OrderExtra.objects.get(pk=0)
-        self.assertEqual(OrderExtra.active_objects.count(), 1)
-        order_extra.used = True
-        order_extra.save()
-        self.assertEqual(OrderExtra.active_objects.count(), 0)
-
-    def test_used_today_order_extra_manager(self):
-        order_extra = OrderExtra.objects.get(pk=0)
-        self.assertEqual(OrderExtra.used_today_objects.count(), 0)
-        order_extra.used = True
-        order_extra.save()
-        self.assertEqual(OrderExtra.used_today_objects.count(), 1)
-        waiter = User.objects.create_user(username="waiterTest")
-        seating = Seating.objects.create()
-        OrderExtra.objects.create(
-            waiter=waiter,
-            seating=seating,
-            time=timezone.now() - timedelta(days=1),
-            used=True,
-        )
-        self.assertEqual(OrderExtra.used_today_objects.count(), 1)
-
-    def test_used_week_order_extra_manager(self):
-        waiter = User.objects.create_user(username="waiterTest")
-        seating = Seating.objects.create()
-        for i in range(10):
-            OrderExtra.objects.create(
-                waiter=waiter,
-                seating=seating,
-                time=timezone.now() - timedelta(days=i),
-                used=True,
-            )
-        self.assertEqual(OrderExtra.used_week_objects.count(), 7)
+        test_order = Order.objects.get(pk=666)
+        self.assertEqual(test_order.ready_delivery, False)
+        test_order.set_ready_delivery()
+        self.assertEqual(test_order.ready_delivery, True)

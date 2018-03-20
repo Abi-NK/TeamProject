@@ -11,7 +11,7 @@ function updateLoop(){
 
 // populates the page with a list of all orders
 function updateOrders(){
-  $.get("getorders", function(data){
+  $.get("/core/order/html/kitchen_cards", function(data){
     $("#order-container").html(data);
     $(".not-late").css("background-color", "LIGHTGREEN");
     $(".nearly-late").css("background-color", "#FEDB00");
@@ -23,7 +23,7 @@ function updateOrders(){
 // in the Order db to True.
 function setReadyDelivery(button, orderID){
   $.ajax({
-    url: "/kitchen/readyDelivery",
+    url: "/core/order/readyDelivery",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
