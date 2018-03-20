@@ -247,3 +247,20 @@ class TestOrderModel(TestCase):
         order.refund_stock()
         for i, item in enumerate(order.items.all()):
             self.assertEqual(item.menu_item.stock, 20+i*5)
+
+    def test_ready_delivery(self):
+        """Orders that are ready for delivery"""
+        Order.objects.create(pk=666,
+                             table=Seating.objects.get(1),
+                             time=timezone.now(),
+                             cooking_instructions="none",
+                             purchase_method="none",
+                             total_price=66.60,
+                             confirmed=False,
+                             ready_delivery=False,
+                             delivered=False)
+
+        test_order = Order.objects.get(pk=666)
+        self.assertEqual(test_order.ready_delivery, False)
+        test_order.set_ready_delivery()
+        self.assertEqual(test_order.ready_delivery, True)
