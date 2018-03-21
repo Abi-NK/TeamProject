@@ -1,17 +1,20 @@
-# CS2810 Team Project, Team 5
+# CS2810 Team Project: Team 5
 The COO of Oaxaca has reached out to us to see if there is some way we can help them mitigate
 their issues by reducing the staffing and/or training needs of their restaurants with technology. Our
 goal is to look at their existing processes and identify ways in which we can use technology to help
 them grow faster.
 
+<br>
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
+
+
 ### Prerequisites
 
-What things you need to install the software and how to install them
+
 
 
 ```
@@ -20,27 +23,43 @@ Python
 ```
 Django
 ```
-
+<br>
 
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-To install Python and Django:
-
+First install Python:
 ```
 $ sudo apt-get update
-$ sudo apt-get install python-django
+$ sudo apt-get install python3.6
+```
+Then install Pip:
+
+```
+$ sudo easy_install pip
+```
+
+Then install virtualenv:
+
+```
+$ sudo pip install virtualenv
+```
+
+Lastly install django:
+
+```
+$ sudo pip install django
 ```
 
 You can test that the installation was successful by typing:
 
 ```
-$ django-admin --version
+$ django-admin.py version
 
 2.0.1
 ```
+
+<br>
 
 
 ## Running the tests
@@ -49,7 +68,7 @@ Django's unit tests use a Python standard library module: **unittest**.
 
 Tests that require a database will not use the real production database, separate blank databases are created for the tests and then destroyed after the tests have been completed, regardless of whether the tests pass or fail.
  
-Tests are located within each Django application as a tests.py file.
+**Tests are located within the posSystem/tests folder as a tests.py file.**
 
 
 Run all tests within the project using the test command of the project’s manage.py utility:
@@ -63,14 +82,20 @@ and then you will see something like this:
 ```
 
 ----------------------------------------------------------------------
-Ran 6 tests in 0.018s
+Ran 32 tests in 0.018s
 
 OK
 
 ```
+
+<br>
+
 ## Coding style
 
-* [PEP 8](https://www.python.org/dev/peps/pep-0008/) -  Python style guide
+* [PEP 8](https://www.python.org/dev/peps/pep-0008/) -  Python style guide using 120 maximum characters per line
+
+
+<br>
 
 
 ## Deployment
@@ -94,9 +119,15 @@ Quit the server with CTRL-BREAK.
 ```
 
 
+<br>
+
+
 ## Built With
 
 * [Django](https://www.djangoproject.com/) -  Web framework
+
+<br>
+
 
 ## Contributing
 
@@ -104,6 +135,9 @@ Quit the server with CTRL-BREAK.
 2. Commit your changes: `git commit -m 'Add some feature'`
 3. Push to the branch: `git push origin my-new-feature`
 4. Submit a pull request
+
+<br>
+
 
 ## Authors
 
