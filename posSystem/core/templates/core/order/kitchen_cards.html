@@ -13,20 +13,28 @@
         <p class="card-text">
           <b>Items:</b>
           <br>
-          <font size="4"> {{ order.get_items_display | linebreaksbr }}</font>
-        </p>
+          <font size="5"> {{ order.get_items_display | linebreaksbr }}</font>
+        <!--</p>
         <p>
           <b>Order time:</b> {{ order.get_time_display }}
+        </p>-->
+        <p>
+         <!-- <b>Cooking instructions:</b> {{ order.cooking_instructions }} -->
+          <b>Cooking instructions:</b>
+        {% if order.cooking_instructions == 'none' %}<i class="fas fa-times-circle"></i> {% else %}
+        <i class="fas fa-check-circle"></i>{{ order.cooking_instructions }}{% endif %}
         </p>
         <p>
-          <b>Cooking instructions:</b> {{ order.cooking_instructions }}
+          <b>Order confirmed:</b> {% if order.confirmed %}<i class="fas fa-check-circle"></i>{% else %}
+          <i class="fas fa-check-circle"></i>{% endif %}
+          |
+          <b>Order delivered:</b> {% if order.delivered %}<i class="fas fa-check-circle"></i>{% else %}
+          <i class="fas fa-times-circle"></i>{% endif %}
         </p>
-        <p>
-          <b>Order confirmed:</b> {% if order.confirmed %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-check-circle"></i>{% endif %}
-        </p>
-        <p>
-          <b>Order delivered:</b> {% if order.delivered %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-times-circle"></i>{% endif %}
-        </p>
+       <!-- <p>
+          <b>Order delivered:</b> {% if order.delivered %}<i class="fas fa-check-circle"></i>{% else %}
+          <i class="fas fa-times-circle"></i>{% endif %}
+        </p> -->
       </div>
       <div class="col-md-3 text-center">
         <button type="button" class="btn btn-{% if order.ready_delivery %}success{% else %}primary{% endif %} btn-lg"
