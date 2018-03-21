@@ -32,6 +32,12 @@ class ReadyOrderManager(models.Manager):
         return super().get_queryset().filter(ready_delivery=True).filter(delivered=False)
 
 
+class UnpaidOrderManager(models.Manager):
+    """Filer for ready, non-delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(confirmed=True).filter(paid=False)
+
+
 class DeliveredTodayOrderManager(models.Manager):
     """Filter for today's delivered orders."""
     def get_queryset(self):
@@ -67,6 +73,7 @@ class Order(models.Model):
     confirmed_objects = ConfirmedOrderManager()
     unconfirmed_objects = UnconfirmedOrderManager()
     ready_objects = ReadyOrderManager()
+    unpaid_objects = UnpaidOrderManager()
     delivered_today_objects = DeliveredTodayOrderManager()
     delivered_week_objects = DeliveredWeekOrderManager()
     cancelled_today_objects = CancelledTodayOrderManager()
@@ -152,10 +159,6 @@ class Order(models.Model):
         """Create an order from the provided JSON."""
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
-        # pastOrder collects total of previos order and adds to current order.
-        pastOrder = Order.objects.filter(table=seating_id)
-        for ord in pastOrder:
-            total_price += ord.total_price  # when reading total order look at the last order customer made
 
         order = Order.objects.create(
             table=Seating.objects.get(pk=seating_id),

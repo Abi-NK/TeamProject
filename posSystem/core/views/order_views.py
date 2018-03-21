@@ -99,17 +99,8 @@ def html_delivery_cards(request):
 def html_unpaid_cards(request):  # what the user does not see, will not hurt them...
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     # the order quiey bellow checks both the order model and the payment fk model
-    orders = Order.objects.filter(Q(delivered=True, paid=False) | Q(payment__payment_accepted=False)).order_by('time')
-    newORder = []  # list to store orders to send but only once instnace of that order
-    listOfTables = []  # track tabkes that are already populated in waiter page
-    for order in orders:
-        if order.table in listOfTables:
-            print("hide payment")
-        else:
-            # if the order is not in the table then add it the new order field and table
-            newORder.append(order)
-            listOfTables.append(order.table)
-    return render(request, "core/order/order_cards.html", {'orders': newORder, 'unpaid': True})
+    orders = Order.unpaid_objects.filter(delivered=True).order_by('time')
+    return render(request, "core/order/order_cards.html", {'orders': orders, 'unpaid': True})
 
 
 @login_required

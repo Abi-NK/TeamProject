@@ -205,7 +205,7 @@
     <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='./statuses'">
       <i class="fas fa-info-circle fa-pull-left fa-lg"></i> Order statuses
     </button>
-    <button id="payButton" type="button" class="btn btn-primary btn-block" onclick="window.location.href='./payment'" {% if order.delivered and not order.payment.payment_accepted %}enabled{% else %}disabled{% endif %}>
+    <button id="payButton" type="button" class="btn btn-primary btn-block" onclick="window.location.href='./payment'" {% if not order.paid %}enabled{% else %}disabled{% endif %}>
       <i class="fas fa-credit-card fa-pull-left fa-lg"></i> Pay
     </button>
   </div>

@@ -30,7 +30,7 @@
                          <form method="POST" onsubmit="endPay();">{% csrf_token %}
                              <div class="form-group">
                                   <label for="name">Order:</label>
-                                  <input type="text" placeholder="Your order number" {% for ord in order%} value="{{ ord.id }}"{% endfor %} class="form-control" name="order" readonly>
+                                  <input type="text" placeholder="Your order number" value="{% for ord in order%}{% if forloop.first %}{{ ord.id }}{% else %}, {{ ord.id }}{% endif %}{% endfor %}" class="form-control" name="order" readonly>
                               </div>
                              <div class="form-group">
                                   <label for="name">table:</label>
@@ -77,7 +77,7 @@
                                         {% endfor %}
                                     {% endfor %}
                                     <hr>
-                                    <H3>Total: £{% for ord in order %}{% if forloop.last %}{{ord.total_price}}{% endif %}{% endfor %}</H3>
+                                    <H3>Total: {{ total }}</H3>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
