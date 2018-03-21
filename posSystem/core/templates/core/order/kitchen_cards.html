@@ -8,11 +8,12 @@
   <div id="body" class="card-body" style=${changeColour(time)}>
     <div class="row">
       <div class="col-md-9">
-        <h2 class="card-title">Order #{{ order.id }}</h2>
+        <h3 class="card-title">Order #{{ order.id }}</h3>
+        <hr>
         <p class="card-text">
           <b>Items:</b>
           <br>
-          {{ order.get_items_display | linebreaksbr }}
+          <font size="4"> {{ order.get_items_display | linebreaksbr }}</font>
         </p>
         <p>
           <b>Order time:</b> {{ order.get_time_display }}
