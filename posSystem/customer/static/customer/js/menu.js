@@ -189,43 +189,49 @@ $(document).ready(function() {
   updateLoop();
 });
 
+// method called by filtering buttons
+$('.filter-btn').on('click', function() {
 
-// method called by submission button of menu filtering modal
-$('.btn-filter').on('click', function() {
-  // if selected "vegan"
-  if($("#vegan").is(':checked')){
-    $('.veg-item').hide();
-    $('.meat-item').hide();
+  if (this.value == "false"){
+    $(this).html('<i class="fas fa-times"></i> ' + this.name);
+    $(this).removeClass("btn-success").addClass("btn-warning");
+    this.value = "true";
+  } else {
+    $(this).html('<i class="fas fa-check"></i> ' + this.name);
+    $(this).removeClass("btn-warning").addClass("btn-success");
+    this.value = "false";
   }
-  // if selected "vegetarian"
-  if($("#vegetarian").is(':checked')){
-    $('.meat-item').hide();
-  }
-  // if selected "wheat-free"
-  if($("#wheat-free").is(':checked')){
-    $('.wheat-item').hide();
-  }
-  // if selected "milk-free"
-  if($("#milk-free").is(':checked')){
-    $('.milk-item').hide();
-  }
-  // if selected "nut-free"
-  if($("#nut-free").is(':checked')){
-    $('.nut-item').hide();
-  }
-  // if selected "meat"
-  if($("#meat").is(':checked')){
-    $('.veg-item').hide();
-    $('.vegan-item').hide();
-  }
-});
 
-// method called by cancel of filters button
-$('.btn-remove').on('click', function() {
   $('.veg-item').show();
   $('.vegan-item').show();
   $('.wheat-item').show();
   $('.nut-item').show();
   $('.meat-item').show();
   $('.milk-item').show();
+
+  // if selected "vegan"
+  if($("#vegan").val() == "true"){
+    $('.vegan-item').hide();
+  }
+  // if selected "vegetarian"
+  if($("#vegetarian").val() == "true"){
+    $('.veg-item').hide();
+    $('.vegan-item').hide();
+  }
+  // if selected "containging meat"
+  if($("#meat").val() == "true"){
+    $('.meat-item').hide();
+  }
+  // if selected "wheat-free"
+  if($("#wheat-free").val() == "true"){
+    $('.wheat-item').hide();
+  }
+  // if selected "milk-free"
+  if($("#milk-free").val() == "true"){
+    $('.milk-item').hide();
+  }
+  // if selected "nut-free"
+  if($("#nut-free").val() == "true"){
+    $('.nut-item').hide();
+  }
 });
