@@ -87,3 +87,13 @@ class ManagerFormTest(TestCase):
                                     'stock': 5, 'cost': 10})
 
         self.assertTrue(form.is_valid())
+
+    # Test 9
+    def test_form_invalid_cost_too_large(self):
+        """Test invalid form with a cost that is too large"""
+        form = AdjustMenuForm(data={'id': 100, 'name': "taco", 'price': 6, 'description': "nice good food",
+                                    'course': "main", 'category': "tacos", 'allergy': "uyhg", 'calories': 99,
+                                    'image': "imgur.com/sef32", 'vegetarian': False, 'vegan': False, 'meat': False,
+                                    'stock': 5, 'cost': 100*10000000000000000000000})
+
+        self.assertFalse(form.is_valid())
