@@ -167,11 +167,12 @@ class Order(models.Model):
             delivered=False,
         )
         for menu_id, quantity in order_json.items():
-            order_item = OrderItem.objects.create(
-                menu_item=Menu.objects.get(pk=menu_id),
-                quantity=quantity
-            )
-            order.items.add(order_item)
+            if quantity != 0:
+                order_item = OrderItem.objects.create(
+                    menu_item=Menu.objects.get(pk=menu_id),
+                    quantity=quantity
+                )
+                order.items.add(order_item)
 
         # handle an OrderExtra if it exists
         try:

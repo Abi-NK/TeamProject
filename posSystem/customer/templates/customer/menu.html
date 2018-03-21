@@ -219,19 +219,18 @@
       {% for menu_item in all_menu %}
       {% if not menu_item.removed %}
         <div class="col-md-4 mb-md-3{% if menu_item.vegan %} vegan-item{% endif %}{% if menu_item.vegetarian %} veg-item{% endif %}{% if menu_item.allergy == "Wheat" %} wheat-item{% endif %}{% if menu_item.allergy == "Milk" %} milk-item{% endif %}{% if menu_item.allergy == "Nuts" %} nut-item{% endif %}{% if menu_item.meat %} meat-item{% endif %}">
-          <div class="card ">
+          <div class="card mb-1">
             <div class="card-body">
 
-              <h3 class="card-title">{{ menu_item.name }} </h3>
+              <h4 class="card-title">{{ menu_item.name }} </h4>
               <h6 class="card-subtitle text-muted">
                 {{ menu_item.calories }}kcal
                 {% if menu_item.allergy != "" %}| Contains {{ menu_item.allergy }}{% endif %}
               </h6>
-              <p class="card-text lead">
+              <p class="card-text lead mb-0">
                 {{ menu_item.description }}
               </p>
               <h5 >£{{ menu_item.price }} | <a class="text-info" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">more information</a></h5>
-              <br />
 
               <div id="containerOrderButton{{ menu_item.id }}">
                 <button type="button" class="btn btn-primary btn-block addButton" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">
