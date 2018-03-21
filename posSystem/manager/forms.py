@@ -4,7 +4,6 @@ from core.models import Menu
 
 class AdjustMenuForm(forms.Form):
 
-    id = forms.IntegerField()
     name = forms.CharField(max_length=100)
     price = forms.DecimalField(max_digits=10, decimal_places=2)
     description = forms.CharField(max_length=1000)

@@ -12,8 +12,7 @@ def adjust_menu(request):
     if request.method == "POST":
 
         # VALIDATION: check if form inputs are valid then send it to database
-        form = AdjustMenuForm(data={'id': request.POST['menu_id'], 'name': request.POST['menu_name'],
-                                    'price': request.POST['menu_price'],
+        form = AdjustMenuForm(data={'name': request.POST['menu_name'], 'price': request.POST['menu_price'],
                                     'description': request.POST['menu_description'],
                                     'course': request.POST['menu_course'], 'category': request.POST['menu_category'],
                                     'allergy': request.POST['menu_allergy'], 'calories': request.POST['menu_calories'],
