@@ -22,10 +22,10 @@
           <b>Cooking instructions:</b> {{ order.cooking_instructions }}
         </p>
         <p>
-          <b>Order confirmed:</b> {% if order.confirmed %}yes{% else %}no{% endif %}
+          <b>Order confirmed:</b> {% if order.confirmed %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-check-circle"></i>{% endif %}
         </p>
         <p>
-          <b>Order delivered:</b> {% if order.delivered %}yes{% else %}no{% endif %}
+          <b>Order delivered:</b> {% if order.delivered %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-times-circle"></i>{% endif %}
         </p>
       </div>
       <div class="col-md-3 text-center">
