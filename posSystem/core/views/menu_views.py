@@ -11,40 +11,44 @@ def adjust_menu(request):
     """Return the menu in formatted HTML and update the table based on inputs by the manager."""
     if request.method == "POST":
 
+        form_name = request.POST['menu_name']
+        form_price = request.POST['menu_price']
+        form_description = request.POST['menu_description']
+        form_course = request.POST['menu_course']
+        form_category = request.POST['menu_category']
+        form_allergy = request.POST['menu_allergy']
+        form_calories = request.POST['menu_calories']
+        form_image = request.POST['menu_image'],
+        form_vegetarian = request.POST['menu_vegetarian']
+        form_vegan = request.POST['menu_vegan']
+        form_meat = request.POST['menu_meat']
+        form_stock = request.POST['menu_stock']
+        form_cost = request.POST['menu_cost']
+
         # VALIDATION: check if form inputs are valid then send it to database
-        form = AdjustMenuForm(data={'id': request.POST['menu_id'], 'name': request.POST['menu_name'],
-                                    'price': request.POST['menu_price'],
-                                    'description': request.POST['menu_description'],
-                                    'course': request.POST['menu_course'], 'category': request.POST['menu_category'],
-                                    'allergy': request.POST['menu_allergy'], 'calories': request.POST['menu_calories'],
-                                    'image': request.POST['menu_image'], 'vegetarian': request.POST['menu_vegetarian'],
-                                    'vegan': request.POST['menu_vegan'], 'meat': request.POST['menu_meat'],
-                                    'stock': request.POST['menu_stock'], 'cost': request.POST['menu_cost']})
+        form = AdjustMenuForm(data={'name': form_name, 'price': form_price, 'description': form_description,
+                                    'course': form_course, 'category': form_category, 'allergy': form_allergy,
+                                    'calories': form_calories, 'image': form_image, 'vegetarian': form_vegetarian,
+                                    'vegan': form_vegan, 'meat': form_meat, 'stock': form_stock, 'cost': form_cost})
 
         # if the confirm change button was pressed, check form for validation and update menu
         if form.is_valid():
             if 'confirm' in request.POST:
                 print("item changed")
                 Menu.objects.filter(pk=request.POST['menu_id']).update(
-                    name=request.POST['menu_name'], price=request.POST['menu_price'],
-                    description=request.POST['menu_description'], course=request.POST['menu_course'],
-                    category=request.POST['menu_category'], allergy=request.POST['menu_allergy'],
-                    calories=request.POST['menu_calories'], image=request.POST['menu_image'],
-                    vegetarian=request.POST['menu_vegetarian'], vegan=request.POST['menu_vegan'],
-                    meat=request.POST['menu_meat'], stock=request.POST['menu_stock'], cost=request.POST['menu_cost'])
+                    name=form_name, price=form_price, description=form_description, course=form_course,
+                    category=form_category, allergy=form_allergy, calories=form_calories, image=form_image,
+                    vegetarian=form_vegetarian, vegan=form_vegan, meat=form_meat, stock=form_stock)
 
             # if the delete button was pressed, remove the item from menu
             elif 'delete' in request.POST:
                 Menu.objects.filter(pk=request.POST['menu_id']).delete()
 
             elif 'add_item' in request.POST:
-                Menu.objects.create(name=request.POST['menu_name'], price=request.POST['menu_price'],
-                                    description=request.POST['menu_description'], course=request.POST['menu_course'],
-                                    category=request.POST['menu_category'], allergy=request.POST['menu_allergy'],
-                                    calories=request.POST['menu_calories'], image=request.POST['menu_image'],
-                                    vegetarian=request.POST['menu_vegetarian'], vegan=request.POST['menu_vegan'],
-                                    meat=request.POST['menu_meat'], stock=request.POST['menu_stock'],
-                                    cost=request.POST['menu_cost'])
+                Menu.objects.create(name=form_name, price=form_price, description=form_description, course=form_course,
+                                    category=form_category, allergy=form_allergy, calories=form_calories,
+                                    image=form_image, vegetarian=form_vegetarian, vegan=form_vegan, meat=form_meat,
+                                    stock=form_stock)
 
     context = {"menu": Menu.objects.all()}
     return render(request, 'manager/managermenu.html', context)
