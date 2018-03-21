@@ -162,8 +162,12 @@
 <div class="col-lg-2">
   <div class="sticky-top">
     <h2 id="seating-label" class="text-center">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
-    <button type="button" class="btn btn-primary btn-block" onclick="buttonHelp(this)">Call a waiter</button>
-    <button type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#collapseMenuFiltering">Filter menu</button>
+    <button type="button" class="btn btn-primary btn-block" onclick="buttonHelp(this)">
+      <i class="fas fa-user fa-pull-left fa-lg"></i> Call a waiter
+    </button>
+    <button type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#collapseMenuFiltering">
+      <i class="fas fa-filter fa-pull-left fa-lg"></i> Filter menu
+    </button>
 
     <div class="collapse" id="collapseMenuFiltering">
       <hr />
@@ -194,11 +198,21 @@
     </div>
 
     <hr />
+
+    <button type="button" class="btn btn-primary btn-block" onclick="showOrder()">
+      <i class="fas fa-align-justify fa-pull-left fa-lg"></i> View order
+    </button>
+    <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='./statuses'">
+      <i class="fas fa-info-circle fa-pull-left fa-lg"></i> Order statuses
+    </button>
+    <button id="payButton" type="button" class="btn btn-primary btn-block" onclick="window.location.href='./payment'" {% if order.delivered and not order.payment.payment_accepted %}enabled{% else %}disabled{% endif %}>
+      <i class="fas fa-credit-card fa-pull-left fa-lg"></i> Pay
+    </button>
   </div>
 </div>
 
 
-<div class="col-lg-10 pt-md-3">
+<div class="col-lg-10 pt-3">
 
   {% if all_menu %}
     <div class="row">
@@ -215,42 +229,29 @@
                   <p class="card-text lead">
                     {{ menu_item.description }}
                   </p>
-                  <a data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">Click here for more information</a>
+                  <h4 class="display-inline">£{{ menu_item.price }}</h4>
+                  <a class="display-inline" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">Click here for more information</a>
                   <br />
                   <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">
                     Add to order
                   </button>
-                <div class="col-md-3">
-                  <h2 class="text-center">£{{ menu_item.price }}</h2>
-                </div>
             </div>
           </div>
         </div>
       {% endif %}
       {% endfor %}
     </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-    <div class="footer" style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: #e6e6e6; color: white; text-align: center; border-top: 1px solid black;">
-    <div class="col-md-12 mb-md-3">
-      <br>
-      <button type="button" class="btn btn-primary btn-lg btn-block" style="height:70px;" onclick="showOrder()">View order</button>
-    </div>
-  <div class="row">
-    <div class="col-md-4">
-      <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {% if order.delivered and not order.payment.payment_accepted %}enabled{% else %}disabled{% endif %}>Pay</button>
-    </div>
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-      <button type="button" class="btn btn-success btn-lg btn-block" onclick="window.location.href='./statuses'">Order Statuses</button>
-    </div>
-  </div>
+
+    <div class="fixed-bottom">
+      <div class="row p-3 bg-secondary">
+        <div class="col-lg-4 offset-lg-4">
+          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="showOrder()">
+            View order
+          </button>
+        </div>
       </div>
-    <br />
+    </div>
+
   {% else %}
     <div class="alert alert-warning">
       No menu data received
@@ -261,6 +262,7 @@
 </div>
 
 {% endblock %}
+
 {% block endjs %}
 <script>var seatingLabel = "{% if seating_label %}{{seating_label}}{% else %}{% endif %}";</script>
 <script src="{% static "customer/js/menu.js" %}"></script>
