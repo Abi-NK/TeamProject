@@ -30,35 +30,34 @@ function getItemTotalPrice(menuItemID){
   }
 }
 
+function getMenuItemDisplay(menuItemID){
+  var displayName = itemNames[menuItemID];
+  if (order[menuItemID] > 1){
+    displayName += ` - (${ order[menuItemID] })`;
+  }
+  return displayName
+}
+
 // adds or updates an entry in the displayed list of items in the order
-function addOrderItemToDisplay(menuItemID){
-  if ($("#order-item-" + menuItemID).length == 0) {
-    // item does not exist in order list yet, so add it
-    var entryTemplate = `<div class="card" id="order-item-${ menuItemID }">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-9">
-            <h4 id="order-item-name-${ menuItemID }">${ itemNames[menuItemID] }</h4>
-          </div>
-          <div class="col-md-3">
-            <h4 id="order-item-price-${ menuItemID }">${ getItemTotalPrice(menuItemID) }</h4>
+function updateItemDisplay(){
+  $("#order-container").html("");
+  $.each(order, function(menuItemID, menuItemQuantity){
+    if (menuItemQuantity != 0){
+      var entryTemplate = `<div class="card" id="order-item-${ menuItemID }">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-9">
+              <h4 id="order-item-name-${ menuItemID }">${ getMenuItemDisplay(menuItemID) }</h4>
+            </div>
+            <div class="col-md-3">
+              <h4 id="order-item-price-${ menuItemID }">${ getItemTotalPrice(menuItemID) }</h4>
+            </div>
           </div>
         </div>
-      </div>
-    </div>`;
-    $("#order-container").append(entryTemplate);
-  } else {
-    // item is already in list, so update it's entry
-    // updates the item name to have " - (n)" appended
-    var itemText = itemNames[menuItemID];
-    if (order[menuItemID] > 1){
-      itemText += ` - (${ order[menuItemID] })`;
+      </div>`;
+      $("#order-container").append(entryTemplate);
     }
-    $("#order-item-name-" + menuItemID).text(itemText);
-
-    // updates total
-    $("#order-item-price-" + menuItemID).text(getItemTotalPrice(menuItemID));
-  }
+  });
 }
 
 // called by buttons on menu items, ads them to the order object
@@ -75,8 +74,38 @@ function addToOrder(menuItemID, menuItemName, menuItemPrice) {
   itemPrices[menuItemID] = menuItemPrice;
 
   updateTotal();
+  updateItemDisplay();
   console.log(menuItemName + " added to order, new total is £" + stringTotal);
-  addOrderItemToDisplay(menuItemID);
+
+  $("#quantity" + menuItemID).html(order[menuItemID])
+  $("#containerOrderButton"+menuItemID+" .addButton").hide()
+  $("#containerOrderButton"+menuItemID+" .incDecButtons").show()
+}
+
+function incOrderItem(menuItemID){
+  if (order.hasOwnProperty(menuItemID)) {
+    order[menuItemID] += 1;
+  } else {
+    order[menuItemID] = 1;
+  }
+  updateTotal();
+  updateItemDisplay();
+  $("#quantity" + menuItemID).html(order[menuItemID])
+}
+
+function decOrderItem(menuItemID){
+  if (order.hasOwnProperty(menuItemID)) {
+    order[menuItemID] -= 1;
+  } else {
+    order[menuItemID] = 0;
+  }
+  if (order[menuItemID] == 0){
+    $("#containerOrderButton"+menuItemID+" .addButton").show()
+    $("#containerOrderButton"+menuItemID+" .incDecButtons").hide()
+  }
+  updateTotal();
+  updateItemDisplay();
+  $("#quantity" + menuItemID).html(order[menuItemID])
 }
 
 // used to show the customer's order
@@ -193,11 +222,11 @@ $(document).ready(function() {
 $('.filter-btn').on('click', function() {
 
   if (this.value == "false"){
-    $(this).html('<i class="fas fa-times"></i> ' + this.name);
+    $(this).html('<i class="fas fa-times fa-pull-left fa-lg"></i> ' + this.name);
     $(this).removeClass("btn-success").addClass("btn-warning");
     this.value = "true";
   } else {
-    $(this).html('<i class="fas fa-check"></i> ' + this.name);
+    $(this).html('<i class="fas fa-check fa-pull-left fa-lg"></i> ' + this.name);
     $(this).removeClass("btn-warning").addClass("btn-success");
     this.value = "false";
   }
@@ -234,4 +263,8 @@ $('.filter-btn').on('click', function() {
   if($("#nut-free").val() == "true"){
     $('.nut-item').hide();
   }
+});
+
+$(".btn-add").on('click', function(){
+
 });

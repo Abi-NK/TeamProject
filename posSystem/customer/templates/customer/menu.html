@@ -173,27 +173,27 @@
       <hr />
 
       <button type="button" class="btn btn-success btn-block filter-btn" name="Vegetarian" value="false" id="vegetarian">
-        <i class="fas fa-check"></i> Vegetarian
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Vegetarian
       </button>
 
       <button type="button" class="btn btn-success btn-block filter-btn" name="Vegan" value="false" id="vegan">
-        <i class="fas fa-check"></i> Vegan
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Vegan
       </button>
 
       <button type="button" class="btn btn-success btn-block filter-btn" name="Containing meat" value="false" id="meat">
-        <i class="fas fa-check"></i> Containing meat
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing meat
       </button>
 
       <button type="button" class="btn btn-success btn-block filter-btn" name="Containing wheat" value="false" id="wheat-free">
-        <i class="fas fa-check"></i> Containing wheat
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing wheat
       </button>
 
       <button type="button" class="btn btn-success btn-block filter-btn" name="Containing milk" value="false" id="milk-free">
-        <i class="fas fa-check"></i> Containing milk
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing milk
       </button>
 
       <button type="button" class="btn btn-success btn-block filter-btn" name="Containing nuts" value="false" id="nut-free">
-        <i class="fas fa-check"></i> Containing nuts
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing nuts
       </button>
     </div>
 
@@ -218,23 +218,41 @@
     <div class="row">
       {% for menu_item in all_menu %}
       {% if not menu_item.removed %}
-        <div class="col-md-6 mb-md-3{% if menu_item.vegan %} vegan-item{% endif %}{% if menu_item.vegetarian %} veg-item{% endif %}{% if menu_item.allergy == "Wheat" %} wheat-item{% endif %}{% if menu_item.allergy == "Milk" %} milk-item{% endif %}{% if menu_item.allergy == "Nuts" %} nut-item{% endif %}{% if menu_item.meat %} meat-item{% endif %}">
+        <div class="col-md-4 mb-md-3{% if menu_item.vegan %} vegan-item{% endif %}{% if menu_item.vegetarian %} veg-item{% endif %}{% if menu_item.allergy == "Wheat" %} wheat-item{% endif %}{% if menu_item.allergy == "Milk" %} milk-item{% endif %}{% if menu_item.allergy == "Nuts" %} nut-item{% endif %}{% if menu_item.meat %} meat-item{% endif %}">
           <div class="card ">
             <div class="card-body">
-                  <h3 class="card-title">{{ menu_item.name }} </h3>
-                  <h6 class="card-subtitle text-muted">
-                    {{ menu_item.calories }}kcal
-                    {% if menu_item.allergy != "" %}| Contains {{ menu_item.allergy }}{% endif %}
-                  </h6>
-                  <p class="card-text lead">
-                    {{ menu_item.description }}
-                  </p>
-                  <h4 class="display-inline">£{{ menu_item.price }}</h4>
-                  <a class="display-inline" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">Click here for more information</a>
-                  <br />
-                  <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">
-                    Add to order
-                  </button>
+
+              <h3 class="card-title">{{ menu_item.name }} </h3>
+              <h6 class="card-subtitle text-muted">
+                {{ menu_item.calories }}kcal
+                {% if menu_item.allergy != "" %}| Contains {{ menu_item.allergy }}{% endif %}
+              </h6>
+              <p class="card-text lead">
+                {{ menu_item.description }}
+              </p>
+              <h5 >£{{ menu_item.price }} | <a class="text-info" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">more information</a></h5>
+              <br />
+
+              <div id="containerOrderButton{{ menu_item.id }}">
+                <button type="button" class="btn btn-primary btn-block addButton" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">
+                  Add to order
+                </button>
+
+                <div class="row mt-1 incDecButtons" style="display: none;">
+                  <div class="col-6">
+                    <h5><strong id="quantity{{ menu_item.id }}">X</strong> in your order</h5>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button type="button" class="btn btn-warning" onclick="decOrderItem({{ menu_item.id }})">
+                      <i class="fas fa-minus fa-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="incOrderItem({{ menu_item.id }})">
+                      <i class="fas fa-plus fa-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
