@@ -17,8 +17,9 @@ class AdjustMenuForm(forms.Form):
     vegetarian = forms.BooleanField(required=False)
     vegan = forms.BooleanField(required=False)
     meat = forms.BooleanField(required=False)
+    cost = forms.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         model = Menu
         fields = ['name', 'price', 'description', 'course', 'category', 'allergy', 'calories', 'image', 'stock',
-                  'vegetarian', 'vegan', 'meat']
+                  'vegetarian', 'vegan', 'meat', 'cost']

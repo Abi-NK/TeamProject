@@ -29,6 +29,7 @@ class Menu(models.Model):
     meat = models.BooleanField(default=False)
     stock = models.IntegerField(default=0)
     removed = models.BooleanField(default=False)
+    cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     objects = models.Manager()
     stock_manager = StockManager()

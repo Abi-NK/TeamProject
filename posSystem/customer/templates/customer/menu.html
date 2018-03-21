@@ -229,11 +229,17 @@
       {% endif %}
       {% endfor %}
     </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+    <div class="footer" style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: #e6e6e6; color: white; text-align: center; border-top: 1px solid black;">
     <div class="col-md-12 mb-md-3">
-      <hr />
-      <button type="button" class="btn btn-primary btn-lg btn-block" onclick="showOrder()">Place order</button>
+      <br>
+      <button type="button" class="btn btn-primary btn-lg btn-block" style="height:70px;" onclick="showOrder()">View order</button>
     </div>
-    <br />
   <div class="row">
     <div class="col-md-4">
       <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {% if order.delivered and not order.payment.payment_accepted %}enabled{% else %}disabled{% endif %}>Pay</button>
@@ -243,6 +249,7 @@
       <button type="button" class="btn btn-success btn-lg btn-block" onclick="window.location.href='./statuses'">Order Statuses</button>
     </div>
   </div>
+      </div>
     <br />
   {% else %}
     <div class="alert alert-warning">
