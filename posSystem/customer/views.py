@@ -24,7 +24,7 @@ def index(request):
 
         context = {
             'all_menu': Menu.objects.all(),
-            'order': Order.objects.filter(table=request.session['seating_id']).first(),
+            'order': Order.unpaid_objects.filter(table=request.session['seating_id']).order_by('time').first(),
         }
         if 'seating_label' in request.session:
             context['seating_label'] = request.session['seating_label']
