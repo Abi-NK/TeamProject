@@ -72,5 +72,16 @@ def t_and_c(request):
 
 def statuses(request):
     """..."""
-    orders = Order.objects.filter(table=request.session['seating_id'])
-    return render(request, 'customer/statuses.html', {'orders': orders})
+    unpaid_orders = Order.unpaid_objects.filter(table=request.session['seating_id'])
+    active_orders = Order.active_objects.filter(table=request.session['seating_id'])
+    orders = []
+    for order in active_orders:
+        orders.insert(0, order)
+    for order in unpaid_orders:
+        if order not in orders:
+            orders.insert(0, order)
+    seating_label = request.session['seating_label']
+    return render(request, 'customer/statuses.html', {
+        'orders': orders,
+        'seating_label': seating_label,
+    })

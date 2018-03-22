@@ -204,6 +204,18 @@ class Order(models.Model):
         """Return the string representation of the items in the order."""
         return "\n".join([str(item) for item in self.items.all()])
 
+    def get_status_display(self):
+        if self.cancelled:
+            return "cancelled"
+        elif self.delivered:
+            return "delivered"
+        elif self.ready_delivery:
+            return "ready for delivery"
+        elif self.confirmed:
+            return "being prepared"
+        else:
+            return "unconfirmed"
+
     def is_nearly_late(self):
         allowed_gap = timedelta(minutes=7)
         difference = datetime.now() - self.time.replace(tzinfo=None)

@@ -132,3 +132,19 @@ def html_active_list(request):
         "orders": Order.active_objects.all(),
     }
     return render(request, 'core/order/active_list.html', context)
+
+
+def html_customer_cards(request):
+    unpaid_orders = Order.unpaid_objects.filter(table=request.session['seating_id'])
+    active_orders = Order.active_objects.filter(table=request.session['seating_id'])
+    orders = []
+    for order in active_orders:
+        orders.insert(0, order)
+    for order in unpaid_orders:
+        if order not in orders:
+            orders.insert(0, order)
+    seating_label = request.session['seating_label']
+    return render(request, 'customer/statuses.html', {
+        'orders': orders,
+        'seating_label': seating_label,
+    })
