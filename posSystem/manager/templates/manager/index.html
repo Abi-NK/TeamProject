@@ -9,14 +9,13 @@
 <h1 class="text-center">Manager Control Panel</h1>
 <hr />
 
-<div class="text-center">
-  <a href="{% url 'data' %}" class="btn btn-primary btn-lg mb-md-3">Live Data Page</a>
-  <br />
-  <a href="{% url 'employee' %}" class="btn btn-primary btn-lg mb-md-3">Employee Data Page</a>
-  <br />
-  <a href="{% url 'managermenu' %}" class="btn btn-primary btn-lg mb-md-3">Adjust Menu</a>
-  <br />
-  <a href="{% url 'waiterassignments' %}" class="btn btn-primary btn-lg mb-md-3">Waiter Seating Assignments</a>
+<div class="row">
+  <div class="col-lg-4 offset-lg-4 text-center">
+    <a href="{% url 'data' %}" class="btn btn-primary btn-lg btn-block">Live Data Page</a>
+    <a href="{% url 'employee' %}" class="btn btn-primary btn-lg btn-block">Employee Data Page</a>
+    <a href="{% url 'managermenu' %}" class="btn btn-primary btn-lg btn-block">Adjust Menu</a>
+    <a href="{% url 'waiterassignments' %}" class="btn btn-primary btn-lg btn-block">Waiter Seating Assignments</a>
+  </div>
 </div>
 
 {% endblock %}
