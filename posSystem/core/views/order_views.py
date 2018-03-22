@@ -4,7 +4,6 @@ from core.models import Order, Seating
 import json
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 
 
 @require_http_methods(["POST"])
@@ -16,6 +15,10 @@ def make_order(request):
 
     order_json = json.loads(request.body.decode('utf-8'))["order"]
     order = Order.make_order(order_json, request.session["seating_id"])
+    notes = json.loads(request.body.decode('utf-8'))["notes"]
+    if notes != "":
+        order.cooking_instructions = notes
+        order.save()
     order.reduce_stock()
     return HttpResponse("recieved")
 

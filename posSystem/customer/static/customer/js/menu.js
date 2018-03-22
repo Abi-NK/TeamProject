@@ -140,12 +140,14 @@ function placeOrder(button){
     $(button).html("Place order");
     $(button).prop("disabled", false);
   } else {
+    var notes = $("#inputKitchenNotes").val()
+    console.log(notes);
     $.ajax({
       url: "/core/order/makeorder",
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify({order: order}),
+      data: JSON.stringify({order: order, notes: notes}),
       dataType: 'text',
       success: function(result) {
         $('#showOrderModalCenter').modal('hide');
