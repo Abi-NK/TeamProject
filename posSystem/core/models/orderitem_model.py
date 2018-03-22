@@ -13,6 +13,10 @@ class OrderItem(models.Model):
         """Return the total price of this item."""
         return self.menu_item.price * self.quantity
 
+    def get_price_display(self):
+        """Get the price in a displayable format."""
+        return "£%.2f" % self.get_price()
+
     def reduce_item_stock(self):
         """Reduce the stock count of the menu item by quantity."""
         self.menu_item.stock -= self.quantity

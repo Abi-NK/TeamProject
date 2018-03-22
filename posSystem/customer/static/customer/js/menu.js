@@ -101,6 +101,7 @@ function decOrderItem(menuItemID){
     order[menuItemID] = 0;
   }
   if (order[menuItemID] == 0){
+    delete order[menuItemID];
     $("#containerOrderButton"+menuItemID+" .addButton").show()
     $("#containerOrderButton"+menuItemID+" .incDecButtons").hide()
   }
@@ -111,6 +112,11 @@ function decOrderItem(menuItemID){
 
 // used to show the customer's order
 function showOrder(){
+  if (Object.keys(order).length === 0 && Object.keys(orderExtra).length === 0){
+    $("#btnPlaceOrder").prop("disabled", true);
+  } else {
+    $("#btnPlaceOrder").prop("disabled", false);
+  }
   $('#showOrderModalCenter').modal('show');
 }
 
