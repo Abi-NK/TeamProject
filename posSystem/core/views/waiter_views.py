@@ -33,7 +33,7 @@ def get_assignments(request):
     names = {}
     for waiter in Waiter.objects.all():
         names[waiter.name] = User.objects.get(username=waiter.name).get_full_name()
-    return render(request, "manager/get/assignments.html", {
+    return render(request, "core/waiter/assignments.html", {
         'seating': seating,
         'onduty_waiters': waiters,
         'names': names
@@ -44,7 +44,7 @@ def get_assignments(request):
 def get_waiters(request):
     """Get all of the restaurant's seating."""
     waiters = Waiter.objects.all()
-    return render(request, "manager/get/waiters.html", {'waiters': waiters})
+    return render(request, "core/waiter/waiters.html", {'waiters': waiters})
 
 
 @login_required
