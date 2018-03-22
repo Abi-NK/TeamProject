@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 
 {% load static %}
 
@@ -6,6 +6,7 @@
 
 {% block content %}
 
+<!-- modal = menu item stock -->
 <div class="modal fade" id="menuStockModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -22,31 +23,41 @@
   </div>
 </div>
 
-<div class="row mt-md-3">
-  <div class="col-xl-2">
-    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
-    <button type="button" class="btn btn-outline-secondary btn-block mb-md-3" data-toggle="modal" data-target="#menuStockModal">
-      <i class="fas fa-cubes"></i> View Stock
+<div class="row">
+
+<div class="col-lg-2">
+  <div class="sticky-top pt-1">
+    <a href="{% url 'index' %}" class="btn btn-primary btn-block">
+      <i class="fas fa-chevron-left fa-pull-left fa-lg"></i> Control Panel
+    </a>
+    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#menuStockModal">
+      <i class="fas fa-cubes fa-pull-left fa-lg"></i> View Stock
     </button>
     <div id="container-summary">
       {# populate summary of restraunt data here #}
     </div>
   </div>
+</div>
 
-  <div class="col-xl-7">
-    <h2 class="text-center">Active Orders</h2>
-    <div id="container-orders">
-      {# populate active orders here #}
+<div class="col-lg-10 pt-3">
+  <div class="row">
+    <div class="col-lg-9">
+      <h2 class="text-center">Active Orders</h2>
+      <div id="container-orders">
+        {# populate active orders here #}
+      </div>
+    </div>
+
+    <div class="col-lg-3">
+      <h2 class="text-center">Seating</h2>
+      <hr />
+      <div id="container-tables">
+        {# populate active orders here #}
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="col-xl-3">
-    <h2 class="text-center">Seating</h2>
-    <hr />
-    <div id="container-tables">
-      {# populate active orders here #}
-    </div>
-  </div>
 </div>
 
 {% endblock %}

@@ -4,7 +4,6 @@ from core.models import Order, Seating
 import json
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
 
 
 @require_http_methods(["POST"])
@@ -16,6 +15,10 @@ def make_order(request):
 
     order_json = json.loads(request.body.decode('utf-8'))["order"]
     order = Order.make_order(order_json, request.session["seating_id"])
+    notes = json.loads(request.body.decode('utf-8'))["notes"]
+    if notes != "":
+        order.cooking_instructions = notes
+        order.save()
     order.reduce_stock()
     return HttpResponse("recieved")
 
@@ -99,17 +102,8 @@ def html_delivery_cards(request):
 def html_unpaid_cards(request):  # what the user does not see, will not hurt them...
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     # the order quiey bellow checks both the order model and the payment fk model
-    orders = Order.objects.filter(Q(delivered=True, paid=False) | Q(payment__payment_accepted=False)).order_by('time')
-    newORder = []  # list to store orders to send but only once instnace of that order
-    listOfTables = []  # track tabkes that are already populated in waiter page
-    for order in orders:
-        if order.table in listOfTables:
-            print("hide payment")
-        else:
-            # if the order is not in the table then add it the new order field and table
-            newORder.append(order)
-            listOfTables.append(order.table)
-    return render(request, "core/order/order_cards.html", {'orders': newORder, 'unpaid': True})
+    orders = Order.unpaid_objects.filter(delivered=True).order_by('time')
+    return render(request, "core/order/order_cards.html", {'orders': orders, 'unpaid': True})
 
 
 @login_required
@@ -141,3 +135,24 @@ def html_active_list(request):
         "orders": Order.active_objects.all(),
     }
     return render(request, 'core/order/active_list.html', context)
+
+
+def html_customer_cards(request):
+    unpaid_orders = Order.unpaid_objects.filter(table=request.session['seating_id'])
+    active_orders = Order.active_objects.filter(table=request.session['seating_id'])
+    orders = []
+    for order in active_orders:
+        orders.insert(0, order)
+    for order in unpaid_orders:
+        if order not in orders:
+            orders.insert(0, order)
+    seating_label = request.session['seating_label']
+    return render(request, 'core/order/customer_cards.html', {
+        'orders': orders,
+        'seating_label': seating_label,
+    })
+
+
+def html_unpaid_dropdown(request):
+    orders = Order.unpaid_objects.all()
+    return render(request, 'core/order/unpaid_dropdown.html', {'orders': orders})

@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand
 from core.models import Menu, Order, OrderItem, OrderExtra, Seating
 from django.contrib.auth.models import User
 import random
-from django.utils import timezone
 from datetime import date, datetime, time, timedelta
 
 
@@ -63,7 +62,7 @@ class Command(BaseCommand):
             time_offset = (dummy_table_count - i) / dummy_table_count * 30
             order = Order.objects.create(
                 table=seating,
-                time=timezone.now() - timedelta(minutes=time_offset),
+                time=datetime.now() - timedelta(minutes=time_offset),
                 total_price=total_price_from_json(order_json),
                 confirmed=False,
                 ready_delivery=False,
@@ -72,7 +71,7 @@ class Command(BaseCommand):
             order_extra = OrderExtra.objects.create(
                 waiter=waiters[random.randrange(5)],
                 seating=seating,
-                time=timezone.now() - timedelta(minutes=time_offset),
+                time=datetime.now() - timedelta(minutes=time_offset),
                 used=True,
             )
             for menu_id, quantity in order_json.items():
@@ -92,7 +91,7 @@ class Command(BaseCommand):
                 time_offset = (dummy_table_count - i) / dummy_table_count * 30
                 order = Order.objects.create(
                     table=seating,
-                    time=timezone.now() - timedelta(minutes=time_offset),
+                    time=datetime.now() - timedelta(minutes=time_offset),
                     total_price=total_price_from_json(order_json),
                     confirmed=False,
                     ready_delivery=False,
@@ -144,7 +143,7 @@ class Command(BaseCommand):
                 random_second = random.randrange(60)
                 order_time = time(hour=random_hour, minute=random_minute, second=random_second)
                 combined = datetime.combine(order_date, order_time)
-                order_datetime = timezone.make_aware(combined, timezone.get_default_timezone())
+                order_datetime = combined
                 order = Order.objects.create(
                     table=all_seating[random.randrange(table_count)],
                     time=order_datetime,
@@ -152,6 +151,7 @@ class Command(BaseCommand):
                     confirmed=True,
                     ready_delivery=True,
                     delivered=True,
+                    paid=True,
                 )
                 order_extra = OrderExtra.objects.create(
                     waiter=waiters[random.randrange(5)],

@@ -1,95 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Payment</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-<div class="jumbotron d-flex align-items-center">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        If you have already paid, please stop and contact a waiter.<br>
-                        <h4>Payment Details:</h4>
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Payment{% endblock %}
+{% block content %}
 
-                    </div>
-                    <div class="panel-body">
-
-                            <script>
-                            function endPay() {
-                                alert('Payment sent, Thank you!');
-                                window.location.href = "/customer";
-                            }
-                            </script>
-                         <form method="POST" onsubmit="endPay();">{% csrf_token %}
-                             <div class="form-group">
-                                  <label for="name">Order:</label>
-                                  <input type="text" placeholder="Your order number" {% for ord in order%} value="{{ ord.id }}"{% endfor %} class="form-control" name="order" readonly>
-                              </div>
-                             <div class="form-group">
-                                  <label for="name">table:</label>
-                                  <input type="text" placeholder="Your table number" {% for ord in order%} value="{{ord.table}}" {% endfor %} class="form-control" name="table" readonly>
-                              </div>
-                              <div class="form-group">
-                                  <label for="name">Name:</label>
-                                  <input type="text" maxlength="50" placeholder="Your Name on Your Card" class="form-control" name="name">
-                              </div>
-                              <div class="form-group">
-                                  <label for="card-number">Card Number:</label>
-                                  <input type="tel" minlength="16" maxlength="16" placeholder="Your Card Number" class="form-control" name="card-number">
-                              </div>
-                             <div class="form-group">
-                                  <label for="cvc">CVC:</label>
-                                  <input type="tel" minlength="3" maxlength="3" placeholder="_ _ _" class="form-control" name="cvc">
-                              </div>
-                             <div class="form-group">
-                                  <label for="expiry">Expiry Date:</label>
-                                  <input type="tel"minlength="5" maxlength="5"placeholder="MM / YY" class="form-control" name="expiry">
-                              </div>
-                              <div class="form-group">
-                                  <label><input type="checkbox" name ="cbx"> I agree to the Oaxaca terms and conditions</label>
-                              </div>
-                              <button type="submit" class="btn btn-default">Pay Now</button>
-                            </form>
-                    </div>
-                </div>
-            </div>
-                <div class="col-sm-6">
-                    <h2>Your Bill:</h2>
-                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#bill">View</button>
-                    <div class="modal fade" id="bill" role="dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Your Bill Today:</h4>
-                                </div>
-                                <div class="modal-body">
-                                    {% for ord in order %}
-                                        {% for item in ord.items.all %}
-                                        <p>{{item}}</p>
-                                        {% endfor %}
-                                    {% endfor %}
-                                    <hr>
-                                    <H3>Total: £{% for ord in order %}{% if forloop.last %}{{ord.total_price}}{% endif %}{% endfor %}</H3>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- modal - view order contents -->
+<div class="modal fade" id="bill" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Your bill:</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        {% for ord in order %}
+          {% for item in ord.items.all %}
+            <p>{{ item }} - {{ item.get_price_display }}</p>
+          {% endfor %}
+        {% endfor %}
+        <hr>
+        <h4>Total: {{ total }}</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
 </div>
 
-</body>
-</html>
+<!-- modal - view t and c -->
+<div class="modal fade" id="modalTandC" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Terms and Conditions</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas consequat quis tortor tempor viverra. Etiam consequat ante sed sapien sodales tincidunt. Nunc varius magna ut lectus dictum, et facilisis ligula pellentesque. Vestibulum maximus lectus sed arcu consequat, non elementum nibh tincidunt. Nulla gravida ligula a tellus porta, ut vehicula tellus lobortis. Pellentesque malesuada elit sit amet risus euismod sollicitudin. Morbi et mi aliquam velit placerat congue eget facilisis lorem.
+        </p>
+        <p>
+          Sed ac est in lorem sollicitudin efficitur. Duis pellentesque congue accumsan. Maecenas libero risus, fringilla at velit non, auctor hendrerit orci. Aenean sed magna bibendum, fringilla risus in, varius nisi. Duis faucibus fringilla ipsum, non placerat purus accumsan nec. Pellentesque egestas accumsan libero in porta. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse potenti.
+        </p>
+        <p>
+          Nullam pharetra mauris vehicula neque sodales, et gravida ligula pretium. Donec facilisis felis sed ullamcorper scelerisque. Quisque fringilla, nisi ac congue tristique, felis erat tristique dolor, in sodales leo arcu ac metus. Proin ut felis porta, interdum magna in, mattis nisi. Donec a rutrum turpis, vitae maximus dolor. Donec bibendum tempus efficitur. Ut massa tellus, fringilla et ultricies ultricies, bibendum ut lorem. Donec in pellentesque dui. Aenean id massa dignissim, finibus lectus in, aliquam diam. Proin scelerisque ante et sagittis gravida. Nulla nec fermentum turpis, ac elementum neque. Suspendisse semper hendrerit nisi, at sodales eros pellentesque sit amet. Interdum et malesuada fames ac ante ipsum primis in faucibus. Mauris ut ipsum eu eros pulvinar tempor ac sed diam. Duis semper, eros sed tincidunt consequat, enim mauris condimentum lacus, tristique rhoncus est mi ut sem.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-4 offset-lg-4">
+    <button type="button" class="btn btn-primary btn-lg btn-block my-3" data-toggle="modal" data-target="#bill">
+      View your bill
+    </button>
+
+    <div class="card">
+
+      <script>
+      function endPay() {
+          alert('Payment sent, Thank you!');
+          window.location.href = "/customer";
+      }
+      </script>
+
+      <div class="card-body">
+        <form method="POST" onsubmit="endPay();" id="paymentForm">
+          {% csrf_token %}
+        <div class="form-group">
+          <label for="name">Order:</label>
+          <input type="text" placeholder="Your order number" value="{% for ord in order%}{% if forloop.first %}{{ ord.id }}{% else %}, {{ ord.id }}{% endif %}{% endfor %}" class="form-control" name="order" readonly>
+        </div>
+        <div class="form-group">
+          <label for="name">Table:</label>
+          <input type="text" placeholder="Your table number" {% for ord in order%} value="{{ord.table}}" {% endfor %} class="form-control" name="table" readonly>
+        </div>
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" maxlength="50" placeholder="Your Name on Your Card" class="form-control" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="card-number">Card Number:</label>
+          <input type="tel" minlength="16" maxlength="16" placeholder="Your Card Number" class="form-control" name="card-number" required>
+        </div>
+        <div class="form-group">
+          <label for="cvc">CVC:</label>
+          <input type="tel" minlength="3" maxlength="3" placeholder="_ _ _" class="form-control" name="cvc" required>
+        </div>
+        <div class="form-group">
+          <label for="expiry">Expiry Date:</label>
+          <input type="tel"minlength="5" maxlength="5"placeholder="MM / YY" class="form-control" name="expiry" required>
+        </div>
+        <div class="form-group">
+          <input type="checkbox" name="cbx" id="tandcCheckbox" required>
+          <label for="tandcCheckbox">I agree to the <a class="text-info" data-toggle="modal" data-target="#modalTandC">Oaxaca terms and conditions</a></label>
+        </div>
+        <button type="submit" class="btn btn-success btn-block">Pay Now</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+<option value="-1" selected>Select an order</option>
+
+{% if orders %}
+{% for order in orders %}
+<option value="{{ order.id }}">Order #{{ order.id }} - {{ order.table.label }}</option>
+{% endfor %}
+{% endif %}

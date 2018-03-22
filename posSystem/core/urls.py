@@ -18,6 +18,8 @@ order_model_html_urls = [
     path('unpaid_cards', views.html_unpaid_cards, name='unpaid_cards'),
     path('summary_list', views.html_summary_list, name='summary_list'),
     path('active_list', views.html_active_list, name='active_list'),
+    path('customer_cards', views.html_customer_cards, name='customer_cards'),
+    path('unpaid_dropdown', views.html_unpaid_dropdown, name="unpaid_dropdown"),
 ]
 
 order_model_urls = [
@@ -54,10 +56,12 @@ seating_model_html_urls = [
 seating_model_urls = [
     path('html/', include(seating_model_html_urls)),
     path('takeseat', views.take_seat, name='takeseat'),
+    path('freeseat', views.free_seat, name='freeseat'),
     path('assigntoseating', views.assign_to_seating, name='assigntoseating'),
     path('unassignfromseating', views.unassign_from_seating, name='unassignfromseating'),
     path('requesthelp', views.request_help, name='requesthelp'),
     path('cancelhelp', views.cancel_help, name='cancelhelp'),
+    path('seatingliveinfo', views.seating_live_info, name='seatingliveinfo'),
 ]
 
 waiter_model_urls = [

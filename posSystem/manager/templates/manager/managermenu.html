@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 
 {% load static %}
 
@@ -204,22 +204,35 @@ function validateForm{{menu_item.id}}(menu_old_price, menu_old_cost, menu_old_st
 </div>
 {% endfor %}
 <br>
-<div class="col-xl-2">
-    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
+
+<div class="row">
+
+<div class="col-lg-2">
+  <div class="sticky-top pt-1">
+    <a href="{% url 'index' %}" class="btn btn-primary btn-block">
+      <i class="fas fa-chevron-left fa-pull-left fa-lg"></i> Control Panel
+    </a>
+  </div>
 </div>
-<h1 class="text-center">Adjust Menu</h1>
-<div style="text-align:center">
-    <br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_item">Add item</button>
+
+<div class="col-lg-10 pt-3">
+  <h1 class="text-center">Adjust Menu</h1>
+  <div style="text-align:center">
+      <br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_item">Add item</button>
+  </div>
+  <br>
+  {% for menu_item in menu %}
+  <div class="list-group">
+      <a class="list-group-item list-group-item-action" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}"><b>{{ menu_item.name }}</b> - {{ menu_item.category }}</a>
+  </div>
+  {% endfor %}
+  <br>
+  <br>
 </div>
-<br>
-{% for menu_item in menu %}
-<div class="list-group">
-    <a class="list-group-item list-group-item-action" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}"><b>{{ menu_item.name }}</b> - {{ menu_item.category }}</a>
 
 </div>
-{% endfor %}
-<br>
-<br>
+
+
 {% endblock %}
 
 {% block endjs %}<script src="{% static "manager/js/index.js" %}"></script>{% endblock %}
