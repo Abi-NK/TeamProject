@@ -1,3 +1,10 @@
+"""
+
+Views for the customer section of the system. Views take a web request and return a web response.
+
+"""
+
+
 from django.shortcuts import render, redirect
 from core.models import Menu, Order, Payment, Seating
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -5,7 +12,13 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 @ensure_csrf_cookie
 def index(request):
-    """Return the menu page."""
+    """
+    Sets up the customer index page with menu displayed.
+
+    :param request: HTTPrequest
+    :returns: HTTPresponse
+            Returns the customer menu html page
+    """
 
     if 'seating_label' in request.session:
 
@@ -29,7 +42,15 @@ def index(request):
 
 
 def payment(request):
-    """Either sends out a list of payment and order objects or takes in a payment using POST."""
+    """
+    Either sends out a list of payment and order objects or takes in a payment using POST.
+
+    :param request: HTTPrequest
+    :returns: HTTPresponse
+              Returns the customer index page if the request method is POST
+    :returns: HTTPresponse
+             Returns the electronic payment html page if the request method is not POST
+    """
     if request.method == "POST":
         payment = Payment.objects.create(
             card_holder=request.POST.get('name'),
@@ -52,18 +73,34 @@ def payment(request):
         'order': orders,
         'total': "£%.2f" % sum([order.total_price for order in orders])
     }
+
+
     return render(request, "customer/e_payment.html", context)
 
 
 def checkbox_check(val):
-    """Converts html checkbox to django model format"""
+    """
+    Converts html checkbox to django model format
+
+    :param val: HTMLcheckbox
+                An html checkbox to be converted
+    :returns: Boolean
+              True if val is checked
+    :returns: Boolean
+              False if val is not checked
+    """
     if val == 'on':
         return "True"
     return "False"
 
 
 def t_and_c(request):
-    """Sets t and c field in DB from POST (not in html form)"""
+    """
+    Sets t and c field in DB from POST (not in html form)
+
+    :param request: HTTPrequest
+
+    """
     if request.method == "POST":
         payment_update = Payment.objects.get(terms_conditions=request.POST['t-c'])
         payment_update.delivered = True
@@ -71,7 +108,15 @@ def t_and_c(request):
 
 
 def statuses(request):
-    """..."""
+    """
+
+    The order statuses page for the customers.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The customer order statuses page.
+
+    """
     unpaid_orders = Order.unpaid_objects.filter(table=request.session['seating_id'])
     active_orders = Order.active_objects.filter(table=request.session['seating_id'])
     orders = []
