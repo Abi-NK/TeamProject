@@ -41,6 +41,8 @@ function updateOrders(){
 }
 
 function confirmOrder(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/order/confirmorder",
     type: 'POST',
@@ -49,7 +51,6 @@ function confirmOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
       $(button).removeClass("btn-primary").addClass("btn-success")
       $(button).text("Confirmed");
     }
@@ -57,6 +58,8 @@ function confirmOrder(button, orderID){
 }
 
 function delayOrder(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/order/delayorder",
     type: 'POST',
@@ -65,7 +68,6 @@ function delayOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
       $(button).removeClass("btn-primary").addClass("btn-success")
       $(button).text("Delayed");
     }
@@ -73,6 +75,8 @@ function delayOrder(button, orderID){
 }
 
 function confirmPayment(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/payment/confirmPayment",
     type: 'POST',
@@ -89,6 +93,8 @@ function confirmPayment(button, orderID){
 }
 
 function cancelOrder(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/order/cancelorder",
     type: 'POST',
@@ -97,7 +103,6 @@ function cancelOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
       $(button).text("Cancelled");
     }
   });
