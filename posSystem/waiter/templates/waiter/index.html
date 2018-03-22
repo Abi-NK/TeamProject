@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 
 {% load static %}
 
@@ -109,58 +109,89 @@
   </div>
 </div>
 
+<!-- modal - free up seating -->
+<div class="modal fade" id="modalFreeSeating" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Mark table as available</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        <!-- occupied seating dropdown -->
+        <div class="form-group">
+          <select id="freeSeatingOptions" class="form-control">
+            <option value="-1" selected>Select a table</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg btn-block" id="btnFreeSeating">
+          Mark as available
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Waiter front-page -->
 <div class="row">
-  <div class="col-md-4">
-    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="openModalSeating()">
-      view table assignments
+<div class="col-lg-2">
+  <div class="sticky-top pt-3">
+    <button type="button" class="btn btn-primary btn-block" onclick="openModalSeating()">
+      <i class="fas fa-user fa-pull-left fa-lg"></i> View table assignments
     </button>
-  </div>
-  <div class="col-md-4">
-    <h1 class="text-center">Orders</h1>
-  </div>
-  <div class="col-md-4">
-    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" onclick="openModalOrderExtra()">
-      <i class="fas fa-plus"></i> add to an order
-    </button>
-    <button type="button" class="btn btn-outline-secondary btn-block mt-md-3" data-toggle="modal" data-target="#removal">
-      <i class="fas fa-bars"></i> edit the menu
-    </button>
-  </div>
-</div>
-<hr />
-<div id="container-tables">
-  {# populate tables here #}
-</div>
-<hr/>
 
-<div id="container-alerts">
-  {# populate alerts here #}
-</div>
+    <button type="button" class="btn btn-primary btn-block" onclick="openModalOrderExtra()">
+      <i class="fas fa-plus fa-pull-left fa-lg"></i> Suggest menu items
+    </button>
 
-<div class="row">
-  <div class="col-md-4">
-    <h2 class="text-center">Requiring confirmation:</h2>
-    <div id="container-confirm">
-      {# populate orders which need confirming here #}
+    <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#removal">
+      <i class="fas fa-bars fa-pull-left fa-lg"></i> Edit the menu
+    </button>
+
+    <button type="button" class="btn btn-primary btn-block" onclick="openModalFreeSeating()">
+      <i class="fas fa-user-times fa-pull-left fa-lg"></i> Mark seating available
+    </button>
+
+    <div id="container-tables">
+      {# populate tables here #}
+    </div>
+
+    <div id="container-alerts">
+      {# populate alerts here #}
     </div>
   </div>
+</div>
 
-  <div class="col-md-4">
-    <h2 class="text-center">Ready to be delivered:</h2>
-    <div id="container-delivery">
-      {# populate orders which need delivering here #}
+<div class="col-lg-10 pt-3">
+  <div class="row">
+    <div class="col-md-4">
+      <h2 class="text-center">Requiring confirmation:</h2>
+      <div id="container-confirm">
+        {# populate orders which need confirming here #}
+      </div>
     </div>
-  </div>
 
-  <div class="col-md-4">
-    <h2 class="text-center">Delivered and unpaid:</h2>
-    <div id="container-unpaid">
-      {# populate orders which need to be paid for here #}
+    <div class="col-md-4">
+      <h2 class="text-center">Ready to be delivered:</h2>
+      <div id="container-delivery">
+        {# populate orders which need delivering here #}
+      </div>
     </div>
-  </div>
 
+    <div class="col-md-4">
+      <h2 class="text-center">Delivered and unpaid:</h2>
+      <div id="container-unpaid">
+        {# populate orders which need to be paid for here #}
+      </div>
+    </div>
+
+  </div>
+</div>
 </div>
 
 {% endblock %}

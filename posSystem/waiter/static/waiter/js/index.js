@@ -151,6 +151,30 @@ $("#btnPlaceOrderExtra").click(function(){
   }
 });
 
+$("#btnFreeSeating").click(function(){
+  var seating_id = $("#freeSeatingOptions").val();
+  if (seating_id != -1){
+    $.ajax({
+      url: "/core/seating/freeseat",
+      type: 'POST',
+      headers: {'X-CSRFToken': csrfToken},
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify({seatingID: seating_id}),
+      dataType: 'text',
+      success: function(result) {
+        $('#modalFreeSeating').modal('hide');
+      }
+    });
+  }
+});
+
+function openModalFreeSeating(){
+  $.get("/core/seating/html/occupied_seating_dropdown", function(data){
+    $("#freeSeatingOptions").html(data);
+    $('#modalFreeSeating').modal('show');
+  });
+}
+
 function openModalSeating(){
   $.get("/core/seating/html/assignment_list", function(data){
     $("#container-seating").html(data);
