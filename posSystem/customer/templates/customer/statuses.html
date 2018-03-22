@@ -1,50 +1,28 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 {% load static %}
 {% block title %}Statuses{% endblock %}
 {% block content %}
-<meta http-equiv="refresh" content="5" >
-<div class="jumbotron">
-    <h1 class="text-center">Order Statuses:</h1>
-    <br>
-    {% if orders %}
-        {% for order in orders %}
-            <h3>Table Number {{order.table}}:</h3>
-            {% if order.delayed %}
-                <div class="progress-bar bg-warning" style="width:100%">
-                    Order has been delayed.
-                </div>
-            {% endif %}
-            {% if order.confirmed and not order.ready_delivery and not order.delivered %}
-                <div class="progress">
-                    <div class="progress-bar" style="width:30%">
-                        Being Cooked
-                    </div>
-                </div>
-            {% endif %}
-            {% if order.ready_delivery and not order.delivered %}
-                <div class="progress">
-                    <div class="progress-bar" style="width:30%">
-                        Being Cooked
-                    </div>
-                    <div class="progress-bar bg-warning" style="width:30%">
-                        Ready For Delivery
-                    </div>
-                </div>
-            {% endif %}
-            {% if order.delivered %}
-                <div class="progress">
-                    <div class="progress-bar" style="width:30%">
-                        Being Cooked
-                    </div>
-                    <div class="progress-bar bg-warning" style="width:30%">
-                        Ready For Delivery
-                    </div>
-                    <div class="progress-bar bg-success" style="width:40%">
-                        Delivered
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+
+<div class="row">
+
+<div class="col-lg-2">
+  <div class="sticky-top">
+    <h2 id="seating-label" class="text-center">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
+    <a type="button" class="btn btn-primary btn-block" href="/customer">
+      <i class="fas fa-chevron-left fa-pull-left fa-lg"></i>Back
+    </a>
+  </div>
 </div>
+
+<div class="col-lg-10 pt-3">
+
+<div id="container-customer-cards">
+  {# populate customer cards here #}
+</div>
+
+</div>
+</div>
+
 {% endblock %}
+
+{% block endjs %}<script src="{% static "customer/js/statuses.js" %}"></script>{% endblock %}

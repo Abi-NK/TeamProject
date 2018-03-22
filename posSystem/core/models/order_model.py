@@ -32,6 +32,12 @@ class ReadyOrderManager(models.Manager):
         return super().get_queryset().filter(ready_delivery=True).filter(delivered=False)
 
 
+class UnpaidOrderManager(models.Manager):
+    """Filer for ready, non-delivered orders."""
+    def get_queryset(self):
+        return super().get_queryset().filter(confirmed=True).filter(paid=False)
+
+
 class DeliveredTodayOrderManager(models.Manager):
     """Filter for today's delivered orders."""
     def get_queryset(self):
@@ -67,6 +73,7 @@ class Order(models.Model):
     confirmed_objects = ConfirmedOrderManager()
     unconfirmed_objects = UnconfirmedOrderManager()
     ready_objects = ReadyOrderManager()
+    unpaid_objects = UnpaidOrderManager()
     delivered_today_objects = DeliveredTodayOrderManager()
     delivered_week_objects = DeliveredWeekOrderManager()
     cancelled_today_objects = CancelledTodayOrderManager()
@@ -152,10 +159,6 @@ class Order(models.Model):
         """Create an order from the provided JSON."""
         order_contents = [Menu.objects.get(pk=key) for key in order_json]
         total_price = sum([item.price * order_json[str(item.id)] for item in order_contents])
-        # pastOrder collects total of previos order and adds to current order.
-        pastOrder = Order.objects.filter(table=seating_id)
-        for ord in pastOrder:
-            total_price += ord.total_price  # when reading total order look at the last order customer made
 
         order = Order.objects.create(
             table=Seating.objects.get(pk=seating_id),
@@ -167,11 +170,12 @@ class Order(models.Model):
             delivered=False,
         )
         for menu_id, quantity in order_json.items():
-            order_item = OrderItem.objects.create(
-                menu_item=Menu.objects.get(pk=menu_id),
-                quantity=quantity
-            )
-            order.items.add(order_item)
+            if quantity != 0:
+                order_item = OrderItem.objects.create(
+                    menu_item=Menu.objects.get(pk=menu_id),
+                    quantity=quantity
+                )
+                order.items.add(order_item)
 
         # handle an OrderExtra if it exists
         try:
@@ -199,6 +203,18 @@ class Order(models.Model):
     def get_items_display(self):
         """Return the string representation of the items in the order."""
         return "\n".join([str(item) for item in self.items.all()])
+
+    def get_status_display(self):
+        if self.cancelled:
+            return "cancelled"
+        elif self.delivered:
+            return "delivered"
+        elif self.ready_delivery:
+            return "ready for delivery"
+        elif self.confirmed:
+            return "being prepared"
+        else:
+            return "unconfirmed"
 
     def is_nearly_late(self):
         allowed_gap = timedelta(minutes=7)

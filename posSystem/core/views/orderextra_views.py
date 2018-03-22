@@ -34,9 +34,9 @@ def get_order_extra(request):
     """Return the suggested order items as formatted HTML."""
     try:
         order_extra = OrderExtra.active_objects.get(seating=Seating.occupied_objects.get(pk=request.session['seating_id']))
-        return render(request, "customer/get/orderextra.html", {'order_extra': order_extra})
+        return render(request, "core/orderextra/orderextra_list.html", {'order_extra': order_extra})
     except:
-        return render(request, "customer/get/orderextra.html")
+        return render(request, "core/orderextra/orderextra_list.html")
 
 
 @require_http_methods(["POST"])
