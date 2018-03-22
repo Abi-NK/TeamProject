@@ -148,3 +148,8 @@ def html_customer_cards(request):
         'orders': orders,
         'seating_label': seating_label,
     })
+
+
+def html_unpaid_dropdown(request):
+    orders = Order.unpaid_objects.all()
+    return render(request, 'core/order/unpaid_dropdown.html', {'orders': orders})

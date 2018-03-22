@@ -19,6 +19,7 @@ order_model_html_urls = [
     path('summary_list', views.html_summary_list, name='summary_list'),
     path('active_list', views.html_active_list, name='active_list'),
     path('customer_cards', views.html_customer_cards, name='customer_cards'),
+    path('unpaid_dropdown', views.html_unpaid_dropdown, name="unpaid_dropdown"),
 ]
 
 order_model_urls = [

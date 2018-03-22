@@ -85,9 +85,8 @@ function confirmPayment(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
-      $(button).removeClass("btn-primary").addClass("btn-success")
-      $(button).text("Confirmed");
+      $(button).text("Complete");
+      $('#modalSetOrderPaid').modal('hide');
     }
   });
 }
@@ -177,6 +176,21 @@ function openModalFreeSeating(){
   $.get("/core/seating/html/occupied_seating_dropdown", function(data){
     $("#freeSeatingOptions").html(data);
     $('#modalFreeSeating').modal('show');
+  });
+}
+
+$("#btnSetOrderPaid").click(function(){
+  var orderID = $("#unpaidOrderOptions").val();
+  if (orderID != -1){
+    confirmPayment(this, orderID);
+  }
+
+});
+
+function openModalSetOrderPaid(){
+  $.get("/core/order/html/unpaid_dropdown", function(data){
+    $("#unpaidOrderOptions").html(data);
+    $('#modalSetOrderPaid').modal('show');
   });
 }
 
