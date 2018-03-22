@@ -78,12 +78,8 @@
         <div class="modal-image text-center">
           <p><img class="img-responsive" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
         </div>
-        <p>{{menu_item.description}}</p>
-        <p><i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></p>
-        <p>{{menu_item.calories}}kcal</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <p class="lead">{{menu_item.description}}</p>
+        <h5>{{menu_item.calories}}kcal | <i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></h5>
       </div>
     </div>
   </div>
@@ -246,6 +242,10 @@
       {% endif %}
       {% endfor %}
     </div>
+    <br />
+    <br />
+    <br />
+    <br />
 
     <div class="fixed-bottom">
       <div class="row p-3 bg-secondary">
