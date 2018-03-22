@@ -7,7 +7,7 @@ class OrderItem(models.Model):
     quantity = models.IntegerField()
 
     def __str__(self):
-        return "%s %s" % (self.quantity, self.menu_item)
+        return "%sx %s" % (self.quantity, self.menu_item)
 
     def get_price(self):
         """Return the total price of this item."""

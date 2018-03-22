@@ -34,7 +34,7 @@ function getItemTotalPrice(menuItemID){
 function getMenuItemDisplay(menuItemID){
   var displayName = itemNames[menuItemID];
   if (order[menuItemID] > 1){
-    displayName += ` - (${ order[menuItemID] })`;
+    displayName = `${ order[menuItemID] }x ` + displayName;
   }
   return displayName
 }
@@ -43,18 +43,29 @@ function getMenuItemDisplay(menuItemID){
 function updateItemDisplay(){
   $("#order-container").html("");
   $.each(order, function(menuItemID, menuItemQuantity){
+    // <div class="row">
+    //   <div class="col-md-6">
+    //     <h5>{{ item.quantity }}x {{ item.menu_item.name }}</h5>
+    //   </div>
+    //   <div class="col-md-2 text-right">
+    //     <h5>£{{ item.get_price }}</h5>
+    //   </div>
+    //   <div class="col-md-4">
+    //     <button type="button" class="btn btn-outline-secondary btn-block" onclick="btnOrderExtraRemoveItem(this, {{ order_extra.id }}, {{ item.id }})">
+    //       remove from order
+    //     </button>
+    //   </div>
+    // </div>
     if (menuItemQuantity != 0){
-      var entryTemplate = `<div class="card" id="order-item-${ menuItemID }">
-        <div class="card-body">
+      var entryTemplate = `<div id="order-item-${ menuItemID }">
           <div class="row">
             <div class="col-md-9">
               <h4 id="order-item-name-${ menuItemID }">${ getMenuItemDisplay(menuItemID) }</h4>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 text-right">
               <h4 id="order-item-price-${ menuItemID }">${ getItemTotalPrice(menuItemID) }</h4>
             </div>
           </div>
-        </div>
       </div>`;
       $("#order-container").append(entryTemplate);
     }
@@ -145,6 +156,10 @@ function placeOrder(button){
     });
   }
 }
+
+$('#placeOrderModalCenter').on('hidden.bs.modal', function (e) {
+  location.reload();
+})
 
 function freeSeating(){
   $.get("/core/seating/freeseat", function(data){
