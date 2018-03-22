@@ -224,6 +224,12 @@ function updateLiveInfo(){
     } else {
       $("#payButton").prop("disabled", true);
     }
+
+    if (data["seatingAvailable"]){
+      if (seatingLabel != ""){
+        freeSeating();
+      }
+    }
   });
 }
 

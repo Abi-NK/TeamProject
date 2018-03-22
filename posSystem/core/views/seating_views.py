@@ -77,6 +77,10 @@ def cancel_help(request):
 def seating_live_info(request):
     json_to_send = {}
     json_to_send["can_pay"] = Order.unpaid_objects.filter(table=request.session['seating_id']).count() > 0
+    if "seating_id" in request.session:
+        json_to_send["seatingAvailable"] = Seating.objects.get(pk=request.session["seating_id"]).available
+    else:
+        json_to_send["seatingAvailable"] = False
     return JsonResponse(json_to_send)
 
 
