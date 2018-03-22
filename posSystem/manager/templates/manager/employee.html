@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 
 {% load static %}
 
@@ -6,80 +6,94 @@
 
 {% block content %}
 
-<div class="row mt-md-3">
-  <div class="col-xl-3">
-    <h3 class="text-center">Managers</h3>
-    <div id="container-managers">
-      {# populate managers here #}
-      {% if managers %}
-      {% for manager in managers %}
+<div class="row">
 
-      <hr />
-      <h5>{{ manager.username }}</h5>
-      <h5>{{ manager.get_full_name }}</h5>
-
-      {% endfor %}
-      {% else %}
-
-      <div class="alert alert-warning">
-        No managers.
-      </div>
-
-      {% endif %}
-    </div>
+<div class="col-lg-2">
+  <div class="sticky-top pt-1">
+    <a href="{% url 'index' %}" class="btn btn-primary btn-block">
+      <i class="fas fa-chevron-left fa-pull-left fa-lg"></i> Control Panel
+    </a>
   </div>
+</div>
 
-  <div class="col-xl-3">
-    <h3 class="text-center">Kitchen Staff</h3>
-    <div id="container-kitchen">
-      {# populate kitchen staff here #}
-      {% if kitchen_staff %}
-      {% for staff in kitchen_staff %}
+<div class="col-lg-10 pt-3">
+  <div class="row mt-md-3">
+    <div class="col-xl-3">
+      <h3 class="text-center">Managers</h3>
+      <div id="container-managers">
+        {# populate managers here #}
+        {% if managers %}
+        {% for manager in managers %}
 
-      <hr />
-      <h5>{{ staff.username }}</h5>
-      <h5>{{ staff.get_full_name }}</h5>
+        <hr />
+        <h5>{{ manager.username }}</h5>
+        <h5>{{ manager.get_full_name }}</h5>
 
-      {% endfor %}
-      {% else %}
+        {% endfor %}
+        {% else %}
 
-      <div class="alert alert-warning">
-        No kitchen staff.
-      </div>
-
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="col-xl-6">
-    <h3 class="text-center">Waiters</h3>
-    <div id="container-waiters">
-      {# populate waiter data here #}
-      {% if waiters %}
-      {% for waiter in waiters %}
-
-      <hr />
-      <div class="row">
-        <div class="col-md-4">
-          <h5>{{ waiter.waiter.username }}</h5>
-          <h5>{{ waiter.waiter.get_full_name }}</h5>
+        <div class="alert alert-warning">
+          No managers.
         </div>
-        <div class="col-md-8">
-          <h5>Extra sales today: <strong>{{ waiter.extra_sales_daily }}</strong></h5>
-          <h5>Extra sales this week: <strong>{{ waiter.extra_sales_weekly }}</strong></h5>
+
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="col-xl-3">
+      <h3 class="text-center">Kitchen Staff</h3>
+      <div id="container-kitchen">
+        {# populate kitchen staff here #}
+        {% if kitchen_staff %}
+        {% for staff in kitchen_staff %}
+
+        <hr />
+        <h5>{{ staff.username }}</h5>
+        <h5>{{ staff.get_full_name }}</h5>
+
+        {% endfor %}
+        {% else %}
+
+        <div class="alert alert-warning">
+          No kitchen staff.
         </div>
+
+        {% endif %}
       </div>
+    </div>
 
-      {% endfor %}
-      {% else %}
+    <div class="col-xl-6">
+      <h3 class="text-center">Waiters</h3>
+      <div id="container-waiters">
+        {# populate waiter data here #}
+        {% if waiters %}
+        {% for waiter in waiters %}
 
-      <div class="alert alert-warning">
-        No waiters.
+        <hr />
+        <div class="row">
+          <div class="col-md-4">
+            <h5>{{ waiter.waiter.username }}</h5>
+            <h5>{{ waiter.waiter.get_full_name }}</h5>
+          </div>
+          <div class="col-md-8">
+            <h5>Extra sales today: <strong>{{ waiter.extra_sales_daily }}</strong></h5>
+            <h5>Extra sales this week: <strong>{{ waiter.extra_sales_weekly }}</strong></h5>
+          </div>
+        </div>
+
+        {% endfor %}
+        {% else %}
+
+        <div class="alert alert-warning">
+          No waiters.
+        </div>
+
+        {% endif %}
       </div>
-
-      {% endif %}
     </div>
   </div>
+</div>
+
 </div>
 
 {% endblock %}

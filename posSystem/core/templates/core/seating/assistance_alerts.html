@@ -1,10 +1,11 @@
 {% if want_assistance %}
-    {% for table in want_assistance %}
-      <div class="alert alert-primary" role="alert">
-        {{ table.label }} wants assistance.
-        <button type="button" class="close" data-dismiss="alert" onclick="requestHelp({{ table.id }})">
-            <span aria-hidden="true">&times;</span>
-          </button>
-      </div>
-    {% endfor %}
+  <hr />
+  {% for table in want_assistance %}
+    <div class="alert alert-primary" role="alert">
+      {{ table.label }} wants assistance.
+      <button type="button" class="close" data-dismiss="alert" onclick="requestHelp({{ table.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
 {% endif %}

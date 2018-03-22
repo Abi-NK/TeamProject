@@ -1,8 +1,8 @@
-'''
+"""
 
 Views for the customer section of the system. Views take a web request and return a web response.
 
-'''
+"""
 
 
 from django.shortcuts import render, redirect
@@ -51,33 +51,30 @@ def payment(request):
     :returns: HTTPresponse
              Returns the electronic payment html page if the request method is not POST
     """
-    context = {
-            'payment': Payment.objects.filter(order=request.session['seating_id']),
-            'order': Order.objects.filter(table=request.session['seating_id']),
-            # 'orderItems': Order.objects.get(table=request.session['seating_id']).items.all(),
-    }
     if request.method == "POST":
-        Payment(
+        payment = Payment.objects.create(
             card_holder=request.POST.get('name'),
             card_number=request.POST.get('card-number'),
             cvc=request.POST.get('cvc'),
             expiry=request.POST.get('expiry'),
             terms_conditions=checkbox_check(request.POST.get('cbx')),
             payment_received=True
-        ).save(force_insert=True)
-        # assign this paymet to its order
+        )
 
-        order = Order.objects.filter(table=request.session['seating_id'])
-
-        c = len(order)
-
-        for i in range(c):
-            # for every item in the order list add it to the same payment as it came from the same table
-            nOrder = Order.objects.get(id=order[i].id)
-            nOrder.payment = Payment.objects.filter(card_number=request.POST.get('card-number')).last()
-            nOrder.save()
-
+        orders = Order.unpaid_objects.filter(table=request.session['seating_id']).order_by('time')
+        for order in orders:
+            order.paid = True
+            order.payment = payment
+            order.save()
         return redirect('/customer')
+
+    orders = Order.unpaid_objects.filter(table=request.session['seating_id']).order_by('time')
+    context = {
+        'order': orders,
+        'total': "£%.2f" % sum([order.total_price for order in orders])
+    }
+
+
     return render(request, "customer/e_payment.html", context)
 
 
@@ -112,10 +109,24 @@ def t_and_c(request):
 
 def statuses(request):
     """
-    Makes all orders available to the statuses page
+
+    The order statuses page for the customers.
 
     :param request: HTTPrequest
+    :return: HTTPresponse
+             The customer order statuses page.
 
     """
-    orders = Order.objects.all()
-    return render(request, 'customer/statuses.html', {'orders': orders})
+    unpaid_orders = Order.unpaid_objects.filter(table=request.session['seating_id'])
+    active_orders = Order.active_objects.filter(table=request.session['seating_id'])
+    orders = []
+    for order in active_orders:
+        orders.insert(0, order)
+    for order in unpaid_orders:
+        if order not in orders:
+            orders.insert(0, order)
+    seating_label = request.session['seating_label']
+    return render(request, 'customer/statuses.html', {
+        'orders': orders,
+        'seating_label': seating_label,
+    })

@@ -1,8 +1,8 @@
-'''
+"""
 
 Views for the waiter section of the system. Views take a web request and return a web response.
 
-'''
+"""
 
 
 from django.http import HttpResponse
@@ -17,7 +17,7 @@ from manager.views import index as manager_index
 
 
 def group_check(user)
-    '''
+    """
 
     For login. Checks that the username of the user is a username for a waiter.
 
@@ -25,12 +25,12 @@ def group_check(user)
     :return: Boolean
              True if the username starts with 'waiter' or false otherwise
 
-    '''
+    """
     return user.username.startswith('waiter')
 
 
 def waiter_login(request):
-    '''
+    """
 
      The waiter login page that handles login requests.
 
@@ -39,7 +39,7 @@ def waiter_login(request):
              Returns a success page for the type of user logging in if the login was successful.
              Returns a failure page otherwise.
 
-    '''
+    """
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -67,7 +67,7 @@ def waiter_login(request):
 
 
 def waiter_logout(request):
-    '''
+    """
 
      A log out of the current user.
 
@@ -75,14 +75,14 @@ def waiter_logout(request):
     :return: HTTPresponse
              Returns the login page after logging out the user.
 
-    '''
+    """
     logout(request)
     return redirect('/login')
 
 
 @user_passes_test(group_check)
 def index(request):
-    '''
+    """
 
      The waiter index page.
 
@@ -90,7 +90,7 @@ def index(request):
     :return: HTTPresponse
              Returns the index page for a waiter.
 
-    '''
+    """
     if request.method == "POST":
         order_update = Order.objects.get(pk=request.POST['delivery_id'])
         order_update.delivered = True

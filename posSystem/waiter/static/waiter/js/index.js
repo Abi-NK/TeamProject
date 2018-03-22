@@ -41,6 +41,8 @@ function updateOrders(){
 }
 
 function confirmOrder(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/order/confirmorder",
     type: 'POST',
@@ -49,7 +51,6 @@ function confirmOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
       $(button).removeClass("btn-primary").addClass("btn-success")
       $(button).text("Confirmed");
     }
@@ -57,6 +58,8 @@ function confirmOrder(button, orderID){
 }
 
 function delayOrder(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/order/delayorder",
     type: 'POST',
@@ -65,30 +68,32 @@ function delayOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
       $(button).removeClass("btn-primary").addClass("btn-success")
       $(button).text("Delayed");
     }
   });
 }
 
-function confirmPayment(button, paymentID){
+function confirmPayment(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/payment/confirmPayment",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
-    data: JSON.stringify({id: paymentID}),
+    data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
-      $(button).removeClass("btn-primary").addClass("btn-success")
-      $(button).text("Confirmed");
+      $(button).text("Complete");
+      $('#modalSetOrderPaid').modal('hide');
     }
   });
 }
 
 function cancelOrder(button, orderID){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   $.ajax({
     url: "/core/order/cancelorder",
     type: 'POST',
@@ -97,7 +102,6 @@ function cancelOrder(button, orderID){
     data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
-      $(button).attr("disabled", true);
       $(button).text("Cancelled");
     }
   });
@@ -150,6 +154,45 @@ $("#btnPlaceOrderExtra").click(function(){
     });
   }
 });
+
+$("#btnFreeSeating").click(function(){
+  var seating_id = $("#freeSeatingOptions").val();
+  if (seating_id != -1){
+    $.ajax({
+      url: "/core/seating/freeseat",
+      type: 'POST',
+      headers: {'X-CSRFToken': csrfToken},
+      contentType: 'application/json; charset=utf-8',
+      data: JSON.stringify({seatingID: seating_id}),
+      dataType: 'text',
+      success: function(result) {
+        $('#modalFreeSeating').modal('hide');
+      }
+    });
+  }
+});
+
+function openModalFreeSeating(){
+  $.get("/core/seating/html/occupied_seating_dropdown", function(data){
+    $("#freeSeatingOptions").html(data);
+    $('#modalFreeSeating').modal('show');
+  });
+}
+
+$("#btnSetOrderPaid").click(function(){
+  var orderID = $("#unpaidOrderOptions").val();
+  if (orderID != -1){
+    confirmPayment(this, orderID);
+  }
+
+});
+
+function openModalSetOrderPaid(){
+  $.get("/core/order/html/unpaid_dropdown", function(data){
+    $("#unpaidOrderOptions").html(data);
+    $('#modalSetOrderPaid').modal('show');
+  });
+}
 
 function openModalSeating(){
   $.get("/core/seating/html/assignment_list", function(data){

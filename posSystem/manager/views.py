@@ -26,7 +26,7 @@ def group_check(user):
 
 @user_passes_test(group_check)
 def index(request):
-    '''
+    """
 
      The manager index page.
 
@@ -34,7 +34,7 @@ def index(request):
     :return: HTTPresponse
              Returns the index page for a manager.
 
-    '''
+    """
     return render(request, 'manager/index.html')
 
 

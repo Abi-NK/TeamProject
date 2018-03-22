@@ -2,30 +2,29 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-md-8">
-    <h4>Signed in as {{ user.get_full_name }} <span class="text-muted">({{ user.get_username }})</span></h4>
-  </div>
+<hr />
 
-  <div class="col-md-4">
-    {% if waiter.onduty %}
-    <button type="button" class="btn btn-success btn-block" onclick="waiterOffDuty(this, '{{ user.get_username }}')">
-      currently on duty (click to toggle)
-    </button>
-    {% else %}
-    <button type="button" class="btn btn-warning btn-block" onclick="waiterOnDuty(this, '{{ user.get_username }}')">
-      currently off duty (click to toggle)
-    </button>
-    {% endif %}
-  </div>
-</div>
+<h5><strong>{{ user.get_full_name }}</strong> <span class="text-muted">({{ user.get_username }})</span></h5>
 
-<h4>Your assigned tables:</h4>
+{% if waiter.onduty %}
+<button type="button" class="btn btn-success btn-block" onclick="waiterOffDuty(this, '{{ user.get_username }}')">
+  <i class="fas fa-check fa-pull-left fa-lg"></i> Currently on duty
+</button>
+{% else %}
+<button type="button" class="btn btn-warning btn-block" onclick="waiterOnDuty(this, '{{ user.get_username }}')">
+  <i class="fas fa-times fa-pull-left fa-lg"></i> Currently off duty
+</button>
+{% endif %}
+<h6 class="text-center text-muted">(click to toggle)</h6>
+
+<hr />
+
+<h5><strong>Your assigned tables:</strong></h5>
 
 {% if users_tables %}
 <div class="row">
   {% for table in users_tables %}
-    <div class="col-md-2">
+    <div class="col-md-4">
       <h5>{{ table.label }}</h5>
     </div>
   {% endfor %}

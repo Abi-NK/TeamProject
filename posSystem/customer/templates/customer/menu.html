@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 {% load static %}
 {% block title %}Menu{% endblock %}
 {% block content %}
@@ -8,7 +8,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="showOrderModalLongTitle">Your Order:</h5>
+        <h5 class="modal-title" id="showOrderModalLongTitle">Your order:</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -16,40 +16,31 @@
       <div class="modal-body">
 
       <div id="order-container">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-9">
-                <h4>Item Name</h4>
-              </div>
-              <div class="col-md-3">
-                <h4>Price</h4>
-              </div>
-            </div>
-          </div>
-        </div>
+        {# populate order items here #}
       </div>
 
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-9">
-              <h4>Total</h4>
-            </div>
-            <div class="col-md-3">
-              <h4 id="total-price">Total</h4>
-            </div>
-          </div>
+      <div class="row">
+        <div class="col-md-9">
+          <h4><strong>Total</strong></h4>
+        </div>
+        <div class="col-md-3 text-right">
+          <h4><strong id="total-price">Total</strong></h4>
         </div>
       </div>
 
       <div id="container-order-extra">
+        {# populate suggested order items here #}
+      </div>
 
+      <div class="form-group">
+        <input type="text" class="form-control" id="inputKitchenNotes" placeholder="Any notes for the kitchen?">
       </div>
 
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder()">Place order</button>
+          <button id="btnPlaceOrder" type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder(this)">
+            Place order
+          </button>
       </div>
     </div>
   </div>
@@ -57,16 +48,13 @@
 
 <!-- Modal - displaying that the order has been placed -->
 <div class="modal fade" id="placeOrderModalCenter" tabindex="-1" role="dialog" aria-labelledby="placeOrderModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="placeOrderModalLongTitle">Order Sent!</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title" id="placeOrderModalLongTitle">Order sent!</h5>
       </div>
       <div class="modal-body">
-        Order Sent!
+        Click on "Order statuses" to view its progress
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -88,14 +76,10 @@
       </div>
       <div class="modal-body">
         <div class="modal-image text-center">
-          <p><img class="img-responsive" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
+          <p><img class="img-fluid img-thumbnail" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
         </div>
-        <p>{{menu_item.description}}</p>
-        <p><i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></p>
-        <p>{{menu_item.calories}}kcal</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <p class="lead">{{menu_item.description}}</p>
+        <h5>{{menu_item.calories}}kcal | <i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></h5>
       </div>
     </div>
   </div>
@@ -135,41 +119,7 @@
           <div class="row">
             {% if seating %}
               {% for seat in seating %}
-                <div class="col-md-6 mb-md-1">
-                  <button type="button" class="btn-seating-option btn btn-primary btn-lg btn-block" name="{{ seat.label }}" value="{{ seat.id }}">
-                    {{ seat.label }}
-                  </button>
-                </div>
-              {% endfor %}
-            {% else %}
-              <div class="alert alert-warning">
-                No seating data recieved
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      <!--<div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>-->
-    </div>
-  </div>
-</div>
-
-<!-- Modal - vegan filtered -->
-<div class="modal fade" id="chooseTableModalCenter" tabindex="-1" role="dialog" aria-labelledby="chooseTableModalCenterTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="chooseTableModalLongTitle">Where are you sitting?</h5>
-      </div>
-      <div class="modal-body">
-        <h6 class="text-center">Available seating:</h6>
-        <div class="container-fluid">
-          <div class="row">
-            {% if seating %}
-              {% for seat in seating %}
-                <div class="col-md-6 mb-md-1">
+                <div class="col-md-6 mb-1">
                   <button type="button" class="btn-seating-option btn btn-primary btn-lg btn-block" name="{{ seat.label }}" value="{{ seat.id }}">
                     {{ seat.label }}
                   </button>
@@ -191,154 +141,122 @@
 </div>
 
 <!-- Visible Menu - main content for the page -->
-<div>
-  <h1 class="text-center">Menu</h1>
-  <hr />
-  <div class="row mb-md-3">
-    <div class="col-md-4">
-      <h2 id="seating-label">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
+<div class="row">
+
+<div class="col-lg-2">
+  <div class="sticky-top">
+    <h2 id="seating-label" class="text-center" onclick="freeSeating()">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
+    <button type="button" class="btn btn-primary btn-block" onclick="buttonHelp(this)">
+      <i class="fas fa-user fa-pull-left fa-lg"></i> Call a waiter
+    </button>
+    <button type="button" class="btn btn-primary btn-block" data-toggle="collapse" data-target="#collapseMenuFiltering">
+      <i class="fas fa-filter fa-pull-left fa-lg"></i> Filter menu
+    </button>
+
+    <div class="collapse" id="collapseMenuFiltering">
+      <hr />
+
+      <button type="button" class="btn btn-success btn-block filter-btn" name="Vegetarian" value="false" id="vegetarian">
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Vegetarian
+      </button>
+
+      <button type="button" class="btn btn-success btn-block filter-btn" name="Vegan" value="false" id="vegan">
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Vegan
+      </button>
+
+      <button type="button" class="btn btn-success btn-block filter-btn" name="Containing meat" value="false" id="meat">
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing meat
+      </button>
+
+      <button type="button" class="btn btn-success btn-block filter-btn" name="Containing wheat" value="false" id="wheat-free">
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing wheat
+      </button>
+
+      <button type="button" class="btn btn-success btn-block filter-btn" name="Containing milk" value="false" id="milk-free">
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing milk
+      </button>
+
+      <button type="button" class="btn btn-success btn-block filter-btn" name="Containing nuts" value="false" id="nut-free">
+        <i class="fas fa-check fa-pull-left fa-lg"></i> Containing nuts
+      </button>
     </div>
-    <div class="col-md-4 text-right">
-        <h5>Need some help?</h5>
-    </div>
-    <div class="col-md-4">
-      <button type="button" class="btn btn-primary btn-sm btn-block" onclick="buttonHelp(this)">Call a waiter</button>
-    </div>
-    <div class="col-md-4"></div>
-    <div class="col-md-4 text-right">
-      <h5>Not found what you're looking for?</h5>
-    </div>
-    <div class="col-md-4">
-      <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#sortMenu">Filter menu</button>
-      <div class="modal fade" id="sortMenu">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 class="modal-title">Filter Oaxaca Menu:</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-           </div>
-          <div class="modal-body">
-            <div class="container">
-                <label class="checkbox-inline">
-                  <input type="checkbox" id="vegetarian" value="">Vegetarian
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" id="vegan" value="">Vegan
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" id="wheat-free" value="">Wheat Free
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" id="milk-free" value="">Milk Free
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" id="nut-free" value="">Nut Free
-                </label>
-                <label class="checkbox-inline">
-                  <input type="checkbox" id="meat" value="">Meat
-                </label>
-                <button class="btn-filter btn btn-success btn-sm btn-block" >Submit</button>
-                <button class="btn-remove btn btn-warning btn-sm btn-block" >Remove Applied Filters</button>
-            </div>
-          </div>
-          <div class="modal-footer">
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-    </div>
+
+    <hr />
+
+    <button type="button" class="btn btn-primary btn-block" onclick="showOrder()">
+      <i class="fas fa-align-justify fa-pull-left fa-lg"></i> View order
+    </button>
+    <button type="button" class="btn btn-primary btn-block" onclick="window.location.href='./statuses'">
+      <i class="fas fa-info-circle fa-pull-left fa-lg"></i> Order statuses
+    </button>
+    <button id="payButton" type="button" class="btn btn-primary btn-block" onclick="window.location.href='./payment'" {% if not order.paid %}enabled{% else %}disabled{% endif %}>
+      <i class="fas fa-credit-card fa-pull-left fa-lg"></i> Pay
+    </button>
   </div>
+</div>
+
+
+<div class="col-lg-10 pt-3">
+
   {% if all_menu %}
     <div class="row">
       {% for menu_item in all_menu %}
       {% if not menu_item.removed %}
-        <div class="col-md-6 mb-md-3">
-          {% if menu_item.vegan %}
-          <div class="vegan-item">
-          {% endif %}
-          {% if menu_item.vegetarian %}
-          <div class="veg-item">
-          {% endif %}
-          {% if menu_item.allergy == "Wheat" %}
-          <div class="wheat-item">
-          {% endif %}
-          {% if menu_item.allergy == "Milk" %}
-          <div class="milk-item">
-          {% endif %}
-          {% if menu_item.allergy == "Nuts" %}
-          <div class="nut-item">
-          {% endif %}
-          {% if menu_item.meat %}
-          <div class="meat-item">
-          {% endif %}
-          <div class="card ">
+        <div class="col-md-4 mb-md-3{% if menu_item.vegan %} vegan-item{% endif %}{% if menu_item.vegetarian %} veg-item{% endif %}{% if menu_item.allergy == "Wheat" %} wheat-item{% endif %}{% if menu_item.allergy == "Milk" %} milk-item{% endif %}{% if menu_item.allergy == "Nuts" %} nut-item{% endif %}{% if menu_item.meat %} meat-item{% endif %}">
+          <div class="card mb-1">
             <div class="card-body">
-              <div class="row">
-                <div class="col-md-9">
-                  <h3 class="card-title">{{ menu_item.name }} </h3>
-                  <h6 class="card-subtitle text-muted">
-                    {% if menu_item.allergy != "" %}
-                      Contains {{ menu_item.allergy }}
-                    {% endif %}
-                  </h6>
-                  <p class="card-text">
-                    {{ menu_item.description }}
-                  </p>
-                  <a data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">Click here for more information</a>
-                  <button type="button" class="btn btn-primary" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">Add to order</button>
-                </div>
-                <div class="col-md-3">
-                  <h2 class="text-center">£{{ menu_item.price }}</h2>
-                  <h6 class="text-center">{{ menu_item.calories }}kcal</h6>
+
+              <h4 class="card-title">{{ menu_item.name }} </h4>
+              <h6 class="card-subtitle text-muted">
+                {{ menu_item.calories }}kcal
+                {% if menu_item.allergy != "" %}| Contains {{ menu_item.allergy }}{% endif %}
+              </h6>
+              <p class="card-text lead mb-0">
+                {{ menu_item.description }}
+              </p>
+              <h5 >£{{ menu_item.price }} | <a class="text-info" data-target="#{{menu_item.id}}" data-toggle="modal" href="#{{menu_item.id}}">more information</a></h5>
+
+              <div id="containerOrderButton{{ menu_item.id }}">
+                <button type="button" class="btn btn-primary btn-block addButton" onclick="addToOrder({{ menu_item.id }}, '{{ menu_item.name }}', {{ menu_item.price }})">
+                  Add to order
+                </button>
+
+                <div class="row mt-1 incDecButtons" style="display: none;">
+                  <div class="col-6">
+                    <h5><strong id="quantity{{ menu_item.id }}">X</strong> in your order</h5>
+                  </div>
+                  <div class="col-6 text-right">
+                    <button type="button" class="btn btn-warning" onclick="decOrderItem({{ menu_item.id }})">
+                      <i class="fas fa-minus fa-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-success" onclick="incOrderItem({{ menu_item.id }})">
+                      <i class="fas fa-plus fa-lg"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
-        {% if menu_item.vegetarian %}
-        </div>
-        {% endif %}
-        {% if menu_item.vegan %}
-        </div>
-        {% endif %}
-        {% if menu_item.allergy == "Wheat" %}
-        </div>
-        {% endif %}
-        {% if menu_item.allergy == "Milk" %}
-        </div>
-        {% endif %}
-        {% if menu_item.allergy == "Nuts" %}
-        </div>
-        {% endif %}
-        {% if menu_item.meat %}
-        </div>
-        {% endif %}
         </div>
       {% endif %}
       {% endfor %}
     </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-    <div class="footer" style="position: fixed; left: 0; bottom: 0; width: 100%; background-color: #e6e6e6; color: white; text-align: center; border-top: 1px solid black;">
-    <div class="col-md-12 mb-md-3">
-      <br>
-      <button type="button" class="btn btn-primary btn-lg btn-block" style="height:70px;" onclick="showOrder()">View order</button>
-    </div>
-  <div class="row">
-    <div class="col-md-4">
-      <button id="payButton" type="button" class="btn btn-primary btn-lg btn-block" onclick="window.location.href='./payment'" {%if order.delivered and not order.payment.payment_accepted %}enabled{%else%}disabled{% endif %}>Pay</button>
-    </div>
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
-      <button type="button" class="btn btn-success btn-lg btn-block" onclick="window.location.href='./statuses'">Order Statuses</button>
-    </div>
-  </div>
-      </div>
     <br />
+    <br />
+    <br />
+    <br />
+
+    <div class="fixed-bottom">
+      <div class="row p-3 bg-secondary">
+        <div class="col-lg-4 offset-lg-4">
+          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="showOrder()">
+            View order
+          </button>
+        </div>
+      </div>
+    </div>
+
   {% else %}
     <div class="alert alert-warning">
       No menu data received
@@ -346,7 +264,10 @@
   {% endif %}
 </div>
 
+</div>
+
 {% endblock %}
+
 {% block endjs %}
 <script>var seatingLabel = "{% if seating_label %}{{seating_label}}{% else %}{% endif %}";</script>
 <script src="{% static "customer/js/menu.js" %}"></script>

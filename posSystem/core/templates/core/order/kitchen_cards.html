@@ -5,33 +5,52 @@
 {% for order in orders %}
 
 <div class="card mb-md-3 {% if order.is_late %}late{% elif order.is_nearly_late %}nearly-late{% else %}not-late{% endif %}">
-  <div id="body" class="card-body" style=${changeColour(time)}>
+  <div class="card-header">
     <div class="row">
-      <div class="col-md-9">
-        <h2 class="card-title">Order #{{ order.id }}</h2>
-        <p class="card-text">
-          <b>Items:</b>
-          <br>
-          {{ order.get_items_display | linebreaksbr }}
-        </p>
-        <p>
-          <b>Order time:</b> {{ order.get_time_display }}
-        </p>
-        <p>
-          <b>Cooking instructions:</b> {{ order.cooking_instructions }}
-        </p>
-        <p>
-          <b>Order confirmed:</b> {% if order.confirmed %}yes{% else %}no{% endif %}
-        </p>
-        <p>
-          <b>Order delivered:</b> {% if order.delivered %}yes{% else %}no{% endif %}
-        </p>
+      <div class="col-lg-8">
+        <h3 class="card-title">Order #{{ order.id }} ({{ order.table.label }})</h3>
       </div>
-      <div class="col-md-3 text-center">
-        <button type="button" class="btn btn-{% if order.ready_delivery %}success{% else %}primary{% endif %} btn-lg"
-        onclick="setReadyDelivery(this, {{ order.id }})" {% if order.ready_delivery %}"disabled"{% endif %}>
-          {% if order.ready_delivery %}Readied{% else %}Ready{% endif %}
+      <div class="col-lg-4">
+        <button type="button" class="btn btn-{% if order.ready_delivery %}success{% else %}primary{% endif %} btn-lg btn-block" onclick="setReadyDelivery(this, {{ order.id }})" {% if order.ready_delivery %} " disabled"{% endif %}>
+          {% if order.ready_delivery %}Readied{% else %}Ready for delivery{% endif %}
         </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="body" class="card-body" style="background-color: linen;">
+    <div class="row">
+      <div class="col-md-4">
+
+        {% if order.cooking_instructions == 'none' %}
+          <h5><b><i class="fas fa-times-circle fa-pull-left fa-lg"></i> Cooking instructions</b></h5>
+        {% else %}
+          <h5><b><i class="fas fa-check-circle fa-pull-left fa-lg"></i> Cooking instructions</b></h5>
+        {% endif %}
+
+        {% if order.confirmed %}
+          <h5><b><i class="fas fa-check-circle fa-pull-left fa-lg"></i> Order confirmed</b></h5>
+        {% else %}
+          <h5><b><i class="fas fa-times-circle fa-pull-left fa-lg"></i> Order confirmed</b></h5>
+        {% endif %}
+
+        {% if order.delivered %}
+          <h5><b><i class="fas fa-check-circle fa-pull-left fa-lg"></i> Order delivered</b></h5>
+        {% else %}
+          <h5><b><i class="fas fa-times-circle fa-pull-left fa-lg"></i> Order delivered</b></h5>
+        {% endif %}
+
+        {% if order.cooking_instructions != "none" %}
+        <p class="lead">
+          {{ order.cooking_instructions }}
+        </p>
+        {% endif %}
+
+      </div>
+
+      <div class="col-md-8">
+        <font size="5"> {{ order.get_items_display | linebreaksbr }}</font>
       </div>
     </div>
   </div>

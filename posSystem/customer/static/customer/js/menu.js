@@ -1,5 +1,6 @@
 // the object of items ordered and quantity
 var order = {};
+var orderExtra = {};
 // used locally for displaying order info, should never be returned to the server
 var itemNames = {};
 var itemPrices = {};
@@ -30,35 +31,45 @@ function getItemTotalPrice(menuItemID){
   }
 }
 
-// adds or updates an entry in the displayed list of items in the order
-function addOrderItemToDisplay(menuItemID){
-  if ($("#order-item-" + menuItemID).length == 0) {
-    // item does not exist in order list yet, so add it
-    var entryTemplate = `<div class="card" id="order-item-${ menuItemID }">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-9">
-            <h4 id="order-item-name-${ menuItemID }">${ itemNames[menuItemID] }</h4>
-          </div>
-          <div class="col-md-3">
-            <h4 id="order-item-price-${ menuItemID }">${ getItemTotalPrice(menuItemID) }</h4>
-          </div>
-        </div>
-      </div>
-    </div>`;
-    $("#order-container").append(entryTemplate);
-  } else {
-    // item is already in list, so update it's entry
-    // updates the item name to have " - (n)" appended
-    var itemText = itemNames[menuItemID];
-    if (order[menuItemID] > 1){
-      itemText += ` - (${ order[menuItemID] })`;
-    }
-    $("#order-item-name-" + menuItemID).text(itemText);
-
-    // updates total
-    $("#order-item-price-" + menuItemID).text(getItemTotalPrice(menuItemID));
+function getMenuItemDisplay(menuItemID){
+  var displayName = itemNames[menuItemID];
+  if (order[menuItemID] > 1){
+    displayName = `${ order[menuItemID] }x ` + displayName;
   }
+  return displayName
+}
+
+// adds or updates an entry in the displayed list of items in the order
+function updateItemDisplay(){
+  $("#order-container").html("");
+  $.each(order, function(menuItemID, menuItemQuantity){
+    // <div class="row">
+    //   <div class="col-md-6">
+    //     <h5>{{ item.quantity }}x {{ item.menu_item.name }}</h5>
+    //   </div>
+    //   <div class="col-md-2 text-right">
+    //     <h5>£{{ item.get_price }}</h5>
+    //   </div>
+    //   <div class="col-md-4">
+    //     <button type="button" class="btn btn-outline-secondary btn-block" onclick="btnOrderExtraRemoveItem(this, {{ order_extra.id }}, {{ item.id }})">
+    //       remove from order
+    //     </button>
+    //   </div>
+    // </div>
+    if (menuItemQuantity != 0){
+      var entryTemplate = `<div id="order-item-${ menuItemID }">
+          <div class="row">
+            <div class="col-md-9">
+              <h4 id="order-item-name-${ menuItemID }">${ getMenuItemDisplay(menuItemID) }</h4>
+            </div>
+            <div class="col-md-3 text-right">
+              <h4 id="order-item-price-${ menuItemID }">${ getItemTotalPrice(menuItemID) }</h4>
+            </div>
+          </div>
+      </div>`;
+      $("#order-container").append(entryTemplate);
+    }
+  });
 }
 
 // called by buttons on menu items, ads them to the order object
@@ -75,32 +86,87 @@ function addToOrder(menuItemID, menuItemName, menuItemPrice) {
   itemPrices[menuItemID] = menuItemPrice;
 
   updateTotal();
+  updateItemDisplay();
   console.log(menuItemName + " added to order, new total is £" + stringTotal);
-  addOrderItemToDisplay(menuItemID);
+
+  $("#quantity" + menuItemID).html(order[menuItemID])
+  $("#containerOrderButton"+menuItemID+" .addButton").hide()
+  $("#containerOrderButton"+menuItemID+" .incDecButtons").show()
+}
+
+function incOrderItem(menuItemID){
+  if (order.hasOwnProperty(menuItemID)) {
+    order[menuItemID] += 1;
+  } else {
+    order[menuItemID] = 1;
+  }
+  updateTotal();
+  updateItemDisplay();
+  $("#quantity" + menuItemID).html(order[menuItemID])
+}
+
+function decOrderItem(menuItemID){
+  if (order.hasOwnProperty(menuItemID)) {
+    order[menuItemID] -= 1;
+  } else {
+    order[menuItemID] = 0;
+  }
+  if (order[menuItemID] == 0){
+    delete order[menuItemID];
+    $("#containerOrderButton"+menuItemID+" .addButton").show()
+    $("#containerOrderButton"+menuItemID+" .incDecButtons").hide()
+  }
+  updateTotal();
+  updateItemDisplay();
+  $("#quantity" + menuItemID).html(order[menuItemID])
 }
 
 // used to show the customer's order
 function showOrder(){
+  if (Object.keys(order).length === 0 && Object.keys(orderExtra).length === 0){
+    $("#btnPlaceOrder").prop("disabled", true);
+  } else {
+    $("#btnPlaceOrder").prop("disabled", false);
+  }
   $('#showOrderModalCenter').modal('show');
 }
 
 // used to send the order object to the server
-function placeOrder(){
+function placeOrder(button){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   if (Object.keys(order).length === 0 && Object.keys(orderExtra).length === 0){
     console.log("Not placing order: order is empty.");
+    $(button).html("Place order");
+    $(button).prop("disabled", false);
   } else {
+    var notes = $("#inputKitchenNotes").val()
+    console.log(notes);
     $.ajax({
       url: "/core/order/makeorder",
       type: 'POST',
       headers: {'X-CSRFToken': csrfToken},
       contentType: 'application/json; charset=utf-8',
-      data: JSON.stringify({order: order}),
+      data: JSON.stringify({order: order, notes: notes}),
       dataType: 'text',
       success: function(result) {
-		$('#placeOrderModalCenter').modal('show');
+        $('#showOrderModalCenter').modal('hide');
+    		$('#placeOrderModalCenter').modal('show');
+        $(button).html("Place order");
+        $(button).prop("disabled", false);
       }
     });
   }
+}
+
+$('#placeOrderModalCenter').on('hidden.bs.modal', function (e) {
+  location.reload();
+})
+
+function freeSeating(){
+  $.get("/core/seating/freeseat", function(data){
+    location.reload();
+  });
 }
 
 function requestHelp(){
@@ -151,8 +217,25 @@ function updateOrderExtra(){
   });
 }
 
+function updateLiveInfo(){
+  $.getJSON("/core/seating/seatingliveinfo", function(data){
+    if (data["can_pay"]){
+      $("#payButton").prop("disabled", false);
+    } else {
+      $("#payButton").prop("disabled", true);
+    }
+
+    if (data["seatingAvailable"]){
+      if (seatingLabel != ""){
+        freeSeating();
+      }
+    }
+  });
+}
+
 function updateLoop(){
   updateOrderExtra();
+  updateLiveInfo();
   setTimeout(function(){
      updateLoop();
   }, 5000);
@@ -189,43 +272,53 @@ $(document).ready(function() {
   updateLoop();
 });
 
+// method called by filtering buttons
+$('.filter-btn').on('click', function() {
 
-// method called by submission button of menu filtering modal
-$('.btn-filter').on('click', function() {
-  // if selected "vegan"
-  if($("#vegan").is(':checked')){
-    $('.veg-item').hide();
-    $('.meat-item').hide();
+  if (this.value == "false"){
+    $(this).html('<i class="fas fa-times fa-pull-left fa-lg"></i> ' + this.name);
+    $(this).removeClass("btn-success").addClass("btn-warning");
+    this.value = "true";
+  } else {
+    $(this).html('<i class="fas fa-check fa-pull-left fa-lg"></i> ' + this.name);
+    $(this).removeClass("btn-warning").addClass("btn-success");
+    this.value = "false";
   }
-  // if selected "vegetarian"
-  if($("#vegetarian").is(':checked')){
-    $('.meat-item').hide();
-  }
-  // if selected "wheat-free"
-  if($("#wheat-free").is(':checked')){
-    $('.wheat-item').hide();
-  }
-  // if selected "milk-free"
-  if($("#milk-free").is(':checked')){
-    $('.milk-item').hide();
-  }
-  // if selected "nut-free"
-  if($("#nut-free").is(':checked')){
-    $('.nut-item').hide();
-  }
-  // if selected "meat"
-  if($("#meat").is(':checked')){
-    $('.veg-item').hide();
-    $('.vegan-item').hide();
-  }
-});
 
-// method called by cancel of filters button
-$('.btn-remove').on('click', function() {
   $('.veg-item').show();
   $('.vegan-item').show();
   $('.wheat-item').show();
   $('.nut-item').show();
   $('.meat-item').show();
   $('.milk-item').show();
+
+  // if selected "vegan"
+  if($("#vegan").val() == "true"){
+    $('.vegan-item').hide();
+  }
+  // if selected "vegetarian"
+  if($("#vegetarian").val() == "true"){
+    $('.veg-item').hide();
+    $('.vegan-item').hide();
+  }
+  // if selected "containging meat"
+  if($("#meat").val() == "true"){
+    $('.meat-item').hide();
+  }
+  // if selected "wheat-free"
+  if($("#wheat-free").val() == "true"){
+    $('.wheat-item').hide();
+  }
+  // if selected "milk-free"
+  if($("#milk-free").val() == "true"){
+    $('.milk-item').hide();
+  }
+  // if selected "nut-free"
+  if($("#nut-free").val() == "true"){
+    $('.nut-item').hide();
+  }
+});
+
+$(".btn-add").on('click', function(){
+
 });

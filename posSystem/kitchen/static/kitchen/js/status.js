@@ -13,9 +13,9 @@ function updateLoop(){
 function updateOrders(){
   $.get("/core/order/html/kitchen_cards", function(data){
     $("#order-container").html(data);
-    $(".not-late").css("background-color", "LIGHTGREEN");
-    $(".nearly-late").css("background-color", "#FEDB00");
-    $(".late").css("background-color", "#F15454");
+    $(".not-late .card-header").css("background-color", "LIGHTGREEN");
+    $(".nearly-late .card-header").css("background-color", "#FEDB00");
+    $(".late .card-header").css("background-color", "#F15454");
   });
 }
 

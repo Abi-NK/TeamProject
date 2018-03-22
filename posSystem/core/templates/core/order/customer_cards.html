@@ -1,0 +1,44 @@
+{% if orders %}
+  <div class="row">
+    {% for order in orders %}
+      <div class="col-lg-4">
+        <div class="card mb-md-3">
+          <div class="card-body">
+            <h4 class="card-title">Order #{{ order.id }}</h4>
+            <p class="card-text">
+              {{ order.get_items_display | linebreaksbr }}
+            </p>
+            <h5>Status: {{ order.get_status_display }}</h5>
+            <h5>Delayed: {% if order.delayed %}yes{% else %}no{% endif %}</h5>
+            <h5>Time Ordered: {{ order.get_time_display }}</h5>
+            <h5>Total price: {{ order.get_price_display }}</h5>
+            <h5>Paid for: {% if order.paid %}yes{% else %}no{% endif %}</h5>
+            {% if order.delivered %}
+            <div class="progress">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+            </div>
+            {% elif order.ready_delivery %}
+            <div class="progress">
+              <div class="progress-bar bg-info" role="progressbar" style="width: 75%"></div>
+            </div>
+            {% elif order.confirmed %}
+            <div class="progress">
+              <div class="progress-bar bg-primary" role="progressbar" style="width: 50%"></div>
+            </div>
+            {% else %}
+            <div class="progress">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: 25%"></div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+
+<div class="alert alert-warning">
+  No orders.
+</div>
+
+{% endif %}

@@ -1,6 +1,6 @@
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render
-from core.models import Seating, Waiter
+from core.models import Order, Seating, Waiter
 from django.contrib.auth.models import User
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,20 @@ def take_seat(request):
     Seating.objects.get(pk=table_id).set_unavailable()
     request.session['seating_id'] = table_id
     request.session['seating_label'] = Seating.objects.get(pk=table_id).label
+    return HttpResponse("received")
+
+
+def free_seat(request):
+    """Marks the provided seating as unavailable in the database."""
+    if request.method == "GET":
+        if "seating_id" in request.session:
+            table_id = request.session['seating_id']
+            Seating.objects.get(pk=table_id).set_available()
+            del request.session['seating_id']
+            del request.session['seating_label']
+    if request.method == "POST":
+        seating_id = json.loads(request.body.decode('utf-8'))["seatingID"]
+        Seating.objects.get(pk=seating_id).set_available()
     return HttpResponse("received")
 
 
@@ -58,6 +72,16 @@ def cancel_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["id"]
     Seating.objects.get(pk=seating_id).set_assistance_false()
     return HttpResponse("recieved")
+
+
+def seating_live_info(request):
+    json_to_send = {}
+    json_to_send["can_pay"] = Order.unpaid_objects.filter(table=request.session['seating_id']).count() > 0
+    if "seating_id" in request.session:
+        json_to_send["seatingAvailable"] = Seating.objects.get(pk=request.session["seating_id"]).available
+    else:
+        json_to_send["seatingAvailable"] = False
+    return JsonResponse(json_to_send)
 
 
 # HTML rendering views are listed below

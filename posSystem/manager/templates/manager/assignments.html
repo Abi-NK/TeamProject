@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "basewide.html" %}
 
 {% load static %}
 
@@ -6,26 +6,38 @@
 
 {% block content %}
 
-<div class="row mt-md-3">
-  <div class="col-xl-2">
-    <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-block mb-md-3"><i class="fas fa-chevron-left"></i> Control Panel</a>
-    <button id="btnAutoAssign" onclick="autoAssign(this)" class="btn btn-outline-secondary btn-block mb-md-3">Auto-Assign</button>
-  </div>
+<div class="row">
 
-  <div class="col-xl-7">
-    <h3 class="text-center">Waiter Seating Assignments</h3>
-    <hr />
-    <div id="container-assignments">
-      {# populate waiter assignment info here #}
+<div class="col-lg-2">
+  <div class="sticky-top pt-1">
+    <a href="{% url 'index' %}" class="btn btn-primary btn-block">
+      <i class="fas fa-chevron-left fa-pull-left fa-lg"></i> Control Panel
+    </a>
+    <button id="btnAutoAssign" onclick="autoAssign(this)" class="btn btn-primary btn-block mb-md-3">
+      <i class="fas fa-cogs fa-pull-left fa-lg"></i> Auto-Assign
+    </button>
+  </div>
+</div>
+
+<div class="col-lg-10 pt-3">
+  <div class="row">
+    <div class="col-lg-8">
+      <h3 class="text-center">Waiter Seating Assignments</h3>
+      <hr />
+      <div id="container-assignments">
+        {# populate waiter assignment info here #}
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <h3 class="text-center">Waiters</h3>
+      <div id="container-waiters">
+        {# populate waiter info here #}
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="col-xl-3">
-    <h3 class="text-center">Waiters</h3>
-    <div id="container-waiters">
-      {# populate waiter info here #}
-    </div>
-  </div>
 </div>
 
 {% endblock %}
