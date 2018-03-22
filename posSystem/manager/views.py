@@ -1,3 +1,10 @@
+'''
+
+Views for the manager section of the system. Views take a web request and return a web response.
+
+'''
+
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from core.models import OrderExtra
@@ -5,24 +12,57 @@ from django.contrib.auth.models import User
 
 
 def group_check(user):
+    '''
+
+    For login. Checks that the username of the user is a username for a manager.
+
+    :param user: user authentication object
+    :return: Boolean
+             True if the username starts with 'manager' or false otherwise
+
+    '''
     return user.username.startswith('manager')
 
 
 @user_passes_test(group_check)
 def index(request):
-    """Return the manager page."""
+    '''
+
+     The manager index page.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             Returns the index page for a manager.
+
+    '''
     return render(request, 'manager/index.html')
 
 
 @user_passes_test(group_check)
 def data(request):
-    """Return the live updating data page."""
+    '''
+
+     The live updating data page.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             Returns the live data page for a manager.
+
+    '''
     return render(request, 'manager/data.html')
 
 
 @user_passes_test(group_check)
 def employee(request):
-    """Return the employee data page."""
+    '''
+
+     Employee data page showing information about the employees of this branch of Oaxaca.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             Returns the employee data page.
+
+    '''
     waiter_data = []
     for waiter in User.objects.filter(username__startswith="waiter"):
         today_total = sum([item.get_total() for item in OrderExtra.used_today_objects.filter(waiter=waiter)])
@@ -41,5 +81,13 @@ def employee(request):
 
 @user_passes_test(group_check)
 def waiter_assignments(request):
-    """Return the waiter seating assignments page."""
+    '''
+
+     The waiter seating assignments page.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             Returns the waiter-seating assignment page.
+
+    '''
     return render(request, 'manager/assignments.html')
