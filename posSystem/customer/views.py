@@ -16,7 +16,7 @@ def index(request):
     Sets up the customer index page with menu displayed.
 
     :param request: HTTPrequest
-    :return: HTTPresponse
+    :returns: HTTPresponse
             Returns the customer menu html page
     """
 
