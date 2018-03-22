@@ -16,7 +16,7 @@ from kitchen.views import index as waiter_index
 from manager.views import index as manager_index
 
 
-def group_check(user)
+def group_check(user):
     """
 
     For login. Checks that the username of the user is a username for a waiter.
