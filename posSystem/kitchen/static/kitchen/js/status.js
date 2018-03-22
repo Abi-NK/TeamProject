@@ -15,7 +15,7 @@ function updateOrders(){
     $("#order-container").html(data);
     $(".not-late .card-header").css("background-color", "LIGHTGREEN");
     $(".nearly-late .card-header").css("background-color", "#FEDB00");
-    $(".late .card-header").css("background-color", "#F15454").css("border-radius", "5px");
+    $(".late .card-header").css("background-color", "#F15454");
   });
 }
 

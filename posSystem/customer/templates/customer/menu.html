@@ -76,7 +76,7 @@
       </div>
       <div class="modal-body">
         <div class="modal-image text-center">
-          <p><img class="img-responsive" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
+          <p><img class="img-fluid img-thumbnail" src="{{menu_item.image}}" border="25" style="max-height:250px;"></p>
         </div>
         <p class="lead">{{menu_item.description}}</p>
         <h5>{{menu_item.calories}}kcal | <i>{% if menu_item.allergy != "" %}Contains {{ menu_item.allergy }} {% endif %}</i></h5>
