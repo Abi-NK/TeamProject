@@ -144,7 +144,7 @@ def html_customer_cards(request):
         if order not in orders:
             orders.insert(0, order)
     seating_label = request.session['seating_label']
-    return render(request, 'customer/statuses.html', {
+    return render(request, 'core/order/customer_cards.html', {
         'orders': orders,
         'seating_label': seating_label,
     })
