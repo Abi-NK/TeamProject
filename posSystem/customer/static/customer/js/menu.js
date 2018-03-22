@@ -1,5 +1,6 @@
 // the object of items ordered and quantity
 var order = {};
+var orderExtra = {};
 // used locally for displaying order info, should never be returned to the server
 var itemNames = {};
 var itemPrices = {};
@@ -114,9 +115,13 @@ function showOrder(){
 }
 
 // used to send the order object to the server
-function placeOrder(){
+function placeOrder(button){
+  $(button).html("<i class='fas fa-circle-notch fa-spin'></i>");
+  $(button).prop("disabled", true);
   if (Object.keys(order).length === 0 && Object.keys(orderExtra).length === 0){
     console.log("Not placing order: order is empty.");
+    $(button).html("Place order");
+    $(button).prop("disabled", false);
   } else {
     $.ajax({
       url: "/core/order/makeorder",
@@ -126,10 +131,19 @@ function placeOrder(){
       data: JSON.stringify({order: order}),
       dataType: 'text',
       success: function(result) {
-		$('#placeOrderModalCenter').modal('show');
+        $('#showOrderModalCenter').modal('hide');
+    		$('#placeOrderModalCenter').modal('show');
+        $(button).html("Place order");
+        $(button).prop("disabled", false);
       }
     });
   }
+}
+
+function freeSeating(){
+  $.get("/core/seating/freeseat", function(data){
+    location.reload();
+  });
 }
 
 function requestHelp(){
@@ -180,8 +194,19 @@ function updateOrderExtra(){
   });
 }
 
+function updateLiveInfo(){
+  $.getJSON("/core/seating/seatingliveinfo", function(data){
+    if (data["can_pay"]){
+      $("#payButton").prop("disabled", false);
+    } else {
+      $("#payButton").prop("disabled", true);
+    }
+  });
+}
+
 function updateLoop(){
   updateOrderExtra();
+  updateLiveInfo();
   setTimeout(function(){
      updateLoop();
   }, 5000);

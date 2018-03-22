@@ -16,18 +16,7 @@
       <div class="modal-body">
 
       <div id="order-container">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-9">
-                <h4>Item Name</h4>
-              </div>
-              <div class="col-md-3">
-                <h4>Price</h4>
-              </div>
-            </div>
-          </div>
-        </div>
+        {# populate order items here #}
       </div>
 
       <div class="card">
@@ -44,12 +33,14 @@
       </div>
 
       <div id="container-order-extra">
-
+        {# populate suggested order items here #}
       </div>
 
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder()">Place order</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" onclick="placeOrder(this)">
+            Place order
+          </button>
       </div>
     </div>
   </div>
@@ -57,16 +48,13 @@
 
 <!-- Modal - displaying that the order has been placed -->
 <div class="modal fade" id="placeOrderModalCenter" tabindex="-1" role="dialog" aria-labelledby="placeOrderModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="placeOrderModalLongTitle">Order Sent!</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title" id="placeOrderModalLongTitle">Order sent!</h5>
       </div>
       <div class="modal-body">
-        Order Sent!
+        Click on "Order statuses" to view its progress
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -135,7 +123,7 @@
           <div class="row">
             {% if seating %}
               {% for seat in seating %}
-                <div class="col-md-6 mb-md-1">
+                <div class="col-md-6 mb-1">
                   <button type="button" class="btn-seating-option btn btn-primary btn-lg btn-block" name="{{ seat.label }}" value="{{ seat.id }}">
                     {{ seat.label }}
                   </button>
@@ -161,7 +149,7 @@
 
 <div class="col-lg-2">
   <div class="sticky-top">
-    <h2 id="seating-label" class="text-center">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
+    <h2 id="seating-label" class="text-center" onclick="freeSeating()">{% if seating_label %}{{ seating_label }}{% endif %}</h2>
     <button type="button" class="btn btn-primary btn-block" onclick="buttonHelp(this)">
       <i class="fas fa-user fa-pull-left fa-lg"></i> Call a waiter
     </button>

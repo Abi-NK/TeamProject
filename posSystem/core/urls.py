@@ -54,10 +54,12 @@ seating_model_html_urls = [
 seating_model_urls = [
     path('html/', include(seating_model_html_urls)),
     path('takeseat', views.take_seat, name='takeseat'),
+    path('freeseat', views.free_seat, name='freeseat'),
     path('assigntoseating', views.assign_to_seating, name='assigntoseating'),
     path('unassignfromseating', views.unassign_from_seating, name='unassignfromseating'),
     path('requesthelp', views.request_help, name='requesthelp'),
     path('cancelhelp', views.cancel_help, name='cancelhelp'),
+    path('seatingliveinfo', views.seating_live_info, name='seatingliveinfo'),
 ]
 
 waiter_model_urls = [
