@@ -64,7 +64,7 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Table Assignments</h5>
+        <h5 class="modal-title">Table assignments</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -114,7 +114,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Mark table as available</h5>
+        <h5 class="modal-title">Set table as available</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -129,7 +129,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary btn-lg btn-block" id="btnFreeSeating">
-          Mark as available
+          Set as available
         </button>
       </div>
     </div>
@@ -141,10 +141,6 @@
 <div class="row">
 <div class="col-lg-2">
   <div class="sticky-top pt-3">
-    <button type="button" class="btn btn-primary btn-block" onclick="openModalSeating()">
-      <i class="fas fa-user fa-pull-left fa-lg"></i> View table assignments
-    </button>
-
     <button type="button" class="btn btn-primary btn-block" onclick="openModalOrderExtra()">
       <i class="fas fa-plus fa-pull-left fa-lg"></i> Suggest menu items
     </button>
@@ -153,8 +149,12 @@
       <i class="fas fa-bars fa-pull-left fa-lg"></i> Edit the menu
     </button>
 
+    <button type="button" class="btn btn-primary btn-block" onclick="openModalSeating()">
+      <i class="fas fa-user fa-pull-left fa-lg"></i> Table assignments
+    </button>
+
     <button type="button" class="btn btn-primary btn-block" onclick="openModalFreeSeating()">
-      <i class="fas fa-user-times fa-pull-left fa-lg"></i> Mark seating available
+      <i class="fas fa-user-times fa-pull-left fa-lg"></i> Set table available
     </button>
 
     <div id="container-tables">

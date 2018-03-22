@@ -72,13 +72,13 @@ function delayOrder(button, orderID){
   });
 }
 
-function confirmPayment(button, paymentID){
+function confirmPayment(button, orderID){
   $.ajax({
     url: "/core/payment/confirmPayment",
     type: 'POST',
     headers: {'X-CSRFToken': csrfToken},
     contentType: 'application/json; charset=utf-8',
-    data: JSON.stringify({id: paymentID}),
+    data: JSON.stringify({id: orderID}),
     dataType: 'text',
     success: function(result) {
       $(button).attr("disabled", true);
