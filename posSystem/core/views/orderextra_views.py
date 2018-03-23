@@ -11,7 +11,13 @@ import json
 
 
 def place_order_extra(request):
-    """Create an OrderExtra from the provided JSON, or update an existing one."""
+    """
+    Create an OrderExtra from the provided JSON, or update an existing one.
+
+    :param request: HTTPrequest
+    :return: HTTP Response
+                "received" message
+    """
     received_json = json.loads(request.body.decode('utf-8'))
     seating_id = received_json["seating_id"]
     menu_item_id = received_json["menu_item_id"]
@@ -31,7 +37,12 @@ def place_order_extra(request):
 
 
 def get_order_extra(request):
-    """Return the suggested order items as formatted HTML."""
+    """
+    Return the suggested order items as formatted HTML.
+
+    :param request: HTTPrequest
+    :return: render to "core/orderextra/orderextra_list.html".
+    """
     try:
         order_extra = OrderExtra.active_objects.get(seating=Seating.occupied_objects.get(pk=request.session['seating_id']))
         return render(request, "core/orderextra/orderextra_list.html", {'order_extra': order_extra})
@@ -40,7 +51,13 @@ def get_order_extra(request):
 
 
 def cancel_order_extra_item(request):
-    """Remove an OrderItem from an OrderExtra."""
+    """
+    Remove an OrderItem from an OrderExtra.
+
+    :param request: HTTPrequest
+    :return: HTTP Response
+                "received" message
+    """
     received_json = json.loads(request.body.decode('utf-8'))
     order_extra = OrderExtra.active_objects.get(pk=received_json["order_extra_id"])
     order_item = OrderItem.objects.get(pk=received_json["order_item_id"])

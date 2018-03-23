@@ -12,7 +12,7 @@ def confirm_payment(request):
     Confirm the payment status of an order in the database.
 
     :param request: HTTPrequest
-    :return:HTTP Response
+    :return: HTTP Response
                 "received" message
     """
     order_id = json.loads(request.body.decode('utf-8'))["id"]
