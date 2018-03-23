@@ -1,9 +1,11 @@
-from django.test import TestCase
-from core.models import Menu
-from core.views import menu_views
-from manager.forms import AdjustMenuForm
-from django.test import RequestFactory
-
+try:
+    from django.test import TestCase
+    from core.models import Menu
+    from core.views import menu_views
+    from manager.forms import AdjustMenuForm
+    from django.test import RequestFactory
+except ImportError:
+    print("failed import")
 
 class ManagerFormTest(TestCase):
 

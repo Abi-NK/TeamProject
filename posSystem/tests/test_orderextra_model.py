@@ -1,9 +1,11 @@
-from django.test import TestCase
-from core.models import Menu, OrderExtra, Seating
-from django.contrib.auth.models import User
-from django.utils import timezone
-from datetime import timedelta
-
+try:
+    from django.test import TestCase
+    from core.models import Menu, OrderExtra, Seating
+    from django.contrib.auth.models import User
+    from django.utils import timezone
+    from datetime import timedelta
+except ImportError:
+    print("failed import")
 
 class TestOrderExtraModel(TestCase):
     def setUp(self):

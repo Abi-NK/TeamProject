@@ -1,6 +1,8 @@
-from django.test import TestCase
+try:
+    from django.test import TestCase
 from core.models import Seating
-
+except ImportError:
+    print("failed import")
 
 # Create your tests here.
 class TestSeatingModel(TestCase):

@@ -4,13 +4,13 @@ Views for the customer section of the system. Views take a web request and retur
 
 """
 
+try:
+    from django.shortcuts import render, redirect
+    from core.models import Menu, Order, Payment, Seating
+    from django.views.decorators.csrf import ensure_csrf_cookie
+except ImportError:
+    print("failed import")
 
-from django.shortcuts import render, redirect
-from core.models import Menu, Order, Payment, Seating
-from django.views.decorators.csrf import ensure_csrf_cookie
-
-
-@ensure_csrf_cookie
 def index(request):
     """
     Sets up the customer index page with menu displayed.
@@ -71,7 +71,7 @@ def payment(request):
     orders = Order.unpaid_objects.filter(table=request.session['seating_id']).order_by('time')
     context = {
         'order': orders,
-        'total': "£%.2f" % sum([order.total_price for order in orders])
+        'total': "%.2f" % sum([order.total_price for order in orders])
     }
 
 

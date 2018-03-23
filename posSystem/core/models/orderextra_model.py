@@ -1,11 +1,13 @@
-from django.db import models
-from .menu_model import Menu
-from .orderitem_model import OrderItem
-from .seating_model import Seating
-from django.contrib.auth.models import User
-from django.utils import timezone
-from datetime import timedelta, date
-
+try:
+    from django.db import models
+    from .menu_model import Menu
+    from .orderitem_model import OrderItem
+    from .seating_model import Seating
+    from django.contrib.auth.models import User
+    from django.utils import timezone
+    from datetime import timedelta, date
+except ImportError:
+    print("failed import")
 
 class ActiveOrderExtraManager(models.Manager):
     """Filter for active (unused) OrderExtras."""

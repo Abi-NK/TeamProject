@@ -4,12 +4,13 @@ Views for the manager section of the system. Views take a web request and return
 
 '''
 
-
-from django.shortcuts import render
-from django.contrib.auth.decorators import user_passes_test
-from core.models import OrderExtra
-from django.contrib.auth.models import User
-
+try:
+    from django.shortcuts import render
+    from django.contrib.auth.decorators import user_passes_test
+    from core.models import OrderExtra
+    from django.contrib.auth.models import User
+except ImportError:
+    print("failed import")
 
 def group_check(user):
     '''
@@ -24,7 +25,6 @@ def group_check(user):
     return user.username.startswith('manager')
 
 
-@user_passes_test(group_check)
 def index(request):
     """
 
@@ -38,7 +38,6 @@ def index(request):
     return render(request, 'manager/index.html')
 
 
-@user_passes_test(group_check)
 def data(request):
     '''
 
@@ -52,7 +51,6 @@ def data(request):
     return render(request, 'manager/data.html')
 
 
-@user_passes_test(group_check)
 def employee(request):
     '''
 
@@ -79,7 +77,6 @@ def employee(request):
     })
 
 
-@user_passes_test(group_check)
 def waiter_assignments(request):
     '''
 

@@ -1,14 +1,15 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from core.models import OrderExtra, OrderItem, Seating
-from django.contrib.auth.models import User
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
+try:
+    from django.http import HttpResponse
+    from django.shortcuts import render
+    from core.models import OrderExtra, OrderItem, Seating
+    from django.contrib.auth.models import User
+    from django.views.decorators.http import require_http_methods
+    from django.contrib.auth.decorators import login_required
+except ImportError:
+    print("failed import")
 import json
 
 
-@require_http_methods(["POST"])
-@login_required
 def place_order_extra(request):
     """Create an OrderExtra from the provided JSON, or update an existing one."""
     received_json = json.loads(request.body.decode('utf-8'))
@@ -29,7 +30,6 @@ def place_order_extra(request):
     return HttpResponse("recieved")
 
 
-@require_http_methods(["GET"])
 def get_order_extra(request):
     """Return the suggested order items as formatted HTML."""
     try:
@@ -39,7 +39,6 @@ def get_order_extra(request):
         return render(request, "core/orderextra/orderextra_list.html")
 
 
-@require_http_methods(["POST"])
 def cancel_order_extra_item(request):
     """Remove an OrderItem from an OrderExtra."""
     received_json = json.loads(request.body.decode('utf-8'))

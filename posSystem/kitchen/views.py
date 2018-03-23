@@ -4,12 +4,13 @@ Views for the kitchen section of the system. Views take a web request and return
 
 """
 
-
-from core.models import Order
-from django.shortcuts import render
-from django.views.decorators.csrf import ensure_csrf_cookie
-from django.contrib.auth.decorators import user_passes_test
-
+try:
+    from core.models import Order
+    from django.shortcuts import render
+    from django.views.decorators.csrf import ensure_csrf_cookie
+    from django.contrib.auth.decorators import user_passes_test
+except ImportError:
+    print("failed import")
 
 def group_check(user):
     """
@@ -25,8 +26,6 @@ def group_check(user):
     return user.username.startswith('kitchen')
 
 
-@ensure_csrf_cookie
-@user_passes_test(group_check)
 def index(request):
     """
 

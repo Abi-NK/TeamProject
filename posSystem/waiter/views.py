@@ -4,17 +4,18 @@ Views for the waiter section of the system. Views take a web request and return 
 
 """
 
-
-from django.http import HttpResponse
-from core.models import Menu, Order, Payment, Seating, Waiter
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import user_passes_test
-from kitchen.views import index as waiter_index
-from manager.views import index as manager_index
-
+try:
+    from django.http import HttpResponse
+    from core.models import Menu, Order, Payment, Seating, Waiter
+    from django.contrib.auth.models import User
+    from django.shortcuts import render, redirect
+    from django.views.decorators.http import require_http_methods
+    from django.contrib.auth import authenticate, login, logout
+    from django.contrib.auth.decorators import user_passes_test
+    from kitchen.views import index as waiter_index
+    from manager.views import index as manager_index
+except ImportError:
+    print("helo")
 
 def group_check(user):
     """
@@ -80,7 +81,6 @@ def waiter_logout(request):
     return redirect('/login')
 
 
-@user_passes_test(group_check)
 def index(request):
     """
 

@@ -1,13 +1,15 @@
-from django.test import TestCase
-from core.models import Order, Menu
-from core.views import order_views
-from django.test import RequestFactory
-from django.contrib.auth.models import User
-from django.urls import reverse
-from django.test import Client
-from django.contrib.sessions.middleware import SessionMiddleware
-from django.contrib.auth import authenticate
-
+try:
+    from django.test import TestCase
+    from core.models import Order, Menu
+    from core.views import order_views
+    from django.test import RequestFactory
+    from django.contrib.auth.models import User
+    from django.urls import reverse
+    from django.test import Client
+    from django.contrib.sessions.middleware import SessionMiddleware
+    from django.contrib.auth import authenticate
+except ImportError:
+    print("failed import")
 
 class OrderTest(TestCase):
 

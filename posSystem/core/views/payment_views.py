@@ -1,12 +1,12 @@
-from django.http import HttpResponse
-from core.models import Order
+try:
+    from django.http import HttpResponse
+    from core.models import Order
+    from django.views.decorators.http import require_http_methods
+    from django.contrib.auth.decorators import login_required
+except ImportError:
+    print("failed import")
 import json
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
 
-
-@require_http_methods(["POST"])
-@login_required
 def confirm_payment(request):
     """Confirm the payment status of an order in the database."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]

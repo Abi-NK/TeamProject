@@ -1,7 +1,9 @@
-from django.test import TestCase
-from core.models import Menu
-from django.test import RequestFactory
-
+try:
+    from django.test import TestCase
+    from core.models import Menu
+    from django.test import RequestFactory
+except ImportError:
+    print("failed import")
 
 class TestMenuModel(TestCase):
 

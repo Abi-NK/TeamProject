@@ -1,6 +1,8 @@
-from django.test import TestCase
-from core.models import Menu, OrderItem
-
+try:
+    from django.test import TestCase
+    from core.models import Menu, OrderItem
+except ImportError:
+    print("failed import")
 
 class TestOrderItemModel(TestCase):
     def setUp(self):

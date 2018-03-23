@@ -1,8 +1,10 @@
-from django.test import TestCase
-from core.models import Menu, Order, OrderItem, Seating
-from django.utils import timezone
-from datetime import datetime, timedelta, date, time
-
+try:
+    from django.test import TestCase
+    from core.models import Menu, Order, OrderItem, Seating
+    from django.utils import timezone
+    from datetime import datetime, timedelta, date, time
+except ImportError:
+    print("failed import")
 
 class TestOrderModel(TestCase):
 
