@@ -1,4 +1,9 @@
 # CS2810 Team Project: Team 5
+
+## Test folder location: posSystem/tests
+
+## Introduction
+
 The COO of Oaxaca has reached out to us to see if there is some way we can help them mitigate
 their issues by reducing the staffing and/or training needs of their restaurants with technology. Our
 goal is to look at their existing processes and identify ways in which we can use technology to help
