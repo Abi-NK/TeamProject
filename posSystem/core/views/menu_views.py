@@ -8,7 +8,14 @@ import json
 
 
 def adjust_menu(request):
-    """Return the menu in formatted HTML and update the table based on inputs by the manager."""
+    """
+    Shows the menu in formatted HTML and updates the table based on inputs by the manager.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The formatted HTML menu with updated table.
+
+    """
     if request.method == "POST":
 
         form_name = request.POST['menu_name']
@@ -56,7 +63,15 @@ def adjust_menu(request):
 
 @require_http_methods(["POST"])
 def remove_menu_item(request):
-    """Return formatted HTML to remove a menu item"""
+    """
+    Formats HTML to remove a menu item"
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The formatted HTML to remove a menu item.
+
+    """
+
     received_json = json.loads(request.body.decode('utf-8'))
     item_to_remove_id = received_json["itemToRemoveID"]
     menu_item = Menu.objects.get(pk=item_to_remove_id)
@@ -73,7 +88,14 @@ def remove_menu_item(request):
 
 @login_required
 def html_stock_list(request):
-    """Return stock data for the menu in formatted HTML."""
+    """
+    Shows the stock data for the menu.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The formatted menu stock data.
+
+    """
     context = {
         "menu": Menu.objects.all(),
     }
