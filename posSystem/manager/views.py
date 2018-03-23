@@ -67,8 +67,8 @@ def employee(request):
         week_total = sum([item.get_total() for item in OrderExtra.used_week_objects.filter(waiter=waiter)])
         waiter_data.append({
             "waiter": waiter,
-            "extra_sales_daily": "£%.2f" % today_total,
-            "extra_sales_weekly": "£%.2f" % week_total,
+            "extra_sales_daily": "%.2f" % today_total,
+            "extra_sales_weekly": "%.2f" % week_total,
         })
     return render(request, 'manager/employee.html', {
         "managers": User.objects.filter(username__startswith="manager"),
