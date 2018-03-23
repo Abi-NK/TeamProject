@@ -8,7 +8,15 @@ from django.contrib.auth.decorators import login_required
 
 @require_http_methods(["POST"])
 def make_order(request):
-    """Create an order from the provided JSON."""
+    """
+    Create an order from the provided JSON.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The received request notification.
+
+    """
+    """"""
     if "seating_id" not in request.session:
         print("A session without a seating ID tried to place an order.")
         return HttpResponseNotFound("no seating_id in session")
@@ -26,7 +34,13 @@ def make_order(request):
 @require_http_methods(["POST"])
 @login_required
 def confirm_order(request):
-    """Confirm the provided order in the database."""
+    """
+    Confirm the provided order in the database.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The received request notification.
+    """
     order_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(order_id))
     order = Order.objects.get(pk=order_id)
@@ -39,7 +53,14 @@ def confirm_order(request):
 @require_http_methods(["POST"])
 @login_required
 def cancel_order(request):
-    """Cancel the order, walkout data left in database."""
+    """
+    Cancel the order, walkout data left in database.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The received request notification.
+    """
+
     order_id = json.loads(request.body.decode('utf-8'))["id"]
     print("Recieved ID: " + str(order_id))
     order = Order.objects.get(pk=order_id)
@@ -53,7 +74,13 @@ def cancel_order(request):
 @require_http_methods(["POST"])
 @login_required
 def readyDelivery(request):
-    """sets the ready_delivery in the database to true."""
+    """
+    Sets the ready_delivery in the database to true.
+
+    :param request: HTTPrequest
+    :return: HTTPresponse
+             The received request notification of order ready.
+    """
     order_id = json.loads(request.body.decode('utf-8'))["id"]
     Order.objects.get(pk=order_id).set_ready_delivery()
     return HttpResponse("Order ready, calling waiter")
