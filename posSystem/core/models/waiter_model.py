@@ -1,7 +1,9 @@
-from django.db import models
-from .seating_model import Seating
-from django.contrib.auth.models import User
-
+try:
+    from django.db import models
+    from .seating_model import Seating
+    from django.contrib.auth.models import User
+except ImportError:
+    print("failed import")
 
 class Waiter(models.Model):
     onduty = models.BooleanField(default=False)

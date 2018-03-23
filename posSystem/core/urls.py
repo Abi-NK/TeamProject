@@ -1,5 +1,8 @@
-from django.urls import include, path
-from . import views
+try:
+    from django.urls import include, path
+    from . import views
+except ImportError:
+    print("failed import")
 
 menu_model_html_urls = [
     path('stock_list', views.html_stock_list, name='stock_list'),

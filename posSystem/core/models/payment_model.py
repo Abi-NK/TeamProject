@@ -1,5 +1,7 @@
-from django.db import models
-
+try:
+    from django.db import models
+except ImportError:
+    print("failed import")
 
 class Payment(models.Model):
     """This model is for payment. Payment stores the payment info and is connected to a order"""

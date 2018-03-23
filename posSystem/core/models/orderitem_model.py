@@ -1,6 +1,8 @@
-from django.db import models
-from .menu_model import Menu
-
+try:
+    from django.db import models
+    from .menu_model import Menu
+except ImportError:
+    print("failed import")
 
 class OrderItem(models.Model):
     menu_item = models.ForeignKey(Menu, on_delete=models.CASCADE)

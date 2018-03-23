@@ -1,14 +1,14 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
-from core.models import Seating, Waiter
-from django.contrib.auth.models import User
+try:
+    from django.http import HttpResponse
+    from django.shortcuts import render
+    from django.contrib.auth.decorators import login_required
+    from django.views.decorators.http import require_http_methods
+    from core.models import Seating, Waiter
+    from django.contrib.auth.models import User
+except ImportError:
+    print("failed import")
 import json
 
-
-@require_http_methods(["POST"])
-@login_required
 def waiter_on_duty(request):
     """Set the provided waiter to be on duty."""
     username = json.loads(request.body.decode('utf-8'))["name"]
@@ -16,8 +16,6 @@ def waiter_on_duty(request):
     return HttpResponse("received")
 
 
-@require_http_methods(["POST"])
-@login_required
 def waiter_off_duty(request):
     """Set the provided waiter to be off duty."""
     username = json.loads(request.body.decode('utf-8'))["name"]
@@ -25,7 +23,6 @@ def waiter_off_duty(request):
     return HttpResponse("received")
 
 
-@login_required
 def get_assignments(request):
     """Get all of the restaurant's seating."""
     seating = Seating.objects.all()
@@ -40,14 +37,12 @@ def get_assignments(request):
     })
 
 
-@login_required
 def get_waiters(request):
     """Get all of the restaurant's seating."""
     waiters = Waiter.objects.all()
     return render(request, "core/waiter/waiters.html", {'waiters': waiters})
 
 
-@login_required
 def auto_assign(request):
     """Automatically distribute assignment across all on-duty waiters."""
     onduty_waiters = [waiter for waiter in Waiter.objects.filter(onduty=True)]

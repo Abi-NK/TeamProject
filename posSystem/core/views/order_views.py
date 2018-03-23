@@ -1,12 +1,13 @@
-from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render
-from core.models import Order, Seating
+try:
+    from django.http import HttpResponse, HttpResponseNotFound
+    from django.shortcuts import render
+    from core.models import Order, Seating
+    from django.views.decorators.http import require_http_methods
+    from django.contrib.auth.decorators import login_required
+except ImportError:
+    print("failed import")
 import json
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
 
-
-@require_http_methods(["POST"])
 def make_order(request):
     """
     Create an order from the provided JSON.
@@ -31,8 +32,6 @@ def make_order(request):
     return HttpResponse("recieved")
 
 
-@require_http_methods(["POST"])
-@login_required
 def confirm_order(request):
     """
     Confirm the provided order in the database.
@@ -50,8 +49,6 @@ def confirm_order(request):
 
 
 # cancel orders post request
-@require_http_methods(["POST"])
-@login_required
 def cancel_order(request):
     """
     Cancel the order, walkout data left in database.
@@ -71,8 +68,6 @@ def cancel_order(request):
     return HttpResponse("recieved")
 
 
-@require_http_methods(["POST"])
-@login_required
 def readyDelivery(request):
     """
     Sets the ready_delivery in the database to true.
@@ -86,7 +81,6 @@ def readyDelivery(request):
     return HttpResponse("Order ready, calling waiter")
 
 
-@require_http_methods(["POST"])
 def delay_order(request):
     """Delay the order."""
     order_id = json.loads(request.body.decode('utf-8'))["id"]
@@ -100,32 +94,24 @@ def delay_order(request):
 # HTML rendering views are listed below
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_kitchen_cards(request):
     """Return all orders for the kitchen as formatted HTML."""
     orders = Order.get_kitchen_orders(all)
     return render(request, "core/order/kitchen_cards.html", {'orders': orders})
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_confirm_cards(request):
     """Return all orders which need confirmation as formatted HTML."""
     orders = Order.objects.filter(confirmed=False, cancelled=False)
     return render(request, "core/order/order_cards.html", {'orders': orders, 'confirm': True})
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_delivery_cards(request):
     """Return all orders which are ready to be delivered as formatted HTML."""
     orders = Order.objects.filter(confirmed=True, ready_delivery=True, delivered=False)
     return render(request, "core/order/order_cards.html", {'orders': orders, 'delivery': True})
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_unpaid_cards(request):  # what the user does not see, will not hurt them...
     """Return all orders which have been delivered but not paid for as formatted HTML."""
     # the order quiey bellow checks both the order model and the payment fk model
@@ -133,7 +119,6 @@ def html_unpaid_cards(request):  # what the user does not see, will not hurt the
     return render(request, "core/order/order_cards.html", {'orders': orders, 'unpaid': True})
 
 
-@login_required
 def html_summary_list(request):
     """Return a summary of restaurant data in formatted HTML."""
     context = {
@@ -155,7 +140,6 @@ def html_summary_list(request):
     return render(request, 'core/order/summary_list.html', context)
 
 
-@login_required
 def html_active_list(request):
     """Return all active orders in formatted HTML."""
     context = {

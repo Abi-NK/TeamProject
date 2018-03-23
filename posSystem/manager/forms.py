@@ -1,6 +1,8 @@
-from django import forms
-from core.models import Menu
-
+try:
+    from django import forms
+    from core.models import Menu
+except ImportError:
+    print("failed import")
 
 class AdjustMenuForm(forms.Form):
 

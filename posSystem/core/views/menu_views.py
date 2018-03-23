@@ -1,9 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-from core.models import Menu
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from manager.forms import AdjustMenuForm
+try:
+    from django.http import HttpResponse
+    from django.shortcuts import render
+    from core.models import Menu
+    from django.views.decorators.http import require_http_methods
+    from django.contrib.auth.decorators import login_required
+    from manager.forms import AdjustMenuForm
+except ImportError:
+    print("failed import")
 import json
 
 
@@ -61,7 +64,6 @@ def adjust_menu(request):
     return render(request, 'manager/managermenu.html', context)
 
 
-@require_http_methods(["POST"])
 def remove_menu_item(request):
     """
     Formats HTML to remove a menu item"
@@ -86,7 +88,6 @@ def remove_menu_item(request):
 # HTML rendering views are listed below
 
 
-@login_required
 def html_stock_list(request):
     """
     Shows the stock data for the menu.

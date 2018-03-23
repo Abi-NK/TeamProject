@@ -1,13 +1,15 @@
-from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
-from django.shortcuts import render
-from core.models import Order, Seating, Waiter
-from django.contrib.auth.models import User
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
+try:
+    from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
+    from django.shortcuts import render
+    from core.models import Order, Seating, Waiter
+    from django.contrib.auth.models import User
+    from django.views.decorators.http import require_http_methods
+    from django.contrib.auth.decorators import login_required
+except ImportError:
+    print("failed import")
 import json
 
 
-@require_http_methods(["POST"])
 def take_seat(request):
     """Marks the provided seating as unavailable in the database."""
     table_id = json.loads(request.body.decode('utf-8'))["tableID"]
@@ -31,8 +33,6 @@ def free_seat(request):
     return HttpResponse("received")
 
 
-@require_http_methods(["POST"])
-@login_required
 def assign_to_seating(request):
     """Set the provided seating's current waiter to be the provided username."""
     username = json.loads(request.body.decode('utf-8'))["username"]
@@ -44,8 +44,6 @@ def assign_to_seating(request):
     return HttpResponse("received")
 
 
-@require_http_methods(["POST"])
-@login_required
 def unassign_from_seating(request):
     """Set the provided seating's current waiter to be the provided username."""
     username = json.loads(request.body.decode('utf-8'))["username"]
@@ -57,7 +55,6 @@ def unassign_from_seating(request):
     return HttpResponse("received")
 
 
-@require_http_methods(["POST"])
 def request_help(request):
     if "seating_id" not in request.session:
         print("A session without a seating ID requested assistance.")
@@ -67,7 +64,6 @@ def request_help(request):
     return HttpResponse("recieved")
 
 
-@require_http_methods(["POST"])
 def cancel_help(request):
     seating_id = json.loads(request.body.decode('utf-8'))["id"]
     Seating.objects.get(pk=seating_id).set_assistance_false()
@@ -87,8 +83,6 @@ def seating_live_info(request):
 # HTML rendering views are listed below
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_waiters_seating_list(request):
     """Get tables for waiter."""
     users_tables = Seating.objects.filter(waiter=request.user.username)
@@ -96,8 +90,6 @@ def html_waiters_seating_list(request):
     return render(request, "core/seating/waiters_seating_list.html", {'users_tables': users_tables, 'waiter': waiter})
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_assignment_list(request):
     """Get all of the restaurant's seating."""
     seating = Seating.objects.all()
@@ -107,22 +99,16 @@ def html_assignment_list(request):
     return render(request, "core/seating/assignment_list.html", {'seating': seating, 'names': names})
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_occupied_seating_dropdown(request):
     """Returns the options for occupied seating."""
     seating = Seating.occupied_objects.all()
     return render(request, "core/seating/occupied_seating_dropdown.html", {'seating': seating})
 
 
-@require_http_methods(["GET"])
-@login_required
 def html_assistance_alerts(request):
     want_assistance = Seating.objects.filter(assistance=True)
     return render(request, "core/seating/assistance_alerts.html", {'want_assistance': want_assistance})
 
-
-@login_required
 def html_manager_list(request):
     """Return all tables in formatted HTML."""
     context = {

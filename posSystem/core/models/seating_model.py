@@ -1,5 +1,7 @@
-from django.db import models
-
+try:
+    from django.db import models
+except ImportError:
+    print("failed import")
 
 class AvailableSeatingManager(models.Manager):
     """Filter for all available seating."""

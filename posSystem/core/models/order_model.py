@@ -1,12 +1,14 @@
-from django.db import models
-from .menu_model import Menu
-from .orderextra_model import OrderExtra
-from .orderitem_model import OrderItem
-from .payment_model import Payment
-from .seating_model import Seating
-from django.utils import timezone
-from datetime import datetime, timedelta, date
-
+try:
+    from django.db import models
+    from .menu_model import Menu
+    from .orderextra_model import OrderExtra
+    from .orderitem_model import OrderItem
+    from .payment_model import Payment
+    from .seating_model import Seating
+    from django.utils import timezone
+    from datetime import datetime, timedelta, date
+except ImportError:
+    print("failed import")
 
 class ActiveOrderManager(models.Manager):
     """Filter for all non-delivered orders."""

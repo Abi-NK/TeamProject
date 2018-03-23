@@ -1,5 +1,7 @@
-from django.db import models
-
+try:
+    from django.db import models
+except ImportError:
+    print("failed import")
 
 class StockManager(models.Manager):
     def reduce_stock(self, json):
