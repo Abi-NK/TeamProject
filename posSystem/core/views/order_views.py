@@ -17,7 +17,6 @@ def make_order(request):
              The received request notification.
 
     """
-    """"""
     if "seating_id" not in request.session:
         print("A session without a seating ID tried to place an order.")
         return HttpResponseNotFound("no seating_id in session")
