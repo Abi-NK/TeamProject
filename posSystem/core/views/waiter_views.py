@@ -10,21 +10,38 @@ except ImportError:
 import json
 
 def waiter_on_duty(request):
-    """Set the provided waiter to be on duty."""
+    """
+    Set the provided waiter to be on duty.
+
+    :param request:
+    :return: HTTP Response
+                "received" message
+    """
     username = json.loads(request.body.decode('utf-8'))["name"]
     Waiter.objects.get(name=username).set_waiter_on_duty()
     return HttpResponse("received")
 
 
 def waiter_off_duty(request):
-    """Set the provided waiter to be off duty."""
+    """
+    Set the provided waiter to be off duty.
+
+    :param request:
+    :return:HTTP Response
+                "received" message
+    """
     username = json.loads(request.body.decode('utf-8'))["name"]
     Waiter.objects.get(name=username).set_waiter_off_duty()
     return HttpResponse("received")
 
 
 def get_assignments(request):
-    """Get all of the restaurant's seating."""
+    """
+    Get all of the restaurant's seating.
+
+    :param request:
+    :return: render to "core/waiter/assignments.html", including seating, on duty waiters and names in context
+    """
     seating = Seating.objects.all()
     waiters = Waiter.objects.filter(onduty=True)
     names = {}
@@ -38,13 +55,24 @@ def get_assignments(request):
 
 
 def get_waiters(request):
-    """Get all of the restaurant's seating."""
+    """
+    Get all of the restaurant's seating.
+
+    :param request:
+    :return:render to "core/waiter/waiters.html" including waiters in context
+    """
     waiters = Waiter.objects.all()
     return render(request, "core/waiter/waiters.html", {'waiters': waiters})
 
 
 def auto_assign(request):
-    """Automatically distribute assignment across all on-duty waiters."""
+    """
+    Automatically distribute assignment across all on-duty waiters.
+
+    :param request:
+    :return:HTTP Response
+                "received" message
+    """
     onduty_waiters = [waiter for waiter in Waiter.objects.filter(onduty=True)]
     seating = [seating for seating in Seating.objects.all()]
     tables_per_waiter = len(seating) // len(onduty_waiters)
